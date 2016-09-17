@@ -10,20 +10,20 @@ import java.util.Map;
 
 public class CallLogRepositoryInMemory implements CallLogRepository {
 
-  private Map<String, CallLog> callLogs = new HashMap<>();
+    private Map<String, CallLog> callLogs = new HashMap<>();
 
-  @Override
-  public List<CallLog> findAll() {
-      return Lists.newArrayList(callLogs.values());
-  }
+    @Override
+    public List<CallLog> findAll() {
+        return Lists.newArrayList(callLogs.values());
+    }
 
-  @Override
-  public void save(CallLog callLog) {
-    callLogs.put(callLog.getId(), callLog);
-  }
+    @Override
+    public void save(CallLog callLog) {
+        callLogs.put(callLog.getId(), callLog);
+    }
 
-  @Override
-  public void remove(String id) {
-    callLogs.remove(id);
-  }
+    @Override
+    public void remove(String id) {
+        callLogs.remove(id);
+    }
 }

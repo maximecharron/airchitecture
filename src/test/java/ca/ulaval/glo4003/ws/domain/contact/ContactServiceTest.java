@@ -17,37 +17,37 @@ import static org.junit.Assert.assertThat;
 @RunWith(MockitoJUnitRunner.class)
 public class ContactServiceTest {
 
-  @Mock
-  private Contact contact;
-  @Mock
-  private ContactDto contactDto;
-  @Mock
-  private ContactRepository contactRepository;
-  @Mock
-  private ContactAssembler contactAssembler;
+    @Mock
+    private Contact contact;
+    @Mock
+    private ContactDto contactDto;
+    @Mock
+    private ContactRepository contactRepository;
+    @Mock
+    private ContactAssembler contactAssembler;
 
-  private ContactService contactService;
+    private ContactService contactService;
 
-  @Before
-  public void setUp()
-          throws Exception {
-    contactService = new ContactService(contactRepository, contactAssembler);
-  }
+    @Before
+    public void setUp()
+            throws Exception {
+        contactService = new ContactService(contactRepository, contactAssembler);
+    }
 
-  @Test
-  public void givenContactsInRepository_whenFindAllContacts_thenReturnDtos()
-          throws Exception {
-    // given
-    BDDMockito.given(contactRepository.findAll()).willReturn(Lists.newArrayList(contact));
-    BDDMockito.given(contactAssembler.create(contact)).willReturn(contactDto);
+    @Test
+    public void givenContactsInRepository_whenFindAllContacts_thenReturnDtos()
+            throws Exception {
+        // given
+        BDDMockito.given(contactRepository.findAll()).willReturn(Lists.newArrayList(contact));
+        BDDMockito.given(contactAssembler.create(contact)).willReturn(contactDto);
 
-    // when
-    List<ContactDto> contactDtos = contactService.findAllContacts();
+        // when
+        List<ContactDto> contactDtos = contactService.findAllContacts();
 
-    // then
-    assertThat(contactDtos, org.hamcrest.Matchers.hasItem(contactDto));
-    Mockito.verify(contactRepository).findAll();
-    Mockito.verify(contactAssembler).create(org.mockito.Matchers.eq(contact));
-  }
+        // then
+        assertThat(contactDtos, org.hamcrest.Matchers.hasItem(contactDto));
+        Mockito.verify(contactRepository).findAll();
+        Mockito.verify(contactAssembler).create(org.mockito.Matchers.eq(contact));
+    }
 
 }

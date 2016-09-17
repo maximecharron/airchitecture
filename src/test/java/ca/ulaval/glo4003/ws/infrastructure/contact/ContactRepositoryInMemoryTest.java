@@ -15,29 +15,29 @@ import static org.junit.Assert.assertThat;
 @RunWith(MockitoJUnitRunner.class)
 public class ContactRepositoryInMemoryTest {
 
-  private static final String CONTACT_ID = "id";
+    private static final String CONTACT_ID = "id";
 
-  @Mock
-  private Contact contact;
+    @Mock
+    private Contact contact;
 
-  private ContactRepositoryInMemory contactRepositoryInMemory;
+    private ContactRepositoryInMemory contactRepositoryInMemory;
 
-  @Before
-  public void setUp() {
-    contactRepositoryInMemory = new ContactRepositoryInMemory();
-    BDDMockito.given(contact.getId()).willReturn(CONTACT_ID);
-  }
+    @Before
+    public void setUp() {
+        contactRepositoryInMemory = new ContactRepositoryInMemory();
+        BDDMockito.given(contact.getId()).willReturn(CONTACT_ID);
+    }
 
-  @Test
-  public void givenContact_whenFindAll_ThenReturnContactInMemory() {
-    //given
-    contactRepositoryInMemory.save(contact);
+    @Test
+    public void givenContact_whenFindAll_ThenReturnContactInMemory() {
+        //given
+        contactRepositoryInMemory.save(contact);
 
-    // when
-    List<Contact> contacts = contactRepositoryInMemory.findAll();
+        // when
+        List<Contact> contacts = contactRepositoryInMemory.findAll();
 
-    // then
-    assertThat(contacts, org.hamcrest.Matchers.hasItem(contact));
-  }
+        // then
+        assertThat(contacts, org.hamcrest.Matchers.hasItem(contact));
+    }
 
 }

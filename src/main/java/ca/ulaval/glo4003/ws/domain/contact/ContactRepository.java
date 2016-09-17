@@ -3,14 +3,14 @@ package ca.ulaval.glo4003.ws.domain.contact;
 import java.util.List;
 
 public interface ContactRepository {
-  List<Contact> findAll();
+    List<Contact> findAll();
 
-  Contact findById(String id);
+    Contact findById(String id);
 
-  void update(Contact contact)
-          throws ContactNotFoundException;
+    void update(Contact contact)
+            throws ContactNotFoundException;
 
-  void save(Contact contact);
+    void save(Contact contact);
 
-  void remove(String id);
+    void remove(String id);
 }
