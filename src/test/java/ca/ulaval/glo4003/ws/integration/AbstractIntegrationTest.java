@@ -1,20 +1,15 @@
-package ca.ulaval.glo4003.ws;
+package ca.ulaval.glo4003.ws.integration;
 
 import ca.ulaval.glo4003.AirChitectureMain;
-import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static io.restassured.RestAssured.get;
-
 @RunWith(MockitoJUnitRunner.class)
-public class ContactResourceIT {
+public abstract class AbstractIntegrationTest {
 
     @Before
-    public void setUp()
-            throws Exception {
+    public void startWebServer() {
         Thread t = new Thread() {
             public void run() {
                 try {
@@ -26,10 +21,5 @@ public class ContactResourceIT {
         };
         t.setDaemon(true);
         t.start();
-    }
-
-    @Test
-    public void givenContacts_whenGetAllContacts_thenContactsReturned() {
-        get("/api/telephony/contacts").then().body("name", Matchers.hasItem("Steve Jobs"));
     }
 }
