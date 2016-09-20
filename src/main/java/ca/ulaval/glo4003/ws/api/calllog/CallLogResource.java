@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Path("/telephony/calllogs")
-public interface CallLogController {
+public interface CallLogResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

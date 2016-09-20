@@ -16,19 +16,19 @@ import java.util.List;
 import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ContactControllerImplTest {
+public class ContactResourceImplTest {
     @Mock
     private ContactService contactService;
     @Mock
     private ContactDto contactDto;
 
-    private ContactController contactResource;
+    private ContactResource contactResource;
 
 
     @Before
     public void setUp()
             throws Exception {
-        contactResource = new ContactControllerImpl(contactService);
+        contactResource = new ContactResourceImpl(contactService);
     }
 
     @Test

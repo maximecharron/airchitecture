@@ -9,11 +9,11 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-public class ContactControllerImpl implements ContactController {
+public class ContactResourceImpl implements ContactResource {
 
     private ContactService contactService;
 
-    public ContactControllerImpl(ContactService contactService) {
+    public ContactResourceImpl(ContactService contactService) {
         this.contactService = contactService;
     }
 

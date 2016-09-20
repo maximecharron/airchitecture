@@ -5,11 +5,11 @@ import ca.ulaval.glo4003.ws.domain.calllog.CallLogService;
 
 import java.util.List;
 
-public class CallLogControllerImpl implements CallLogController {
+public class CallLogResourceImpl implements CallLogResource {
 
     private CallLogService callLogService;
 
-    public CallLogControllerImpl(CallLogService callLogService) {
+    public CallLogResourceImpl(CallLogService callLogService) {
         this.callLogService = callLogService;
     }
 

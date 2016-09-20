@@ -7,7 +7,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Path("/telephony/contacts")
-public interface ContactController {
+public interface ContactResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
