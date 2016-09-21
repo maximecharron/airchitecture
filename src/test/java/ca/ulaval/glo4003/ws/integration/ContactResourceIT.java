@@ -5,7 +5,7 @@ import org.junit.Test;
 import static io.restassured.RestAssured.get;
 import static org.hamcrest.Matchers.hasItem;
 
-public class ContactControllerIT extends AbstractIntegrationTest {
+public class ContactResourceIT extends AbstractIntegrationTest {
 
     @Test
     public void givenContacts_whenGetAllContacts_thenContactsReturned() {
