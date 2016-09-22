@@ -1,6 +1,7 @@
 package ca.ulaval.glo4003.ws.domain.flight;
 
 import ca.ulaval.glo4003.ws.api.flight.dto.FlightDto;
+import jersey.repackaged.com.google.common.collect.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,6 +9,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -44,13 +47,14 @@ public class FlightServiceTest {
 
     @Test
     public void givenPersistedFlights_whenFindingAllFlightsWithFilters_thenReturnDtos() {
-        given(flightRepository.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE)).willReturn(Stream.of(flight));
-        given(flightAssembler.create(flight)).willReturn(flightDto);
+        Stream<Flight> flightStream = Stream.of(this.flight);
+        given(flightRepository.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE)).willReturn(flightStream);
+        given(flightAssembler.create(flightStream)).willReturn(Collections.singletonList(flightDto));
 
         List<FlightDto> flightDtos = flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE);
 
         verify(flightRepository).findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE);
-        verify(flightAssembler).create(flight);
+        verify(flightAssembler).create(flightStream);
         assertThat(flightDtos, hasItem(flightDto));
     }
 }

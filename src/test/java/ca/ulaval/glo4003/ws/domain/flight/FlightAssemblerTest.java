@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 
@@ -41,6 +43,16 @@ public class FlightAssemblerTest {
         Flight flight = flightAssembler.create(flightDto);
 
         assertHasAllTheRelevantProperties(flight, flightDto);
+    }
+
+    @Test
+    public void givenFlights_whenCreatingFlightDtos_thenFlightsAreMappedToTheirEquivalentDto() {
+        Flight flight = givenAFlight();
+        Stream<Flight> flightStream = Stream.of(flight);
+
+        List<FlightDto> flightDtos = flightAssembler.create(flightStream);
+
+        assertHasAllTheRelevantProperties(flight, flightDtos.get(0));
     }
 
     private Flight givenAFlight() {

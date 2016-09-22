@@ -2,6 +2,10 @@ package ca.ulaval.glo4003.ws.domain.flight;
 
 import ca.ulaval.glo4003.ws.api.flight.dto.FlightDto;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class FlightAssembler {
 
     public FlightDto create(Flight flight) {
@@ -24,5 +28,9 @@ public class FlightAssembler {
         flight.setArrivalAirport(flightDto.arrivalAirport);
         flight.setAvailableSeats(flightDto.availableSeats);
         return flight;
+    }
+
+    public List<FlightDto> create(Stream<Flight> flights) {
+        return flights.map(this::create).collect(Collectors.toList());
     }
 }

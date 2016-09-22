@@ -25,7 +25,7 @@ public class FlightService {
         logRequest(departureAirport, arrivalAirport, departureDate);
 
         Stream<Flight> flights = flightRepository.findAllWithFilters(departureAirport, arrivalAirport, departureDate);
-        return flights.map(flightAssembler::create).collect(Collectors.toList());
+        return flightAssembler.create(flights);
     }
 
     private void logRequest(String departureAirport, String arrivalAirport, LocalDateTime departureDate) {
