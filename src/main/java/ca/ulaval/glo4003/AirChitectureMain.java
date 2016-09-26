@@ -6,6 +6,8 @@ import ca.ulaval.glo4003.ws.api.contact.ContactResource;
 import ca.ulaval.glo4003.ws.api.contact.ContactResourceImpl;
 import ca.ulaval.glo4003.ws.api.flight.FlightResource;
 import ca.ulaval.glo4003.ws.api.flight.FlightResourceImpl;
+import ca.ulaval.glo4003.ws.api.user.UserResource;
+import ca.ulaval.glo4003.ws.api.user.UserResourceImpl;
 import ca.ulaval.glo4003.ws.domain.calllog.CallLog;
 import ca.ulaval.glo4003.ws.domain.calllog.CallLogAssembler;
 import ca.ulaval.glo4003.ws.domain.calllog.CallLogRepository;
@@ -18,6 +20,9 @@ import ca.ulaval.glo4003.ws.domain.flight.Flight;
 import ca.ulaval.glo4003.ws.domain.flight.FlightAssembler;
 import ca.ulaval.glo4003.ws.domain.flight.FlightRepository;
 import ca.ulaval.glo4003.ws.domain.flight.FlightService;
+import ca.ulaval.glo4003.ws.domain.user.User;
+import ca.ulaval.glo4003.ws.domain.user.UserRepository;
+import ca.ulaval.glo4003.ws.domain.user.UserService;
 import ca.ulaval.glo4003.ws.http.CORSResponseFilter;
 import ca.ulaval.glo4003.ws.infrastructure.calllog.CallLogDevDataFactory;
 import ca.ulaval.glo4003.ws.infrastructure.calllog.CallLogRepositoryInMemory;
@@ -25,6 +30,8 @@ import ca.ulaval.glo4003.ws.infrastructure.contact.ContactDevDataFactory;
 import ca.ulaval.glo4003.ws.infrastructure.contact.ContactRepositoryInMemory;
 import ca.ulaval.glo4003.ws.infrastructure.flight.FlightDevDataFactory;
 import ca.ulaval.glo4003.ws.infrastructure.flight.FlightRepositoryInMemory;
+import ca.ulaval.glo4003.ws.infrastructure.user.UserDevDataFactory;
+import ca.ulaval.glo4003.ws.infrastructure.user.UserRepositoryInMemory;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
@@ -49,7 +56,7 @@ public class AirChitectureMain {
         ContactResource contactResource = createContactResource();
         CallLogResource callLogResource = createCallLogResource();
         FlightResource flightResource = createFlightResource();
-
+        UserResource userResource = createUserResource();
         // Setup API context (JERSEY + JETTY)
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/api/");
@@ -61,6 +68,7 @@ public class AirChitectureMain {
                 resources.add(contactResource);
                 resources.add(callLogResource);
                 resources.add(flightResource);
+                resources.add(userResource);
                 return resources;
             }
         });
@@ -140,5 +148,19 @@ public class AirChitectureMain {
         FlightService flightService = new FlightService(flightRepository, flightAssembler);
 
         return new FlightResourceImpl(flightService);
+    }
+
+    private static UserResource createUserResource() {
+        UserRepository userRepository = new UserRepositoryInMemory();
+
+        if (isDev) {
+            UserDevDataFactory userDevDataFactory = new UserDevDataFactory();
+            List<User> users = userDevDataFactory.createMockData();
+            users.forEach(userRepository::save);
+        }
+
+        UserService flightService = new UserService(userRepository);
+
+        return new UserResourceImpl(flightService);
     }
 }

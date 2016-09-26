@@ -61,6 +61,16 @@
             <artifactId>javax.ws.rs-api</artifactId>
             <version>2.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.3m</version>
+        </dependency>
 
         <!-- Test dependencies -->
         <dependency>
