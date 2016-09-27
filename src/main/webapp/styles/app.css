@@ -1,0 +1,55 @@
+/* app css stylesheet */
+
+.main {
+    background-color: black;
+}
+
+.title {
+    color: #ffffff;
+}
+
+.ajax-loading {
+    margin-left: 35%;
+    margin-right: 35%;
+
+    width: 30%;
+}
+.ajax-loading.ng-enter, .ajax-loading.ng-leave {
+    transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+}
+
+.ajax-loading.ng-enter,
+.ajax-loading.ng-leave.ng-leave-active {
+    opacity:0;
+}
+
+.ajax-loading.ng-leave,
+.ajax-loading.ng-enter.ng-enter-active {
+    opacity:1;
+}
+.ajax-loading .img {
+    image-resolution: 300dppx;
+}
+
+button.btn, .btn{
+    background-color: #598cb7;
+    border-radius: 5px;
+    color: lightgray;
+}
+.btn:hover, .btn:active, .btn:focus{
+    background-color: #337ab7;
+    color: lightgray;
+}
+input{
+    padding-left: 5px;
+}
+.noMovie {
+    color: darkred;
+    margin-bottom: 20px;
+}
+.error-message{
+    text-align: center;
+}
+.lost-cat-image{
+    width: 50%;
+}

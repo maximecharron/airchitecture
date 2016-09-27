@@ -1,0 +1,15 @@
+input:required:invalid, input:focus:invalid {
+  background-image: url(/img/required-icon.png);
+  background-position: right;
+  background-repeat: no-repeat;
+}
+input:required:valid {
+  background-image: url(/img/valid.png);
+  background-position: right;
+  background-repeat: no-repeat;
+}
+.login-panel{
+  margin-left: 25%;
+  margin-right: 25%;
+
+}

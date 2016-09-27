@@ -1,42 +1,74 @@
 <!DOCTYPE html>
-<html data-ng-app="telephonyApp">
-<head lang="en">
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>UMovie</title>
+    <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <base href="/"/>
-    <title>Telephony App</title>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="css/app.css"/>
+    <link rel="icon"
+          type="image/png"
+          href="img/favicon.ico">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/app.css">
+    <link rel="stylesheet" href="styles/menu.css">
+    <link rel="stylesheet" href="styles/dashboard.css">
+    <link rel="stylesheet" href="styles/dropdown.css">
+    <link rel="stylesheet" href="styles/user-view.css">
+    <link rel="stylesheet" href="styles/login.css">
 </head>
-<body>
-<nav class="navbar navbar-default" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" ui-sref="contacts">Telephony App</a>
-        </div>
-        <div class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a ui-sref="contacts">Contacts</a></li>
-                <li class="active"><a ui-sref="callLogs">Call Logs</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
-<div class="container">
-    <div class="row top-buffer">
-        <div class="col-xs-8 col-xs-offset-2">
-            <div ui-view></div>
-        </div>
-    </div>
+<body class="main">
+<div ng-app="airchitecture">
+
+    <div ng-include src="'components/commons/views/menuTop.html'"></div>
+
+    <div ng-view></div>
+
+    <!-- Compiled files -->
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.min.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.min.js"></script>
+    <script src="bower_components/angular-gravatar/build/angular-gravatar.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
+    <script src="bower_components/angular-validation-match/dist/angular-validation-match.min.js"></script>
+
+    <!-- Main application -->
+    <script src="app.js"></script>
+
+    <!-- Commons component -->
+    <script src="components/commons/scripts/error/errorInterceptor.js"></script>
+
+    <!--Home -->
+    <script src="components/home/scripts/controller/home-controller.js"></script>
+    <script src=components/home/scripts/services/homeResource.js></script>
+
+    <!-- User component-->
+    <script src="components/user/scripts/user.js"></script>
+    <script src="components/user/scripts/services/logout-resource.js"></script>
+    <script src="components/user/scripts/controllers/user-menu-controller.js"></script>
+
+    <!-- Login component -->
+    <script src="components/login/scripts/login.js"></script>
+    <script src="components/login/scripts/services/loginResource.js"></script>
+    <script src="components/login/scripts/services/loginService.js"></script>
+    <script src="components/login/scripts/controller/login-controller.js"></script>
+    <script src="components/login/scripts/unauthorizeInterceptor.js"></script>
+    <script src="components/login/scripts/sessionInjector.js"></script>
+
+    <!-- Register component -->
+    <script src="components/register/scripts/register.js"></script>
+    <script src="components/register/scripts/services/registerResource.js"></script>
+    <script src="components/register/scripts/controller/register-controller.js"></script>
+
+    <!-- Route providers -->
+    <script src="components/home/scripts/homeRouteProvider.js"></script>
+    <script src="components/login/scripts/loginRouteProvider.js"></script>
+    <script src="components/register/scripts/registerRouteProvider.js"></script>
+    <script src="components/commons/scripts/error/errorRouteProvider.js"></script>
+
+
 </div>
-<script type="text/javascript" src="lib/angular.min.js"></script>
-<script type="text/javascript" src="js/app.js"></script>
-<script type="text/javascript" src="callLogs/callLogsControllers.js"></script>
-<script type="text/javascript" src="callLogs/callLogsServices.js"></script>
-<script type="text/javascript" src="contacts/contactsControllers.js"></script>
-<script type="text/javascript" src="contacts/contactsServices.js"></script>
-<script type="text/javascript" src="lib/angular-ui-router.min.js"></script>
-<script type="text/javascript" src="lib/angular-resource.min.js"></script>
 </body>
 </html>

@@ -1,5 +1,10 @@
 package ca.ulaval.glo4003.ws.domain.user;
 
+import ca.ulaval.glo4003.ws.api.user.dto.UserDto;
+import ca.ulaval.glo4003.ws.domain.user.exception.InvalidPasswordException;
+import ca.ulaval.glo4003.ws.domain.user.exception.NoSuchUserException;
+import ca.ulaval.glo4003.ws.domain.user.exception.UserAlreadyExistException;
+
 import javax.naming.AuthenticationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -8,22 +13,26 @@ public class UserService {
 
     private Logger logger = Logger.getLogger(UserService.class.getName());
     private UserRepository userRepository;
+    private UserAssembler userAssembler;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserAssembler userAssembler) {
         this.userRepository = userRepository;
+        this.userAssembler = userAssembler;
     }
 
-    public String authenticateUser(String email, String password) throws AuthenticationException{
+    public UserDto authenticateUser(String email, String password) throws AuthenticationException{
         try{
             User user = findUser(email);
             verifyPassword(user, password);
-            return user.generateToken();
+            generateToken(user);
+            updateUser(user);
+            return userAssembler.create(user);
         } catch(RuntimeException e){
           throw new AuthenticationException("Authentication failed");
         }
     }
 
-    public void createUser(String email, String password) throws UserAlreadyExistException{
+    public void createUser(String email, String password) throws UserAlreadyExistException {
         User user = new User(email, password);
         try {
             userRepository.create(user);
@@ -34,7 +43,7 @@ public class UserService {
 
     }
 
-    private User findUser(String email) throws NoSuchUserException{
+    private User findUser(String email) throws NoSuchUserException {
         User user = userRepository.findUserByEmail(email);
         if (user == null){
             throw new NoSuchUserException("User " + email + " does not exists");
@@ -42,7 +51,15 @@ public class UserService {
         return user;
     }
 
-    private void verifyPassword(User user, String password) throws InvalidPasswordException{
+    private void generateToken(User user){
+        user.generateToken();
+    }
+
+    private void updateUser(User user){
+        userRepository.save(user);
+    }
+
+    private void verifyPassword(User user, String password) throws InvalidPasswordException {
         if (!user.isPasswordValid(password)){
             throw new InvalidPasswordException("Password is invalid");
         }

@@ -12,7 +12,7 @@ public class UserDevDataFactory {
 
     public List<User> createMockData() {
         List<User> users = new ArrayList<>();
-        User user = new User("Bob", "1234");
+        User user = new User("bob@test.com", "1234");
         users.add(user);
         return users;
     }

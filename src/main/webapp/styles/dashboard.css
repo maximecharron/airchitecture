@@ -1,0 +1,28 @@
+.dashboard-container{
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+}
+.dashboard-container #featured{
+    width: 100%;
+}
+.btn.dashboard-detail{
+    position:absolute;
+    bottom:2%;
+    right:2%;
+}
+.dashboard-container #featured h2, .dashboard-header h2, .movie-title{
+    color: lightgray;
+}
+.overlay .glyphicon{
+    color: lightgray;
+}
+.ajax-loading img {
+    margin-top : 5%;
+    width : 100%;
+    height : 30%;
+}
+.dashboard-header{
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+}

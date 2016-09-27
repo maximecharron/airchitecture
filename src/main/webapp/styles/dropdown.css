@@ -1,0 +1,15 @@
+.dropdown-menu{
+    border: solid 1px darkgray;
+    background-color: rgba(55, 49, 54, 0.83);
+    min-width: 200px;
+    padding-left: 1.5%;
+    color: lightgray;
+    overflow: hidden;
+    left: auto;
+}
+.dropdown-menu > li > a{
+    color: lightgray;
+}
+.dropdown-menu >li > a:hover{
+    background-color: rgba(111, 99, 109, 0.65);
+}

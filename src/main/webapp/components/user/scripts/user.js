@@ -1,0 +1,1 @@
+var userApp = angular.module('airchitecture.user', ['ngRoute', 'ngCookies']);
