@@ -1,9 +1,6 @@
 package ca.ulaval.glo4003.ws.domain.user;
 
 import ca.ulaval.glo4003.ws.api.user.dto.UserDto;
-import ca.ulaval.glo4003.ws.domain.user.exception.InvalidPasswordException;
-import ca.ulaval.glo4003.ws.domain.user.exception.NoSuchUserException;
-import ca.ulaval.glo4003.ws.domain.user.exception.UserAlreadyExistException;
 
 import javax.naming.AuthenticationException;
 import java.util.logging.Level;

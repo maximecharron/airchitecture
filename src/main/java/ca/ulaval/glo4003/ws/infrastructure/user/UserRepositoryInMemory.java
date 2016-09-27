@@ -1,7 +1,7 @@
 package ca.ulaval.glo4003.ws.infrastructure.user;
 
 import ca.ulaval.glo4003.ws.domain.user.User;
-import ca.ulaval.glo4003.ws.domain.user.exception.UserAlreadyExistException;
+import ca.ulaval.glo4003.ws.domain.user.UserAlreadyExistException;
 import ca.ulaval.glo4003.ws.domain.user.UserRepository;
 
 import java.util.HashMap;

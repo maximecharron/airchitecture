@@ -2,7 +2,7 @@ package ca.ulaval.glo4003.ws.api.user;
 
 import ca.ulaval.glo4003.ws.api.user.dto.UserDto;
 import ca.ulaval.glo4003.ws.domain.user.UserService;
-import ca.ulaval.glo4003.ws.domain.user.exception.UserAlreadyExistException;
+import ca.ulaval.glo4003.ws.domain.user.UserAlreadyExistException;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Rule;

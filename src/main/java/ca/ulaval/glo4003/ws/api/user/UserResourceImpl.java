@@ -1,13 +1,12 @@
 package ca.ulaval.glo4003.ws.api.user;
 
 import ca.ulaval.glo4003.ws.api.user.dto.UserDto;
-import ca.ulaval.glo4003.ws.domain.user.exception.UserAlreadyExistException;
+import ca.ulaval.glo4003.ws.domain.user.UserAlreadyExistException;
 import ca.ulaval.glo4003.ws.domain.user.UserService;
 
 import javax.naming.AuthenticationException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class UserResourceImpl implements UserResource {

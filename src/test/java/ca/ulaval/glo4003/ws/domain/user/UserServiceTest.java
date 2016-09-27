@@ -1,7 +1,6 @@
 package ca.ulaval.glo4003.ws.domain.user;
 
 import ca.ulaval.glo4003.ws.api.user.dto.UserDto;
-import ca.ulaval.glo4003.ws.domain.user.exception.UserAlreadyExistException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,7 +1,5 @@
 package ca.ulaval.glo4003.ws.domain.user;
 
-import ca.ulaval.glo4003.ws.domain.user.exception.UserAlreadyExistException;
-
 public interface UserRepository {
 
     User findUserByEmail(String username);

@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 public class TokenHandler {
 
-    private final static String secret = "My_Super_Secret";
+    private final static String SECRET = "My_Super_Secret";
     private final static long A_DAY = 86400L;
 
     public static String createToken(String issuer){
@@ -14,7 +14,7 @@ public class TokenHandler {
         final long issuedTime = System.currentTimeMillis() / 1000l;
         final long expiration = issuedTime + A_DAY;
 
-        final JWTSigner signer = new JWTSigner(secret);
+        final JWTSigner signer = new JWTSigner(SECRET);
         final HashMap<String, Object> claims = new HashMap<>();
         claims.put("iss", issuer);
         claims.put("exp", expiration);
