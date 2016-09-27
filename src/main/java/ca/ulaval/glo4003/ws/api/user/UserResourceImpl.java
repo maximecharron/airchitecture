@@ -29,13 +29,13 @@ public class UserResourceImpl implements UserResource {
         }
     }
 
-    public Response signup(String email, String password) {
+    public void signup(String email, String password) {
         try {
             userService.createUser(email, password);
-            return Response.ok().build();
         } catch (UserAlreadyExistException e){
-            logger.log(Level.INFO, "Unable to create user with email " + email + " because it already exists");
-            return Response.status(409).build();
+            throw new WebApplicationException(Response.status(Response.Status.CONFLICT)
+                                                      .entity("Signup failed")
+                                                      .build());
         }
     }
 }

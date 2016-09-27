@@ -18,6 +18,5 @@ public interface UserResource {
     @POST
     @Path("signup/")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response signup(@FormParam("email") String email, @FormParam("password") String password);
+    void signup(@FormParam("email") String email, @FormParam("password") String password);
 }

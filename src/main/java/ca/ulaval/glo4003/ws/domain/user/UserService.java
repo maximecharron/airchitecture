@@ -46,6 +46,7 @@ public class UserService {
     private User findUser(String email) throws NoSuchUserException {
         User user = userRepository.findUserByEmail(email);
         if (user == null){
+            logger.log(Level.INFO, "Unable to login with email " + email + " because user does not exist");
             throw new NoSuchUserException("User " + email + " does not exists");
         }
         return user;
@@ -61,6 +62,7 @@ public class UserService {
 
     private void verifyPassword(User user, String password) throws InvalidPasswordException {
         if (!user.isPasswordValid(password)){
+            logger.log(Level.INFO, "Unable to login with email " + user.getEmail() + " because password is invalid");
             throw new InvalidPasswordException("Password is invalid");
         }
     }
