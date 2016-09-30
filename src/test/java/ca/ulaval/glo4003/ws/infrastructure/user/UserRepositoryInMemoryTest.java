@@ -9,6 +9,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Optional;
+
 import static org.junit.Assert.*;
 
 import static org.mockito.BDDMockito.given;
@@ -22,6 +24,9 @@ public class UserRepositoryInMemoryTest {
 
     @Mock
     private User matchingUser;
+
+    @Mock
+    private User aUser;
 
     @Mock
     private User notMatchingUser;
@@ -39,35 +44,37 @@ public class UserRepositoryInMemoryTest {
     public void givenPersistedUsers_whenFindingExistingUser_thenMatchingUserIsReturned() {
         givenPersistedUsers();
 
-        User user = userRepository.findUserByEmail(EMAIL);
+        Optional<User> user = userRepository.findUserByEmail(EMAIL);
 
-        assertEquals(EMAIL, user.getEmail());
+        assertEquals(EMAIL, user.get().getEmail());
     }
 
     @Test
     public void givenPersistedUsers_whenFindingNonExistingUser_thenUserIsNull() {
         givenPersistedUsers();
 
-        User user = userRepository.findUserByEmail(NON_EXISTING_EMAIL);
+        Optional<User> user = userRepository.findUserByEmail(NON_EXISTING_EMAIL);
 
-        assertNull(user);
+        assertFalse(user.isPresent());
     }
 
     @Test
-    public void givenPersistedUsers_whenCreateNonExistingUser_thenUserIsCreated() {
+    public void givenPersistedUsers_whenCreateNonExistingUser_thenUserIsCreated() throws UserAlreadyExistException{
         givenPersistedUsers();
+        given(aUser.getEmail()).willReturn(NON_EXISTING_EMAIL);
 
-        userRepository.create(new User(NON_EXISTING_EMAIL, ""));
+        userRepository.persist(aUser);
 
-        User user = userRepository.findUserByEmail(NON_EXISTING_EMAIL);
-        assertNotNull(user);
+        Optional<User> user = userRepository.findUserByEmail(NON_EXISTING_EMAIL);
+        assertTrue(user.isPresent());
     }
 
     @Test(expected = UserAlreadyExistException.class)
-    public void givenPersistedUsers_whenCreateUserWithExistingEmail_thenThrows() {
+    public void givenPersistedUsers_whenCreateUserWithExistingEmail_thenThrows() throws UserAlreadyExistException{
         givenPersistedUsers();
+        given(aUser.getEmail()).willReturn(EMAIL);
 
-        userRepository.create(new User(EMAIL, ""));
+        userRepository.persist(aUser);
     }
 
     private void givenPersistedUsers() {

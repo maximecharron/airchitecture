@@ -6,6 +6,7 @@ import ca.ulaval.glo4003.ws.domain.user.UserRepository;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class UserRepositoryInMemory implements UserRepository {
 
@@ -18,12 +19,12 @@ public class UserRepositoryInMemory implements UserRepository {
     }
 
     @Override
-    public User findUserByEmail(String username) {
-        return users.get(username);
+    public Optional<User> findUserByEmail(String username) {
+        return Optional.ofNullable(users.get(username));
     }
 
     @Override
-    public void create(User user) throws UserAlreadyExistException {
+    public void persist(User user) throws UserAlreadyExistException {
         if (users.containsKey(user.getEmail())){
             throw new UserAlreadyExistException("User with email " + user.getEmail() + " already exists.");
         } else {

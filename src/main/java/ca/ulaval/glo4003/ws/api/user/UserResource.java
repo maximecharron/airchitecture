@@ -6,17 +6,17 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/auth/")
+@Path("/auth")
 public interface UserResource {
 
     @POST
-    @Path("login/")
+    @Path("/login")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
     UserDto login(@FormParam("email") String email, @FormParam("password") String password);
 
     @POST
-    @Path("signup/")
+    @Path("/signup")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     void signup(@FormParam("email") String email, @FormParam("password") String password);
 }

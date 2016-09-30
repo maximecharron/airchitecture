@@ -1,15 +1,16 @@
 package ca.ulaval.glo4003.ws.service;
 
+import ca.ulaval.glo4003.ws.domain.user.TokenGenerator;
 import com.auth0.jwt.JWTSigner;
 
 import java.util.HashMap;
 
-public class TokenHandler {
+public class TokenGeneratorImpl implements TokenGenerator {
 
     private final static String SECRET = "My_Super_Secret";
     private final static long A_DAY = 86400L;
 
-    public static String createToken(String issuer){
+    public String createToken(String issuer){
 
         final long issuedTime = System.currentTimeMillis() / 1000l;
         final long expiration = issuedTime + A_DAY;

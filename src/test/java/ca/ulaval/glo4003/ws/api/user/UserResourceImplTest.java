@@ -59,7 +59,7 @@ public class UserResourceImplTest {
     }
 
     @Test
-    public void givenABadPassword_whenLogin_then403IsThrown() throws AuthenticationException{
+    public void givenABadPassword_whenLogin_then403IsThrown() throws AuthenticationException {
         given(userService.authenticateUser(EMAIL, BAD_PASSWORD)).willThrow(AuthenticationException.class);
         try {
             userResource.login(EMAIL, BAD_PASSWORD);
@@ -70,7 +70,7 @@ public class UserResourceImplTest {
     }
 
     @Test
-    public void givenAUserResource_whenSignup_thenItsDelegatedToTheService() throws AuthenticationException {
+    public void givenAUserResource_whenSignup_thenItsDelegatedToTheService() throws AuthenticationException, UserAlreadyExistException {
 
         userResource.signup(EMAIL, PASSWORD);
 
@@ -78,7 +78,7 @@ public class UserResourceImplTest {
     }
 
     @Test
-    public void givenAlreadyExsitingEmail_whenSignup_then409IsThrown() throws AuthenticationException{
+    public void givenAlreadyExsitingEmail_whenSignup_then409IsThrown() throws AuthenticationException, UserAlreadyExistException{
         doThrow(UserAlreadyExistException.class).when(userService).createUser(anyString(), anyString());
         try {
             userResource.signup(EMAIL, PASSWORD);

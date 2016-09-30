@@ -9,6 +9,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.naming.AuthenticationException;
 
+import java.util.Optional;
+
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
@@ -24,66 +26,71 @@ public class UserServiceTest {
     private final String ANOTHER_EMAIL = "test_patate@test.com";
     private final String PASSWORD = "ABC";
     @Mock
-    private UserRepository flightRepository;
+    private UserRepository userRepository;
 
     @Mock
-    private UserAssembler flightAssembler;
+    private UserFactory userFactory;
 
     @Mock
-    private User flight;
+    private UserAssembler userAssembler;
 
     @Mock
-    private UserDto flightDto;
+    private User user;
 
-    private UserService flightService;
+    @Mock
+    private UserDto userDto;
+
+    private UserService userService;
 
     @Before
     public void setup() {
-        flightService = new UserService(flightRepository, flightAssembler);
+        userService = new UserService(userRepository, userAssembler, userFactory);
     }
 
     @Test
     public void givenPersistedUser_whenAuthenticatingUser_thenReturnDto() throws AuthenticationException {
-        given(flight.isPasswordValid(anyString())).willReturn(true);
-        given(flightRepository.findUserByEmail(EMAIL)).willReturn(flight);
-        given(flightAssembler.create(flight)).willReturn(flightDto);
+        given(user.isPasswordValid(anyString())).willReturn(true);
+        given(userRepository.findUserByEmail(EMAIL)).willReturn(Optional.of(user));
+        given(userAssembler.create(user)).willReturn(userDto);
 
-        UserDto user = flightService.authenticateUser(EMAIL, "");
+        UserDto user = userService.authenticateUser(EMAIL, "");
 
         assertNotNull(user);
-        verify(flight).generateToken();
+        verify(this.user).generateToken();
     }
 
 
     @Test(expected = AuthenticationException.class)
     public void givenPersistedUser_whenAuthenticatingUserWithInvalidPassword_thenThrow() throws AuthenticationException {
-        given(flight.isPasswordValid(anyString())).willReturn(false);
-        given(flightRepository.findUserByEmail(EMAIL)).willReturn(flight);
+        given(user.isPasswordValid(anyString())).willReturn(false);
+        given(userRepository.findUserByEmail(EMAIL)).willReturn(Optional.of(user));
 
-        flightService.authenticateUser(EMAIL, "");
+        userService.authenticateUser(EMAIL, "");
 
     }
 
     @Test(expected = AuthenticationException.class)
     public void givenPersistedUser_whenAuthenticatingUserWithInvalidInvalidEmail_thenThrow() throws AuthenticationException {
-        given(flight.isPasswordValid(anyString())).willReturn(false);
-        given(flightRepository.findUserByEmail("")).willReturn(null);
+        given(user.isPasswordValid(anyString())).willReturn(false);
+        given(userRepository.findUserByEmail("")).willReturn(Optional.empty());
 
-        flightService.authenticateUser("", "");
+        userService.authenticateUser("", "");
     }
 
     @Test
     public void givenPersistedUser_whenCreatingUserWithAnotherEmail_thenUserIsCreated() throws UserAlreadyExistException {
+        given(userFactory.createUser(ANOTHER_EMAIL, PASSWORD)).willReturn(user);
 
-        flightService.createUser(ANOTHER_EMAIL, PASSWORD);
+        userService.createUser(ANOTHER_EMAIL, PASSWORD);
 
-        verify(flightRepository).create(any(User.class));
+        verify(userRepository).persist(user);
     }
 
     @Test(expected = UserAlreadyExistException.class)
     public void givenPersistedUser_whenCreatingUserWithSameEmail_thenThrow() throws UserAlreadyExistException {
-        doThrow(UserAlreadyExistException.class).when(flightRepository).create(any(User.class));
+        given(userFactory.createUser(anyString(), anyString())).willReturn(user);
+        doThrow(UserAlreadyExistException.class).when(userRepository).persist(any(User.class));
 
-        flightService.createUser(ANOTHER_EMAIL, PASSWORD);
+        userService.createUser(ANOTHER_EMAIL, PASSWORD);
     }
 }

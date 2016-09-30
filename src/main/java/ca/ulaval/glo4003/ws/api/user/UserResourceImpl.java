@@ -22,6 +22,7 @@ public class UserResourceImpl implements UserResource {
         try {
             return userService.authenticateUser(email, password);
         } catch (AuthenticationException e) {
+            logger.info("Login failed for user with email "+ email);
             throw new WebApplicationException(Response.status(Response.Status.FORBIDDEN)
                                                       .entity("Authentication failed")
                                                       .build());
@@ -32,6 +33,7 @@ public class UserResourceImpl implements UserResource {
         try {
             userService.createUser(email, password);
         } catch (UserAlreadyExistException e){
+            logger.info("Signup failed for user with email "+ email + " because it already exists");
             throw new WebApplicationException(Response.status(Response.Status.CONFLICT)
                                                       .entity("Signup failed")
                                                       .build());

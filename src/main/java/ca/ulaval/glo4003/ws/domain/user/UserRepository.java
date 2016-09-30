@@ -1,10 +1,12 @@
 package ca.ulaval.glo4003.ws.domain.user;
 
+import java.util.Optional;
+
 public interface UserRepository {
 
-    User findUserByEmail(String username);
+    Optional<User> findUserByEmail(String username);
 
     void save(User user);
 
-    void create(User user) throws UserAlreadyExistException;
+    void persist(User user) throws UserAlreadyExistException;
 }

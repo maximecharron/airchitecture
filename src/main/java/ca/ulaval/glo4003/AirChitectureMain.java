@@ -8,15 +8,14 @@ import ca.ulaval.glo4003.ws.domain.flight.Flight;
 import ca.ulaval.glo4003.ws.domain.flight.FlightAssembler;
 import ca.ulaval.glo4003.ws.domain.flight.FlightRepository;
 import ca.ulaval.glo4003.ws.domain.flight.FlightService;
-import ca.ulaval.glo4003.ws.domain.user.User;
-import ca.ulaval.glo4003.ws.domain.user.UserAssembler;
-import ca.ulaval.glo4003.ws.domain.user.UserRepository;
-import ca.ulaval.glo4003.ws.domain.user.UserService;
+import ca.ulaval.glo4003.ws.domain.user.*;
 import ca.ulaval.glo4003.ws.http.CORSResponseFilter;
 import ca.ulaval.glo4003.ws.infrastructure.flight.FlightDevDataFactory;
 import ca.ulaval.glo4003.ws.infrastructure.flight.FlightRepositoryInMemory;
 import ca.ulaval.glo4003.ws.infrastructure.user.UserDevDataFactory;
 import ca.ulaval.glo4003.ws.infrastructure.user.UserRepositoryInMemory;
+import ca.ulaval.glo4003.ws.service.HashingStrategyBCrypt;
+import ca.ulaval.glo4003.ws.service.TokenGeneratorImpl;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
@@ -36,13 +35,12 @@ public class AirChitectureMain {
     private static boolean isDev = true; // Would be a JVM argument or in a .property file
 
     public static void main(String[] args) throws Exception {
-
         // Setup resources (API)
         FlightResource flightResource = createFlightResource();
         UserResource userResource = createUserResource();
         // Setup API context (JERSEY + JETTY)
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.setContextPath("/api/");
+        context.setContextPath("/api");
         ResourceConfig resourceConfig = ResourceConfig.forApplication(new Application() {
             @Override
             public Set<Object> getSingletons() {
@@ -99,15 +97,19 @@ public class AirChitectureMain {
 
     private static UserResource createUserResource() {
         UserRepository userRepository = new UserRepositoryInMemory();
+        TokenGenerator tokenGenerator = new TokenGeneratorImpl();
+        HashingStrategy hashingStrategy = new HashingStrategyBCrypt();
+        UserFactory userFactory = new UserFactory(tokenGenerator, hashingStrategy);
 
         if (isDev) {
-            UserDevDataFactory userDevDataFactory = new UserDevDataFactory();
+            UserDevDataFactory userDevDataFactory = new UserDevDataFactory(userFactory);
             List<User> users = userDevDataFactory.createMockData();
             users.forEach(userRepository::save);
         }
-        UserAssembler userAssembler = new UserAssembler();
-        UserService flightService = new UserService(userRepository, userAssembler);
 
-        return new UserResourceImpl(flightService);
+        UserAssembler userAssembler = new UserAssembler();
+        UserService userService = new UserService(userRepository, userAssembler, userFactory);
+
+        return new UserResourceImpl(userService);
     }
 }
