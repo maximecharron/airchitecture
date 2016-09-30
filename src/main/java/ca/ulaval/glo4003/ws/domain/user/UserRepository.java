@@ -6,7 +6,7 @@ public interface UserRepository {
 
     Optional<User> findUserByEmail(String username);
 
-    void save(User user);
+    void update(User user);
 
     void persist(User user) throws UserAlreadyExistException;
 }

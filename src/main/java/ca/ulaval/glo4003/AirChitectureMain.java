@@ -104,7 +104,7 @@ public class AirChitectureMain {
         if (isDev) {
             UserDevDataFactory userDevDataFactory = new UserDevDataFactory(userFactory);
             List<User> users = userDevDataFactory.createMockData();
-            users.forEach(userRepository::save);
+            users.forEach(userRepository::update);
         }
 
         UserAssembler userAssembler = new UserAssembler();

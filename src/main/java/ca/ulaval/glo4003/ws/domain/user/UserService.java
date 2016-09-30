@@ -60,7 +60,7 @@ public class UserService {
     }
 
     private void updateUser(User user) {
-        userRepository.save(user);
+        userRepository.update(user);
     }
 
     private void verifyPassword(User user, String password) throws InvalidPasswordException {

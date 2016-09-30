@@ -14,7 +14,7 @@ public class UserRepositoryInMemory implements UserRepository {
     private Map<String, User> users = new HashMap<>();
 
     @Override
-    public void save(User user) {
+    public void update(User user) {
         users.put(user.getEmail(), user);
     }
 

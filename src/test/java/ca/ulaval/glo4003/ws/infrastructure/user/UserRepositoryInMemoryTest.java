@@ -79,7 +79,7 @@ public class UserRepositoryInMemoryTest {
 
     private void givenPersistedUsers() {
 
-        userRepository.save(matchingUser);
-        userRepository.save(notMatchingUser);
+        userRepository.update(matchingUser);
+        userRepository.update(notMatchingUser);
     }
 }

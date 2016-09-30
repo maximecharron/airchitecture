@@ -16,7 +16,6 @@ import static org.mockito.Mockito.verify;
 public class UserTest {
     private static final String EMAIL = "test@test.com";
     private static final String PASSWORD = "DEF";
-    private static final String WRONG_PASSWORD = "ABC";
     private static final String A_TOKEN = "A_TOKEN";
     private static final String A_HASHED_PASSWORD = "asdn89023e4nads982";
     private User user;
@@ -38,8 +37,7 @@ public class UserTest {
 
         User newUser = new User(EMAIL, PASSWORD, tokenGenerator, hashingStrategy);
 
-        assertNotNull(newUser.getPassword());
-        assertNotEquals(PASSWORD, newUser.getPassword());
+        assertEquals(A_HASHED_PASSWORD, newUser.getPassword());
     }
 
     @Test
@@ -49,19 +47,8 @@ public class UserTest {
         boolean validPassword = user.isPasswordValid(PASSWORD);
 
         assertTrue(validPassword);
-        verify(hashingStrategy, times(1)).validatePassword(anyString(), anyString());
+        verify(hashingStrategy).validatePassword(anyString(), anyString());
     }
-
-    @Test
-    public void givenAUser_whenValidatePasswordWithWrongPassword_thenPassowrdIsInvalid(){
-        given(hashingStrategy.validatePassword(anyString(), anyString())).willReturn(false);
-
-        boolean validPassword = user.isPasswordValid(WRONG_PASSWORD);
-
-        assertFalse(validPassword);
-        verify(hashingStrategy, times(1)).validatePassword(anyString(), anyString());
-    }
-
 
     @Test
     public void givenAUser_whenGeneratingToken_thenTokenIsGenerated() {
