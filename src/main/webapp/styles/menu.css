@@ -1,0 +1,101 @@
+.search-bar{
+  display: inline-block;
+}
+
+#avatar{
+  width: 25px;
+}
+
+.dropdown{
+  list-style-type: none;
+}
+.umovie-font {
+    color: #FFFFFF;
+}
+
+
+.search-focus {
+    width: 150px!important;
+    padding-left: 32px!important;
+    color: #000000!important;
+    background-color: #ffffff!important;
+
+    outline: none!important;
+    cursor: auto!important;
+}
+
+input[type=search]{
+    background: url(../../img/search-icon.png) no-repeat 2px center;
+    background-color: #cccccc;
+    border: solid 1px #cccccc;
+    padding-left: 20px;
+    width: 25px;
+    height : 25px;
+    -webkit-border-radius: 10em;
+    -moz-border-radius: 10em;
+    border-radius: 10em;
+
+    -webkit-transition: all .5s;
+    -moz-transition: all .5s;
+    transition: all .5s;
+
+    color: transparent;
+    cursor: pointer;
+}
+
+
+input[type=search]:hover {
+    background-color: #ffffff;
+}
+
+#searchOptionSelect {
+    align-self: center;
+    text-align: center;
+    background: transparent;
+    width: 75px;
+    padding: 5px;
+    line-height: 1;
+    border: 0;
+    border-radius: 0;
+    height: 34px;
+    -webkit-appearance: none;
+}
+
+#searchOptionSelect:focus {
+    outline: none;
+    background: rgba(206, 208, 203, 0.3);
+}
+
+#searchOptionSelect:hover {
+    outline: none;
+    background: rgba(206, 208, 203, 0.3);
+}
+
+.search-filters {
+    margin-top: 25px;
+}
+
+.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+
+.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+
+.autocomplete-selected { background: #F0F0F0; }
+
+.container-fluid{
+    background-color: black;
+}
+#navbar-collapse-1{
+    margin-top : 3px;
+    background: linear-gradient(to bottom, #222 0%,#222 50%,#000000 50%,black 50%,black 100%);
+    box-shadow: 0 0 5px #888;
+
+}
+.navbar-inverse .navbar-nav>li>a:focus, .navbar-inverse .navbar-nav>li>a:hover{
+    background: rgba(206, 208, 203, 0.3);
+    margin-bottom:0px;
+}
+@media screen and (max-width: 800px) {
+    #navbar-collapse-1{
+        background: linear-gradient(to bottom, #222 0%,#222 50%,#222 50%, #222 50%, #222 100%);
+    }
+}

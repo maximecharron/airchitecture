@@ -1,0 +1,53 @@
+#user-email{
+    color: lightgray;
+    padding: 15px;
+    overflow: hidden;
+}
+#user-no-follower{
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    margin-bottom: 5%;
+}
+#user-no-follower h2{
+    color: lightgray;
+}
+#user-no-follower h3{
+    color: lightgray;
+    margin-left: 15%;
+    margin-right: 15%;
+}
+#user-with-follower{
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    margin-bottom: 5%;
+}
+.following-user{
+    list-style: none;
+}
+.following-user-profile{
+    color: lightgray;
+    padding: 10px;
+}
+.user-profile{
+    border: solid lightslategray 1px;
+    border-radius: 5px;
+}
+.btn-view-watchlist{
+    margin-right: 45%;
+    margin-left: 45%;
+}
+.user-header{
+    margin-bottom: 5%;
+}
+.dashboard-header.avatar{
+    border: 1px solid lightgray;
+    float: left;
+    border-radius: 5px;
+}
+.user-avatar{
+    width: 250px;
+    height: 250px;
+}
+.following-header, .following-email{
+    color: lightgray;
+}

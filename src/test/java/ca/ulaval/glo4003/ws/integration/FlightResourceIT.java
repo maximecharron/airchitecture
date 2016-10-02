@@ -5,7 +5,7 @@ import org.junit.Test;
 import static io.restassured.RestAssured.get;
 import static org.hamcrest.CoreMatchers.hasItem;
 
-public class FlightResourceIT extends AbstractIntegrationTest {
+public class FlightResourceIT{
 
     @Test
     public void givenAFlightFromAToB_whenSearchingFlightsFromAToB_thenThisFlightIsReturned() {
