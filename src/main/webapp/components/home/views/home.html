@@ -22,8 +22,14 @@
             <button type="submit" class="btn btn-primary">Find</button>
         </div>
     </form>
-    <div ng.show="haveResults">
+
+    <div ng-show="hasError" class="alert alert-danger" role="alert">
+        <strong>Oh snap!</strong> {{error}}
+    </div>
+
+    <div ng-show="haveResults">
         <h3>Flights</h3>
+
         <table class="table-hover">
             <tr>
                 <th>Airline company</th>

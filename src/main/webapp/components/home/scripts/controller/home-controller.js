@@ -9,9 +9,11 @@ homeApp.controller("home-controller", function ($scope, homeResource) {
     };
     $scope.haveResults = false;
     $scope.flightsResults = [];
+    
+    $scope.hasError = false;
+    $scope.error = undefined;
 
     $scope.find = function () {
-        console.log($scope.formData);
         $scope.isLoading = true;
 
         var searchCriteria = {};
@@ -24,24 +26,14 @@ homeApp.controller("home-controller", function ($scope, homeResource) {
         if($scope.formData.date) {
             searchCriteria.datetime = new Date($scope.formData.date).toISOString().slice(0, 16);
         }
-
-        console.dir(searchCriteria);
+        
         homeResource.query(searchCriteria, function onSuccess(data) {
-            console.log(data);
-
-            $scope.flightsResults = [];
-            data.forEach(function(d) {
-                $scope.flightsResults.push(d);
-            });
+            $scope.flightsResults = data;
             $scope.isLoading = false;
             $scope.haveResults = true;
         }, function onError(data) {
-            console.log("erreur");
-            console.dir(data);
+            $scope.isLoading = false;
+            $scope.error = data;
         });
-    };
-
-    $scope.click = function(flight) {
-        console.log(flight);
     };
 });
