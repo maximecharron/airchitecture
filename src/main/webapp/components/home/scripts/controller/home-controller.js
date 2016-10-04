@@ -27,12 +27,13 @@ homeApp.controller("home-controller", function ($scope, homeResource) {
             searchCriteria.datetime = new Date($scope.formData.date).toISOString().slice(0, 16);
         }
         
-        homeResource.query(searchCriteria, function onSuccess(data) {
+        homeResource.get(searchCriteria, function onSuccess(data) {
             $scope.flightsResults = data;
             $scope.isLoading = false;
             $scope.haveResults = true;
         }, function onError(data) {
             $scope.isLoading = false;
+            $scope.hasError = true;
             $scope.error = data;
         });
     };
