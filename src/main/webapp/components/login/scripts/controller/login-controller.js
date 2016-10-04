@@ -12,7 +12,7 @@ loginApp.controller("login-controller", function ($scope, loginService, $locatio
             "password": $scope.password
         }
         loginResource.post(credentials, function onSuccess(data) {
-
+            
             loginService.SetUser(data);
             $location.path("/home");
             $scope.isLoading = false;

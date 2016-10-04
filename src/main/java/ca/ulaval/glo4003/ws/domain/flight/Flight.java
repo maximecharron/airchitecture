@@ -19,8 +19,8 @@ public class Flight {
         return this.arrivalAirport != null && this.arrivalAirport.equals(arrivalAirport);
     }
 
-    public boolean isLeavingOn(LocalDateTime date) {
-        return departureDate != null && departureDate.equals(date);
+    public boolean isLeavingAfter(LocalDateTime date) {
+        return departureDate != null && (departureDate.isAfter(date) || departureDate.isEqual(date));
     }
 
     public boolean isFuture() {

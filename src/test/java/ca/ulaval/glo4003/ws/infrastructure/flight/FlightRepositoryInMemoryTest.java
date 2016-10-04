@@ -67,12 +67,12 @@ public class FlightRepositoryInMemoryTest {
     private void givenPersistedFlights() {
         given(matchingFlight.isDepartingFrom(DEPARTURE_AIRPORT)).willReturn(true);
         given(matchingFlight.isGoingTo(ARRIVAL_AIRPORT)).willReturn(true);
-        given(matchingFlight.isLeavingOn(DATE)).willReturn(true);
+        given(matchingFlight.isLeavingAfter(DATE)).willReturn(true);
         given(matchingFlight.isFuture()).willReturn(true);
 
         given(notMatchingFlight.isDepartingFrom(DEPARTURE_AIRPORT)).willReturn(false);
         given(notMatchingFlight.isGoingTo(ARRIVAL_AIRPORT)).willReturn(false);
-        given(notMatchingFlight.isLeavingOn(DATE)).willReturn(false);
+        given(notMatchingFlight.isLeavingAfter(DATE)).willReturn(false);
         given(notMatchingFlight.isFuture()).willReturn(false);
 
         flightRepository.save(matchingFlight);

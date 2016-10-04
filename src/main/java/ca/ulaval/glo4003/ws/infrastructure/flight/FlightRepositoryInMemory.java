@@ -3,7 +3,6 @@ package ca.ulaval.glo4003.ws.infrastructure.flight;
 import ca.ulaval.glo4003.ws.domain.flight.Flight;
 import ca.ulaval.glo4003.ws.domain.flight.FlightRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,8 +21,8 @@ public class FlightRepositoryInMemory implements FlightRepository {
     public Stream<Flight> findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime date) {
         return flights.values()
                       .stream()
-                      .filter(f -> date != null ? f.isLeavingOn(date) : f.isFuture())
-                      .filter(f -> f.isDepartingFrom(departureAirport))
-                      .filter(f -> f.isGoingTo(arrivalAirport));
+                      .filter(f -> date != null ? f.isLeavingAfter(date) : f.isFuture())
+                      .filter(f -> departureAirport == null || f.isDepartingFrom(departureAirport))
+                      .filter(f -> arrivalAirport == null || f.isGoingTo(arrivalAirport));
     }
 }
