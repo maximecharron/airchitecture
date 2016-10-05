@@ -5,14 +5,15 @@ homeApp.controller("home-controller", function ($scope, homeResource) {
     $scope.formData = {
         from: "",
         to: "",
-        date: ""
+        date: "",
+        luggageWeight: ""
     };
     $scope.haveResults = false;
     $scope.flightsResults = [];
     
     $scope.hasError = false;
     $scope.error = undefined;
-
+    
     $scope.find = function () {
         $scope.isLoading = true;
 
@@ -25,6 +26,9 @@ homeApp.controller("home-controller", function ($scope, homeResource) {
         }
         if($scope.formData.date) {
             searchCriteria.datetime = new Date($scope.formData.date).toISOString().slice(0, 16);
+        }
+        if($scope.formData.luggageWeight){
+            $scope.formData.luggageWeight = Number((Math.ceil($scope.formData.luggageWeight * 2)/2).toFixed(1));
         }
         
         homeResource.get(searchCriteria, function onSuccess(data) {
