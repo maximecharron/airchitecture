@@ -1,6 +1,6 @@
-package ca.ulaval.glo4003.ws.service;
+package ca.ulaval.glo4003.ws.infrastructure.user;
 
-import ca.ulaval.glo4003.ws.domain.user.HashingStrategy;
+import ca.ulaval.glo4003.ws.infrastructure.user.HashingStrategyBCrypt;
 import org.junit.Before;
 import org.junit.Test;
 

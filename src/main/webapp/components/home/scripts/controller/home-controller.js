@@ -1,4 +1,4 @@
-homeApp.controller("home-controller", function ($scope, homeResource) {
+homeApp.controller("home-controller", function ($scope, homeResource, weightDetectionResource) {
 
     $scope.isLoading = false;
 
@@ -13,7 +13,13 @@ homeApp.controller("home-controller", function ($scope, homeResource) {
     
     $scope.hasError = false;
     $scope.error = undefined;
-    
+
+    $scope.detectWeight = function () {
+        weightDetectionResource.get({}, function onSuccess(data) {
+            $scope.formData.luggageWeight = data.weight;
+        })
+    };
+
     $scope.find = function () {
         $scope.isLoading = true;
 

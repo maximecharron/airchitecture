@@ -9,7 +9,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -21,7 +20,7 @@ public class UserTest {
     private User user;
 
     @Mock
-    private TokenGenerator tokenGenerator;
+    private TokenEncoder tokenEncoder;
 
     @Mock
     private HashingStrategy hashingStrategy;
@@ -29,13 +28,13 @@ public class UserTest {
     @Before
     public void setup() {
         given(hashingStrategy.hashPassword(anyString())).willReturn(A_HASHED_PASSWORD);
-        user = new User(EMAIL, PASSWORD, tokenGenerator, hashingStrategy);
+        user = new User(EMAIL, PASSWORD, tokenEncoder, hashingStrategy);
     }
 
     @Test
     public void whenConstructingNewUser_thenPasswordIsHash() {
 
-        User newUser = new User(EMAIL, PASSWORD, tokenGenerator, hashingStrategy);
+        User newUser = new User(EMAIL, PASSWORD, tokenEncoder, hashingStrategy);
 
         assertEquals(A_HASHED_PASSWORD, newUser.getPassword());
     }
@@ -52,7 +51,7 @@ public class UserTest {
 
     @Test
     public void givenAUser_whenGeneratingToken_thenTokenIsGenerated() {
-        given(tokenGenerator.createToken(anyString())).willReturn(A_TOKEN);
+        given(tokenEncoder.encode(anyString())).willReturn(A_TOKEN);
 
         user.generateToken();
 
