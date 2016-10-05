@@ -1,16 +1,18 @@
 package ca.ulaval.glo4003.ws.domain.user;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 public class User {
 
     private String email;
     private String password;
     private String token;
     private HashingStrategy hashingStrategy;
-    private TokenEncoder tokenEncoder;
+    private TokenGenerator tokenGenerator;
 
-    public User(String email, String password, TokenEncoder tokenEncoder, HashingStrategy hashingStrategy) {
+    public User(String email, String password, TokenGenerator tokenGenerator, HashingStrategy hashingStrategy) {
         this.email = email;
-        this.tokenEncoder = tokenEncoder;
+        this.tokenGenerator = tokenGenerator;
         this.hashingStrategy = hashingStrategy;
         hashPassword(password);
     }
@@ -32,7 +34,7 @@ public class User {
     }
 
     public void generateToken() {
-        this.token = tokenEncoder.encode(email);
+        this.token = tokenGenerator.createToken(email);
     }
 
     private void hashPassword(String password) {

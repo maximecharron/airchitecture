@@ -1,4 +1,4 @@
-package ca.ulaval.glo4003.ws.infrastructure.user;
+package ca.ulaval.glo4003.ws.service;
 
 import ca.ulaval.glo4003.ws.domain.user.HashingStrategy;
 import org.mindrot.jbcrypt.BCrypt;
