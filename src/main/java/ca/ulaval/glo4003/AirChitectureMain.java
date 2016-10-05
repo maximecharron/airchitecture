@@ -4,18 +4,25 @@ import ca.ulaval.glo4003.ws.api.flight.FlightResource;
 import ca.ulaval.glo4003.ws.api.flight.FlightResourceImpl;
 import ca.ulaval.glo4003.ws.api.user.UserResource;
 import ca.ulaval.glo4003.ws.api.user.UserResourceImpl;
+import ca.ulaval.glo4003.ws.api.weightDetection.WeightDetectionResource;
+import ca.ulaval.glo4003.ws.api.weightDetection.WeightDetectionResourceImpl;
 import ca.ulaval.glo4003.ws.domain.flight.Flight;
 import ca.ulaval.glo4003.ws.domain.flight.FlightAssembler;
 import ca.ulaval.glo4003.ws.domain.flight.FlightRepository;
 import ca.ulaval.glo4003.ws.domain.flight.FlightService;
 import ca.ulaval.glo4003.ws.domain.user.*;
+import ca.ulaval.glo4003.ws.domain.weightDetection.WeightDetectionAssembler;
+import ca.ulaval.glo4003.ws.domain.weightDetection.WeightDetectionService;
+import ca.ulaval.glo4003.ws.domain.weightDetection.WeightDetector;
 import ca.ulaval.glo4003.ws.http.CORSResponseFilter;
 import ca.ulaval.glo4003.ws.infrastructure.flight.FlightDevDataFactory;
 import ca.ulaval.glo4003.ws.infrastructure.flight.FlightRepositoryInMemory;
 import ca.ulaval.glo4003.ws.infrastructure.user.UserDevDataFactory;
 import ca.ulaval.glo4003.ws.infrastructure.user.UserRepositoryInMemory;
-import ca.ulaval.glo4003.ws.service.HashingStrategyBCrypt;
-import ca.ulaval.glo4003.ws.service.TokenGeneratorImpl;
+import ca.ulaval.glo4003.ws.infrastructure.user.HashingStrategyBCrypt;
+import ca.ulaval.glo4003.ws.infrastructure.user.JWTTokenEncoder;
+import ca.ulaval.glo4003.ws.infrastructure.weightDetection.DummyWeightDetector;
+import com.auth0.jwt.JWTSigner;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
@@ -38,6 +45,7 @@ public class AirChitectureMain {
         // Setup resources (API)
         FlightResource flightResource = createFlightResource();
         UserResource userResource = createUserResource();
+        WeightDetectionResource weightDetectionResource = createWeightDetectionResource();
         // Setup API context (JERSEY + JETTY)
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/api");
@@ -48,6 +56,7 @@ public class AirChitectureMain {
                 // Add resources to context
                 resources.add(flightResource);
                 resources.add(userResource);
+                resources.add(weightDetectionResource);
                 return resources;
             }
         });
@@ -95,11 +104,19 @@ public class AirChitectureMain {
         return new FlightResourceImpl(flightService);
     }
 
+    private static WeightDetectionResource createWeightDetectionResource() {
+        WeightDetector weightDetector = new DummyWeightDetector();
+        WeightDetectionAssembler weightDetectionAssembler = new WeightDetectionAssembler();
+        WeightDetectionService weightDetectionService = new WeightDetectionService(weightDetector, weightDetectionAssembler);
+
+        return new WeightDetectionResourceImpl(weightDetectionService);
+    }
+
     private static UserResource createUserResource() {
         UserRepository userRepository = new UserRepositoryInMemory();
-        TokenGenerator tokenGenerator = new TokenGeneratorImpl();
+        TokenEncoder tokenEncoder = new JWTTokenEncoder(new JWTSigner(JWTTokenEncoder.SECRET));
         HashingStrategy hashingStrategy = new HashingStrategyBCrypt();
-        UserFactory userFactory = new UserFactory(tokenGenerator, hashingStrategy);
+        UserFactory userFactory = new UserFactory(tokenEncoder, hashingStrategy);
 
         if (isDev) {
             UserDevDataFactory userDevDataFactory = new UserDevDataFactory(userFactory);
