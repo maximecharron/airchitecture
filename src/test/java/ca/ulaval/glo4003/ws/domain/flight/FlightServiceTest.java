@@ -53,8 +53,6 @@ public class FlightServiceTest {
 
         List<FlightDto> flightDtos = flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE);
 
-        verify(flightRepository).findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE);
-        verify(flightAssembler).create(flightStream);
         assertThat(flightDtos, hasItem(flightDto));
     }
 }
