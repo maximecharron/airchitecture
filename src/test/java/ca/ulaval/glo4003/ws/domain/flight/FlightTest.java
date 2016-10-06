@@ -10,9 +10,9 @@ import static org.junit.Assert.assertTrue;
 
 public class FlightTest {
 
-    private static final String YQB = "YQB";
-    private static final String DUB = "DUB";
-    private static final LocalDateTime DEPARTURE_DATE = LocalDateTime.of(2000, 10, 10, 9, 55);
+    public static final String YQB = "YQB";
+    public static final String DUB = "DUB";
+    public static final LocalDateTime DEPARTURE_DATE = LocalDateTime.of(2000, 10, 10, 9, 55);
     private Flight flight;
 
     @Before
@@ -39,30 +39,20 @@ public class FlightTest {
     }
 
     @Test
-    public void givenAFlighDepartingFromA_whenCheckingIfItsLeavingFromA_thenItIs() {
+    public void givenAFlightFromQuebecToDublin_whenCheckingIfItsLeavingFromQuebecToDublin_thenItIs() {
         flight.setDepartureAirport(YQB);
+        flight.setArrivalAirport(DUB);
 
+        assertTrue(flight.isGoingTo(DUB));
         assertTrue(flight.isDepartingFrom(YQB));
     }
 
     @Test
-    public void givenAFlightLeavingToB_whenCheckingIfItsGoingToB_thenItIs() {
-        flight.setArrivalAirport(DUB);
-
-        assertTrue(flight.isGoingTo(DUB));
-    }
-
-    @Test
-    public void givenAFlighDepartingFromA_whenCheckingIfItsLeavingFromB_thenItIsNot() {
+    public void givenAFlightFromQuebecToDublin_whenCheckingIfItsLeavingFromTorontoToLondon_thenItsNot() {
         flight.setDepartureAirport(YQB);
-
-        assertFalse(flight.isDepartingFrom(DUB));
-    }
-
-    @Test
-    public void givenAFlightLeavingToB_whenCheckingIfItsGoingToA_thenItIsNot() {
         flight.setArrivalAirport(DUB);
 
-        assertFalse(flight.isGoingTo(YQB));
+        assertFalse(flight.isGoingTo("YXU"));
+        assertFalse(flight.isDepartingFrom("YYZ"));
     }
 }

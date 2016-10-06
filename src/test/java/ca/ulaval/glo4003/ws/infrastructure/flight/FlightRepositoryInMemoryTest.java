@@ -40,12 +40,12 @@ public class FlightRepositoryInMemoryTest {
         flightRepository = new FlightRepositoryInMemory();
         given(matchingFlight.getFlightNumber()).willReturn(FLIGHT_NUMBER);
         given(notMatchingFlight.getFlightNumber()).willReturn(ANOTHER_FLIGHT_NUMBER);
-
-        givenPersistedFlights();
     }
 
     @Test
     public void givenPersistedFlights_whenFindingAllFlightsWithFilters_thenOnlyMatchingFlightsAreReturned() {
+        givenPersistedFlights();
+
         Stream<Flight> matchingFlightsStream = flightRepository.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE);
         List<Flight> matchingFlights = matchingFlightsStream.collect(Collectors.toList());
 
@@ -55,6 +55,8 @@ public class FlightRepositoryInMemoryTest {
 
     @Test
     public void givenPersistedFlights_whenFindingAllFlightsWithoutADateFilter_thenOnlyFutureFlightsAreReturned() {
+        givenPersistedFlights();
+
         Stream<Flight> matchingFlightsStream = flightRepository.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, null);
         List<Flight> matchingFlights = matchingFlightsStream.collect(Collectors.toList());
 

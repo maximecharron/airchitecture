@@ -4,10 +4,7 @@
 Une petite web app pour acheter des billets d'avion.
 
 ## Comment l'utiliser
-* Se rendre au répertoire `/src/main/webapp` et effectuer la commande `bower install` pour installer les dépendances client
-* Exécuter `mvn exec:java` pour lancer le serveur
-* L'application est alors disponible au `localhost:8081`
-* L'API est disponible au `localhost:8081/api`
+* `mvn exec:java` pour faire tourner le serveur web sur le port `8081`
 * Les tests d'intégrations utilisent le port `8080`
 
 ## API   
@@ -46,15 +43,4 @@ Une petite web app pour acheter des billets d'avion.
     "availableSeats": 42
   }
 ]
-```
-
-### Weight Detector
-   
-**Route** : `api/weightDetection`   
-
-**Exemple** : `http://localhost:8081/api/weightDetection`   
-```
-{
-    "weight": 45.5
-}
 ```
