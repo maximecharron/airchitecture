@@ -9,6 +9,6 @@ public class FlightResourceIT{
 
     @Test
     public void givenAFlightFromAToB_whenSearchingFlightsFromAToB_thenThisFlightIsReturned() {
-        get("/api/search/flights?from=YQB&to=DUB&datetime=2017-04-23T20:15").then().body("flightNumber", hasItem("AF0001"));
+        get("http://localhost:8888/api/search/flights?from=YQB&to=DUB&datetime=2017-04-23T20:15").then().body("flightNumber", hasItem("AF0001"));
     }
 }
