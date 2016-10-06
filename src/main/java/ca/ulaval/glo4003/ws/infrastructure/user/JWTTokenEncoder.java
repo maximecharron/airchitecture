@@ -16,7 +16,7 @@ public class JWTTokenEncoder implements TokenEncoder {
     }
 
     public String encode(String issuer){
-        final long issuedTime = System.currentTimeMillis() / 1000l;
+        final long issuedTime = System.currentTimeMillis() / 1000L;
         final long expiration = issuedTime + A_DAY;
 
         final HashMap<String, Object> claims = new HashMap<>();

@@ -30,7 +30,7 @@ public class WeightDetectionServiceTest {
     }
 
     @Test
-    public void whenDetectingWeight_thenReturnDto() {
+    public void givenAWeightToDetect_whenDetectingWeight_thenReturnDto() {
         given(weightDetector.detect()).willReturn(A_WEIGHT);
         given(weightDetectionAssembler.create(A_WEIGHT)).willReturn(A_WEIGHT_DTO);
 

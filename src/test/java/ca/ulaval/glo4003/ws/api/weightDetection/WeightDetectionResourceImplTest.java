@@ -44,7 +44,7 @@ public class WeightDetectionResourceImplTest {
     }
 
     @Test
-    public void whenDetectingWeight_thenItsDelegatedToTheService() {
+    public void givenAWeightToDetect_whenDetectingWeight_thenItsDelegatedToTheService() {
         given(weightDetectionService.detectWeight()).willReturn(A_WEIGHT_DTO);
 
         WeightDetectionDto result = weightDetectionResourceImpl.detectWeight();

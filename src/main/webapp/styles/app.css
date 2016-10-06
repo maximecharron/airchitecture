@@ -1,7 +1,11 @@
 /* app css stylesheet */
 
 .main {
-    background-color: black;
+    background-color: #353942;
+}
+
+body{
+    color: #e7eaeb;
 }
 
 .title {
@@ -32,13 +36,14 @@
 }
 
 button.btn, .btn{
-    background-color: #598cb7;
+    background-color: #337ab7;
     border-radius: 5px;
-    color: lightgray;
 }
 .btn:hover, .btn:active, .btn:focus{
     background-color: #337ab7;
-    color: lightgray;
+}
+label{
+    color: #e7eaeb;
 }
 input{
     padding-left: 5px;
@@ -52,4 +57,30 @@ input{
 }
 .lost-cat-image{
     width: 50%;
+}
+.results-container{
+    padding: 15px;
+    background-color: #2a2d34;
+    color: #e7eaeb;
+    margin-bottom: 20px;
+}
+.table-hover>tbody>tr:hover {
+    background-color: #353942;
+}
+table>tbody>tr.result{
+    cursor: pointer;
+}
+table>tbody>tr.table-header{
+    border-bottom: 1px solid #e7eaeb;
+    margin-bottom: 5px;
+}
+.welcome-message{
+    text-align: center;
+}
+.form-actions{
+    border-top: 1px solid #e7eaeb;
+    padding-top: 10px;
+}
+.modal-content{
+    background-color: #353942;
 }

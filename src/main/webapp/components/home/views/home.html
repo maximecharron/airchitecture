@@ -2,6 +2,10 @@
     <img src="img/cat-mouse_Transparent.gif">
 </div>
 <div class="dashboard-container" ng-if="!isLoading">
+    <h3 class="welcome-message">
+        Welcome to our AirChitecture, your reference for flying needs!
+    </h3>
+    <h3>Search for flights:</h3>
     <form name="form" ng-submit="find()" role="form">
         <div class="form-group">
             <label>From</label>
@@ -23,7 +27,7 @@
             <input type="button" class="btn btn-primary" ng-click="detectWeight()" value="Detect Weight Automatically" />
         </div>
         <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Find</button>
+            <button type="submit" class="btn btn-primary">Find flights!</button>
         </div>
     </form>
 
@@ -34,18 +38,20 @@
     <div ng-show="haveResults">
         <h3>Flights</h3>
 
-        <table class="table-hover">
-            <tr>
-                <th>Airline company</th>
-                <th>Available seats</th>
-                <th>Departure date</th>
-            </tr>
-            <tr data-toggle="modal" data-target="#{{flight.flightNumber}}" ng-repeat="flight in flightsResults">
-                <td>{{flight.airlineCompany}}</td>
-                <td>{{flight.availableSeats}}</td>
-                <td>{{flight.departureDate}}</td>
-            </tr>
-        </table>
+        <div class="results-container">
+            <table class="table-hover">
+                <tr class="table-header">
+                    <th>Airline company</th>
+                    <th>Available seats</th>
+                    <th>Departure date</th>
+                </tr>
+                <tr data-toggle="modal" class="result" data-target="#{{flight.flightNumber}}" ng-repeat="flight in flightsResults">
+                    <td>{{flight.airlineCompany}}</td>
+                    <td>{{flight.availableSeats}}</td>
+                    <td>{{flight.departureDate}}</td>
+                </tr>
+            </table>
+        </div>
     </div>
 
     <div class="modal fade" id="{{flight.flightNumber}}" ng-repeat="flight in flightsResults" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -68,11 +74,9 @@
                     <p>{{flight.departureDate}}</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
-
-    Welcome to our AirChitecture, your reference for your flying needs!
 </div>
