@@ -47,12 +47,12 @@ public class FlightDevDataFactory {
         montrealToOslo2.setAvailableSeats(17);
 
         Flight osloToMontreal = new Flight();
-        montrealToOslo2.setFlightNumber("AF0005");
-        montrealToOslo2.setAirlineCompany(AIRLINE_COMPANY);
-        montrealToOslo2.setDepartureDate(LocalDateTime.of(2018, 8, 16, 21, 2));
-        montrealToOslo2.setDepartureAirport("OSL");
-        montrealToOslo2.setArrivalAirport("YUL");
-        montrealToOslo2.setAvailableSeats(13);
+        osloToMontreal.setFlightNumber("AF0005");
+        osloToMontreal.setAirlineCompany(AIRLINE_COMPANY);
+        osloToMontreal.setDepartureDate(LocalDateTime.of(2018, 8, 16, 21, 2));
+        osloToMontreal.setDepartureAirport("OSL");
+        osloToMontreal.setArrivalAirport("YUL");
+        osloToMontreal.setAvailableSeats(13);
 
         flights.addAll(Arrays.asList(quebecToDublin, torontoToLondon, montrealToOslo, montrealToOslo2, osloToMontreal));
         return flights;
