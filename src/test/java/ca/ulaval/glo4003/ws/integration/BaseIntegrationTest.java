@@ -19,7 +19,7 @@ public class BaseIntegrationTest {
             Thread t = new Thread() {
                 public void run() {
                     try {
-                        AirChitectureMain.main(new String[]{"8888"});
+                        AirChitectureMain.main(new String[]{"8080"});
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
