@@ -2,4 +2,7 @@ language: java
 jdk:
   - oraclejdk8
   
+notifications:
+  slack: architecturemoiletrou:sRsjhf8KjykvsqZdjWvcf1tY
+  
 script: mvn clean verify
