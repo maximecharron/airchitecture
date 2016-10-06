@@ -11,7 +11,7 @@ public class UserResourceIT {
         given().formParam("email", "bob@test.com")
                .formParam("password", "1234")
                .contentType("application/x-www-form-urlencoded")
-               .post("/api/auth/login")
+               .post("http://localhost:8888/api/auth/login")
                .then()
                .statusCode(200);
     }
@@ -21,7 +21,7 @@ public class UserResourceIT {
         given().formParam("email", "ginette@test.com")
                .formParam("password", "12345")
                .contentType("application/x-www-form-urlencoded")
-               .post("/api/auth/signup")
+               .post("http://localhost:8888/api/auth/signup")
                .then()
                .statusCode(204);
     }
