@@ -1,7 +1,6 @@
 package ca.ulaval.glo4003.ws.domain.flight;
 
 import ca.ulaval.glo4003.ws.api.flight.dto.FlightDto;
-import jersey.repackaged.com.google.common.collect.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
@@ -17,7 +15,6 @@ import java.util.stream.Stream;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FlightServiceTest {
@@ -53,8 +50,6 @@ public class FlightServiceTest {
 
         List<FlightDto> flightDtos = flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE);
 
-        verify(flightRepository).findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE);
-        verify(flightAssembler).create(flightStream);
         assertThat(flightDtos, hasItem(flightDto));
     }
 }

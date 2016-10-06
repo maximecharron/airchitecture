@@ -10,7 +10,7 @@ homeApp.controller("home-controller", function ($scope, homeResource, weightDete
     };
     $scope.haveResults = false;
     $scope.flightsResults = [];
-    
+
     $scope.hasError = false;
     $scope.error = undefined;
 
@@ -24,19 +24,18 @@ homeApp.controller("home-controller", function ($scope, homeResource, weightDete
         $scope.isLoading = true;
 
         var searchCriteria = {};
-        if($scope.formData.from) {
+        if ($scope.formData.from) {
             searchCriteria.from = $scope.formData.from;
         }
-        if($scope.formData.to) {
+        if ($scope.formData.to) {
             searchCriteria.to = $scope.formData.to;
         }
-        if($scope.formData.date) {
+        if ($scope.formData.date) {
             searchCriteria.datetime = new Date($scope.formData.date).toISOString().slice(0, 16);
         }
         if($scope.formData.luggageWeight){
             $scope.formData.luggageWeight = Number((Math.ceil($scope.formData.luggageWeight * 2)/2).toFixed(1));
         }
-        
         homeResource.get(searchCriteria, function onSuccess(data) {
             $scope.flightsResults = data;
             $scope.isLoading = false;
@@ -46,5 +45,14 @@ homeApp.controller("home-controller", function ($scope, homeResource, weightDete
             $scope.hasError = true;
             $scope.error = data;
         });
+    };
+
+    $scope.findReturnFlight = function () {
+        var previousFrom = $scope.formData.from;
+
+        $scope.formData.from = $scope.formData.to;
+        $scope.formData.to = previousFrom;
+
+        $scope.find();
     };
 });

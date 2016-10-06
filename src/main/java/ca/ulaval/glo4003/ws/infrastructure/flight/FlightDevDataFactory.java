@@ -46,7 +46,15 @@ public class FlightDevDataFactory {
         montrealToOslo2.setArrivalAirport("OSL");
         montrealToOslo2.setAvailableSeats(17);
 
-        flights.addAll(Arrays.asList(quebecToDublin, torontoToLondon, montrealToOslo, montrealToOslo2));
+        Flight osloToMontreal = new Flight();
+        osloToMontreal.setFlightNumber("AF0005");
+        osloToMontreal.setAirlineCompany(AIRLINE_COMPANY);
+        osloToMontreal.setDepartureDate(LocalDateTime.of(2018, 8, 16, 21, 2));
+        osloToMontreal.setDepartureAirport("OSL");
+        osloToMontreal.setArrivalAirport("YUL");
+        osloToMontreal.setAvailableSeats(13);
+
+        flights.addAll(Arrays.asList(quebecToDublin, torontoToLondon, montrealToOslo, montrealToOslo2, osloToMontreal));
         return flights;
     }
 }
