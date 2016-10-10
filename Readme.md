@@ -49,7 +49,7 @@ Une petite web app pour acheter des billets d'avion.
 ]
 ```
 
- ### Weight Detector   
+### Weight Detector   
     
  **Route** : `api/weightDetection`   
  
