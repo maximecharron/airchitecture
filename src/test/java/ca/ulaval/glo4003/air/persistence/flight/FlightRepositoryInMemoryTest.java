@@ -1,6 +1,7 @@
 package ca.ulaval.glo4003.air.persistence.flight;
 
 import ca.ulaval.glo4003.air.domain.flight.Flight;
+import ca.ulaval.glo4003.air.domain.flight.FlightFilters;
 import ca.ulaval.glo4003.air.domain.flight.FlightRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +34,8 @@ public class FlightRepositoryInMemoryTest {
     @Mock
     private Flight notMatchingFlight;
 
+    private FlightFilters flightFilters;
+
     private FlightRepository flightRepository;
 
     @Before
@@ -45,8 +48,10 @@ public class FlightRepositoryInMemoryTest {
     }
 
     @Test
-    public void givenPersistedFlights_whenFindingAllFlightsWithFilters_thenOnlyMatchingFlightsAreReturned() {
-        Stream<Flight> matchingFlightsStream = flightRepository.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE);
+    public void givenFlightFilters_whenFindingAllFlightsWithTheseFilters_thenOnlyMatchingFlightsAreReturned() {
+        flightFilters = new FlightFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE);
+
+        Stream<Flight> matchingFlightsStream = flightRepository.findAllWithFilters(flightFilters);
         List<Flight> matchingFlights = matchingFlightsStream.collect(Collectors.toList());
 
         assertThat(matchingFlights, hasItem(matchingFlight));
@@ -55,7 +60,9 @@ public class FlightRepositoryInMemoryTest {
 
     @Test
     public void givenPersistedFlights_whenFindingAllFlightsWithoutADateFilter_thenOnlyFutureFlightsAreReturned() {
-        Stream<Flight> matchingFlightsStream = flightRepository.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, null);
+        flightFilters = new FlightFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, null);
+
+        Stream<Flight> matchingFlightsStream = flightRepository.findAllWithFilters(flightFilters);
         List<Flight> matchingFlights = matchingFlightsStream.collect(Collectors.toList());
 
         assertThat(matchingFlights, hasItem(matchingFlight));

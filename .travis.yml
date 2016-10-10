@@ -3,6 +3,9 @@ jdk:
   - oraclejdk8
   
 notifications:
+  email:
+    on_success: change
+    on_failure: always
   slack: architecturemoiletrou:sRsjhf8KjykvsqZdjWvcf1tY
   
 script: mvn clean verify

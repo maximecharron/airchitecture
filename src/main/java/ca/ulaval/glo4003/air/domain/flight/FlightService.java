@@ -4,6 +4,7 @@ import ca.ulaval.glo4003.air.api.flight.dto.FlightDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -22,7 +23,9 @@ public class FlightService {
     public List<FlightDto> findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate) {
         logRequest(departureAirport, arrivalAirport, departureDate);
 
-        Stream<Flight> flights = flightRepository.findAllWithFilters(departureAirport, arrivalAirport, departureDate);
+        FlightFilters flightFilters = new FlightFilters(departureAirport, arrivalAirport, departureDate);
+        Stream<Flight> flights = flightRepository.findAllWithFilters(flightFilters);
+
         return flightAssembler.create(flights);
     }
 
