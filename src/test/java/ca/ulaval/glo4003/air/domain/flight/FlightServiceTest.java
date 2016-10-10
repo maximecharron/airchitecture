@@ -35,17 +35,20 @@ public class FlightServiceTest {
     @Mock
     private FlightDto flightDto;
 
+    private FlightFilters flightFilters;
+
     private FlightService flightService;
 
     @Before
     public void setup() {
+        flightFilters = new FlightFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE);
         flightService = new FlightService(flightRepository, flightAssembler);
     }
 
     @Test
     public void givenPersistedFlights_whenFindingAllFlightsWithFilters_thenReturnDtos() {
-        Stream<Flight> flightStream = Stream.of(this.flight);
-        given(flightRepository.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE)).willReturn(flightStream);
+        Stream<Flight> flightStream = Stream.of(flight);
+        given(flightRepository.findAllWithFilters(flightFilters)).willReturn(flightStream);
         given(flightAssembler.create(flightStream)).willReturn(Collections.singletonList(flightDto));
 
         List<FlightDto> flightDtos = flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE);
