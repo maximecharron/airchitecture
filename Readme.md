@@ -96,8 +96,8 @@ Une petite web app pour acheter des billets d'avion.
 204 - No Content
 ```
 
- ### Weight Detector
-    
+### Weight Detector
+
  **Route** : `api/weightDetection`   
  
  **Exemple** : `http://localhost:8081/api/weightDetection`   
