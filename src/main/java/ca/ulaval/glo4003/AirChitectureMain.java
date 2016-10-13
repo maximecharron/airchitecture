@@ -1,27 +1,24 @@
 package ca.ulaval.glo4003;
 
-import ca.ulaval.glo4003.ws.api.flight.FlightResource;
-import ca.ulaval.glo4003.ws.api.flight.FlightResourceImpl;
-import ca.ulaval.glo4003.ws.api.user.UserResource;
-import ca.ulaval.glo4003.ws.api.user.UserResourceImpl;
-import ca.ulaval.glo4003.ws.api.weightDetection.WeightDetectionResource;
-import ca.ulaval.glo4003.ws.api.weightDetection.WeightDetectionResourceImpl;
-import ca.ulaval.glo4003.ws.domain.flight.Flight;
-import ca.ulaval.glo4003.ws.domain.flight.FlightAssembler;
-import ca.ulaval.glo4003.ws.domain.flight.FlightRepository;
-import ca.ulaval.glo4003.ws.domain.flight.FlightService;
-import ca.ulaval.glo4003.ws.domain.user.*;
-import ca.ulaval.glo4003.ws.domain.weightDetection.WeightDetectionAssembler;
-import ca.ulaval.glo4003.ws.domain.weightDetection.WeightDetectionService;
-import ca.ulaval.glo4003.ws.domain.weightDetection.WeightDetector;
-import ca.ulaval.glo4003.ws.http.CORSResponseFilter;
-import ca.ulaval.glo4003.ws.infrastructure.flight.FlightDevDataFactory;
-import ca.ulaval.glo4003.ws.infrastructure.flight.FlightRepositoryInMemory;
-import ca.ulaval.glo4003.ws.infrastructure.user.UserDevDataFactory;
-import ca.ulaval.glo4003.ws.infrastructure.user.UserRepositoryInMemory;
-import ca.ulaval.glo4003.ws.infrastructure.user.HashingStrategyBCrypt;
-import ca.ulaval.glo4003.ws.infrastructure.user.JWTTokenEncoder;
-import ca.ulaval.glo4003.ws.infrastructure.weightDetection.DummyWeightDetector;
+import ca.ulaval.glo4003.air.api.flight.FlightResource;
+import ca.ulaval.glo4003.air.api.user.UserResource;
+import ca.ulaval.glo4003.air.api.weightdetection.WeightDetectionResource;
+import ca.ulaval.glo4003.air.domain.flight.Flight;
+import ca.ulaval.glo4003.air.domain.flight.FlightAssembler;
+import ca.ulaval.glo4003.air.domain.flight.FlightRepository;
+import ca.ulaval.glo4003.air.domain.flight.FlightService;
+import ca.ulaval.glo4003.air.domain.user.*;
+import ca.ulaval.glo4003.air.domain.weightdetection.WeightDetectionAssembler;
+import ca.ulaval.glo4003.air.domain.weightdetection.WeightDetectionService;
+import ca.ulaval.glo4003.air.domain.weightdetection.WeightDetector;
+import ca.ulaval.glo4003.air.api.config.CORSResponseFilter;
+import ca.ulaval.glo4003.air.persistence.flight.FlightDevDataFactory;
+import ca.ulaval.glo4003.air.persistence.flight.FlightRepositoryInMemory;
+import ca.ulaval.glo4003.air.persistence.user.UserDevDataFactory;
+import ca.ulaval.glo4003.air.persistence.user.UserRepositoryInMemory;
+import ca.ulaval.glo4003.air.domain.user.hashingStrategies.HashingStrategyBCrypt;
+import ca.ulaval.glo4003.air.domain.user.encoders.JWTTokenEncoder;
+import ca.ulaval.glo4003.air.domain.weightdetection.detectors.DummyWeightDetector;
 import com.auth0.jwt.JWTSigner;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -101,7 +98,7 @@ public class AirChitectureMain {
         FlightAssembler flightAssembler = new FlightAssembler();
         FlightService flightService = new FlightService(flightRepository, flightAssembler);
 
-        return new FlightResourceImpl(flightService);
+        return new FlightResource(flightService);
     }
 
     private static WeightDetectionResource createWeightDetectionResource() {
@@ -109,7 +106,7 @@ public class AirChitectureMain {
         WeightDetectionAssembler weightDetectionAssembler = new WeightDetectionAssembler();
         WeightDetectionService weightDetectionService = new WeightDetectionService(weightDetector, weightDetectionAssembler);
 
-        return new WeightDetectionResourceImpl(weightDetectionService);
+        return new WeightDetectionResource(weightDetectionService);
     }
 
     private static UserResource createUserResource() {
@@ -127,6 +124,6 @@ public class AirChitectureMain {
         UserAssembler userAssembler = new UserAssembler();
         UserService userService = new UserService(userRepository, userAssembler, userFactory);
 
-        return new UserResourceImpl(userService);
+        return new UserResource(userService);
     }
 }
