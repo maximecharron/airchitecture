@@ -9,13 +9,11 @@
     <form name="form" ng-submit="find()" role="form">
         <div class="form-group">
             <label>From</label>
-            <input type="text" name="from" id="from" class="form-control" ng-model="formData.from" placeholder="From"
-                   uib-typeahead="airport as airport.name for airport in airports | filter:$viewValue | limitTo:8" typeahead-show-hint="true"/>
+            <input type="text" name="from" id="from" class="form-control" ng-model="formData.from"/>
         </div>
         <div class="form-group">
             <label>To</label>
-            <input type="text" name="to" id="to" class="form-control" ng-model="formData.to" placeholder="To"
-                   uib-typeahead="airport as airport.name for airport in airports | filter:$viewValue | limitTo:8" typeahead-show-hint="true"/>
+            <input type="text" name="to" id="to" class="form-control" ng-model="formData.to"/>
         </div>
         <div class="form-group">
             <label>Departure date</label>
@@ -80,9 +78,7 @@
                     <label>Departure date</label>
                     <p>{{flight.departureDate}}</p>
                 </div>
-
                 <div class="modal-footer">
-                    <ngcart-addtocart id="flight.flightNumber" name="My Item #1" price="10.99" quantity="1">Add to Cart</ngcart-addtocart>
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                 </div>
             </div>

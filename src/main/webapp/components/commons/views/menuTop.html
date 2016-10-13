@@ -18,7 +18,9 @@
                 <ul class="nav navbar-nav">
                     <!-- NAV here -->
                 </ul>
-
+                <div class="navbar-text pull-right">
+                    <ngcart-summary></ngcart-summary>
+                </div>
                 <div class="navbar-text pull-right" ng-show="user && user != {}">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="true">{{user.email}}<span class="caret"></span></a>

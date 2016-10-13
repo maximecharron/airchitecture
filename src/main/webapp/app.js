@@ -5,11 +5,14 @@ var homeApp = angular.module('airchitecture', [
     'ngRoute',
     'ngResource',
     'ngCookies',
+    'ngCart',
     'airchitecture.user',
     "airchitecture.login",
     "validation.match",
     "ui.gravatar",
-    "airchitecture.register"
+    "airchitecture.register",
+    "airchitecture.cart",
+    "ui.bootstrap"
 ]).run(['$rootScope', '$cookies', '$location', function ($rootScope, $cookies, $location) {
 
     if ($cookies.getObject('user') != null) {

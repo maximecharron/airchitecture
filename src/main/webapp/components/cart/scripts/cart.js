@@ -1,0 +1,1 @@
+var cartApp = angular.module('airchitecture.cart', ['ngRoute']);

@@ -1,4 +1,4 @@
-homeApp.controller("home-controller", function ($scope, homeResource, weightDetectionResource) {
+homeApp.controller("home-controller", function ($scope, $http, homeResource, weightDetectionResource) {
 
     $scope.isLoading = false;
 
@@ -14,6 +14,11 @@ homeApp.controller("home-controller", function ($scope, homeResource, weightDete
     $scope.hasError = false;
     $scope.error = undefined;
 
+    $http.get('./airports.json')
+        .success(function(data) {
+            $scope.airports=data;
+        });
+
     $scope.detectWeight = function () {
         weightDetectionResource.get({}, function onSuccess(data) {
             $scope.formData.luggageWeight = data.weight;
@@ -25,10 +30,10 @@ homeApp.controller("home-controller", function ($scope, homeResource, weightDete
 
         var searchCriteria = {};
         if ($scope.formData.from) {
-            searchCriteria.from = $scope.formData.from;
+            searchCriteria.from = $scope.formData.from.code;
         }
         if ($scope.formData.to) {
-            searchCriteria.to = $scope.formData.to;
+            searchCriteria.to = $scope.formData.to.code;
         }
         if ($scope.formData.date) {
             searchCriteria.datetime = new Date($scope.formData.date).toISOString().slice(0, 16);
