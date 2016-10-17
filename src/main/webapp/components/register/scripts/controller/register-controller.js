@@ -1,12 +1,12 @@
 registerApp.controller("register-controller", function ($scope, $location, registerResource) {
     $scope.notRegister = true;
 
-    $scope.email ="";
+    $scope.emailAddress ="";
     $scope.password ="";
 
     $scope.register = function () {
         var user = {
-            "email": $scope.email,
+            "email": $scope.emailAddress,
             "password": $scope.password
         };
         registerResource.post(user, function onSuccess(data) {

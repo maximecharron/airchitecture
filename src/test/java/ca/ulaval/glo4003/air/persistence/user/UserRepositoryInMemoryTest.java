@@ -36,8 +36,8 @@ public class UserRepositoryInMemoryTest {
     @Before
     public void setup() {
         userRepository = new UserRepositoryInMemory();
-        given(matchingUser.getEmail()).willReturn(EMAIL);
-        given(notMatchingUser.getEmail()).willReturn(ANOTHER_EMAIL);
+        given(matchingUser.getEmailAddress()).willReturn(EMAIL);
+        given(notMatchingUser.getEmailAddress()).willReturn(ANOTHER_EMAIL);
     }
 
     @Test
@@ -46,7 +46,7 @@ public class UserRepositoryInMemoryTest {
 
         Optional<User> user = userRepository.findUserByEmail(EMAIL);
 
-        assertEquals(EMAIL, user.get().getEmail());
+        assertEquals(EMAIL, user.get().getEmailAddress());
     }
 
     @Test
@@ -61,7 +61,7 @@ public class UserRepositoryInMemoryTest {
     @Test
     public void givenPersistedUsers_whenCreateNonExistingUser_thenUserIsCreated() throws UserAlreadyExistException{
         givenPersistedUsers();
-        given(aUser.getEmail()).willReturn(NON_EXISTING_EMAIL);
+        given(aUser.getEmailAddress()).willReturn(NON_EXISTING_EMAIL);
 
         userRepository.persist(aUser);
 
@@ -72,7 +72,7 @@ public class UserRepositoryInMemoryTest {
     @Test(expected = UserAlreadyExistException.class)
     public void givenPersistedUsers_whenCreateUserWithExistingEmail_thenThrows() throws UserAlreadyExistException{
         givenPersistedUsers();
-        given(aUser.getEmail()).willReturn(EMAIL);
+        given(aUser.getEmailAddress()).willReturn(EMAIL);
 
         userRepository.persist(aUser);
     }
