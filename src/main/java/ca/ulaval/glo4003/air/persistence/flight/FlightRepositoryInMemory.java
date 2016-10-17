@@ -18,11 +18,18 @@ public class FlightRepositoryInMemory implements FlightRepository {
     }
 
     @Override
-    public Stream<Flight> findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime date) {
+    public Stream<Flight> findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate) {
         return flights.values()
                       .stream()
-                      .filter(f -> date != null ? f.isLeavingAfter(date) : f.isFuture())
-                      .filter(f -> departureAirport == null || f.isDepartingFrom(departureAirport))
-                      .filter(f -> arrivalAirport == null || f.isGoingTo(arrivalAirport));
+                      .filter(flight -> flight.isLeavingOn(departureDate))
+                      .filter(flight -> flight.isDepartingFrom(departureAirport))
+                      .filter(flight -> flight.isGoingTo(arrivalAirport));
+    }
+
+    @Override
+    public Stream<Flight> findFuture(String departureAirport, String arrivalAirport) {
+        return flights.values()
+                      .stream()
+                      .filter(Flight::isFuture);
     }
 }

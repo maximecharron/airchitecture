@@ -23,8 +23,10 @@ public class FlightResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<FlightDto> findAllWithFilters(@QueryParam("from") String departureAirport,
-                                       @QueryParam("to") String arrivalAirport,
-                                       @QueryParam("datetime") String departureDate) {
+                                              @QueryParam("to") String arrivalAirport,
+                                              @QueryParam("datetime") String departureDate) {
+        validateAirportsArePresent(departureAirport, arrivalAirport);
+
         LocalDateTime dateTime = null;
 
         if (departureDate != null) {
@@ -38,5 +40,13 @@ public class FlightResource {
         }
 
         return flightService.findAllWithFilters(departureAirport, arrivalAirport, dateTime);
+    }
+
+    private void validateAirportsArePresent(String departureAirport, String arrivalAirport) {
+        if (departureAirport == null || arrivalAirport == null) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+                                                      .entity("Missing departure or arrival airport.")
+                                                      .build());
+        }
     }
 }
