@@ -66,4 +66,28 @@ public class FlightResourceTest {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.BAD_REQUEST_400)));
         }
     }
+
+    @Test
+    public void givenAMissingDepartureAirport_whenFindingAllFlightsWithFilters_then400IsThrown() {
+        String departureAirport = null;
+
+        try {
+            flightResource.findAllWithFilters(departureAirport, ARRIVAL_AIRPORT, DATE_STRING);
+            fail("Exception not thrown");
+        } catch(WebApplicationException e) {
+            assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.BAD_REQUEST_400)));
+        }
+    }
+
+    @Test
+    public void givenAMissingArrivalAirport_whenFindingAllFlightsWithFilters_then400IsThrown() {
+        String arrivalAirport = null;
+
+        try {
+            flightResource.findAllWithFilters(DEPARTURE_AIRPORT, arrivalAirport, DATE_STRING);
+            fail("Exception not thrown");
+        } catch(WebApplicationException e) {
+            assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.BAD_REQUEST_400)));
+        }
+    }
 }

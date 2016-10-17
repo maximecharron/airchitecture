@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FlightServiceTest {
@@ -43,8 +44,22 @@ public class FlightServiceTest {
     }
 
     @Test
+    public void givenSearchFiltersWithADepartureDate_whenFindingAllMatchingFlights_thenTheRepositoryFindsCorrespondingFlights() {
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE);
+
+        verify(flightRepository).findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE);
+    }
+
+    @Test
+    public void givenSearchFiltersWithNoDepartureDate_whenFindingAllMatchingFlights_thenTheRepositoryFindsFutureFlights() {
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, null);
+
+        verify(flightRepository).findFuture(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT);
+    }
+
+    @Test
     public void givenPersistedFlights_whenFindingAllFlightsWithFilters_thenReturnDtos() {
-        Stream<Flight> flightStream = Stream.of(this.flight);
+        Stream<Flight> flightStream = Stream.of(flight);
         given(flightRepository.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE)).willReturn(flightStream);
         given(flightAssembler.create(flightStream)).willReturn(Collections.singletonList(flightDto));
 

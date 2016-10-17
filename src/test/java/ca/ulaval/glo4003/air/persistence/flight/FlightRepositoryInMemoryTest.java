@@ -54,8 +54,8 @@ public class FlightRepositoryInMemoryTest {
     }
 
     @Test
-    public void givenPersistedFlights_whenFindingAllFlightsWithoutADateFilter_thenOnlyFutureFlightsAreReturned() {
-        Stream<Flight> matchingFlightsStream = flightRepository.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, null);
+    public void givenPersistedFlights_whenFindingAllFutureFlights_thenOnlyFutureFlightsAreReturned() {
+        Stream<Flight> matchingFlightsStream = flightRepository.findFuture(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT);
         List<Flight> matchingFlights = matchingFlightsStream.collect(Collectors.toList());
 
         assertThat(matchingFlights, hasItem(matchingFlight));
@@ -65,12 +65,12 @@ public class FlightRepositoryInMemoryTest {
     private void givenPersistedFlights() {
         given(matchingFlight.isDepartingFrom(DEPARTURE_AIRPORT)).willReturn(true);
         given(matchingFlight.isGoingTo(ARRIVAL_AIRPORT)).willReturn(true);
-        given(matchingFlight.isLeavingAfter(DATE)).willReturn(true);
+        given(matchingFlight.isLeavingOn(DATE)).willReturn(true);
         given(matchingFlight.isFuture()).willReturn(true);
 
         given(notMatchingFlight.isDepartingFrom(DEPARTURE_AIRPORT)).willReturn(false);
         given(notMatchingFlight.isGoingTo(ARRIVAL_AIRPORT)).willReturn(false);
-        given(notMatchingFlight.isLeavingAfter(DATE)).willReturn(false);
+        given(notMatchingFlight.isLeavingOn(DATE)).willReturn(false);
         given(notMatchingFlight.isFuture()).willReturn(false);
 
         flightRepository.save(matchingFlight);

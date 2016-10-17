@@ -22,7 +22,14 @@ public class FlightService {
     public List<FlightDto> findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate) {
         logRequest(departureAirport, arrivalAirport, departureDate);
 
-        Stream<Flight> flights = flightRepository.findAllWithFilters(departureAirport, arrivalAirport, departureDate);
+        Stream<Flight> flights;
+
+        if (departureDate != null) {
+            flights = flightRepository.findAllWithFilters(departureAirport, arrivalAirport, departureDate);
+        } else {
+            flights = flightRepository.findFuture(departureAirport, arrivalAirport);
+        }
+
         return flightAssembler.create(flights);
     }
 
