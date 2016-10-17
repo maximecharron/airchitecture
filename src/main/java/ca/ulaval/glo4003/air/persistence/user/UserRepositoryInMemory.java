@@ -15,7 +15,7 @@ public class UserRepositoryInMemory implements UserRepository {
 
     @Override
     public void update(User user) {
-        users.put(user.getEmail(), user);
+        users.put(user.getEmailAddress(), user);
     }
 
     @Override
@@ -25,10 +25,10 @@ public class UserRepositoryInMemory implements UserRepository {
 
     @Override
     public void persist(User user) throws UserAlreadyExistException {
-        if (users.containsKey(user.getEmail())){
-            throw new UserAlreadyExistException("User with email " + user.getEmail() + " already exists.");
+        if (users.containsKey(user.getEmailAddress())){
+            throw new UserAlreadyExistException("User with email " + user.getEmailAddress() + " already exists.");
         } else {
-            users.put(user.getEmail(), user);
+            users.put(user.getEmailAddress(), user);
         }
 
     }

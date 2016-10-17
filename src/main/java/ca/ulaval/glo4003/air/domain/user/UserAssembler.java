@@ -7,7 +7,7 @@ public class UserAssembler {
     public UserDto create(User user) {
         UserDto userDto = new UserDto();
         userDto.token = user.getToken();
-        userDto.email = user.getEmail();
+        userDto.emailAddress = user.getEmailAddress();
         return userDto;
     }
 }

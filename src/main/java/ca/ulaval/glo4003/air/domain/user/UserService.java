@@ -65,7 +65,7 @@ public class UserService {
 
     private void verifyPassword(User user, String password) throws InvalidPasswordException {
         if (!user.isPasswordValid(password)) {
-            logger.info("Unable to login with email " + user.getEmail() + " because password is invalid");
+            logger.info("Unable to login with email " + user.getEmailAddress() + " because password is invalid");
             throw new InvalidPasswordException("Password is invalid");
         }
     }

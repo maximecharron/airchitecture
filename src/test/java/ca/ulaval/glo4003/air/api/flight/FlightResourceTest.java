@@ -32,9 +32,6 @@ public class FlightResourceTest {
     private static final LocalDateTime DATE = LocalDateTime.of(2025, 12, 24, 22, 59);
     private static final String DATE_STRING = DATE.toString();
 
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
-
     @Mock
     private FlightService flightService;
 
@@ -49,7 +46,7 @@ public class FlightResourceTest {
     }
 
     @Test
-    public void givenAFlightController_whenFindingAllFlightsWithFilters_thenItsDelegatedToTheService() {
+    public void givenAFlightResource_whenFindingAllFlightsWithFilters_thenItsDelegatedToTheService() {
         given(flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE)).willReturn(Lists.newArrayList(flightDto));
 
         List<FlightDto> flightDtos = flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING);
