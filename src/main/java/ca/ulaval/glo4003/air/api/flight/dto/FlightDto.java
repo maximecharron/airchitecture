@@ -10,4 +10,5 @@ public class FlightDto {
     public LocalDateTime departureDate;
     public String airlineCompany;
     public int availableSeats;
+    public boolean acceptsAdditionalWeight;
 }

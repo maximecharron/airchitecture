@@ -19,22 +19,22 @@ public class FlightService {
         this.flightAssembler = flightAssembler;
     }
 
-    public List<FlightDto> findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate) {
-        logRequest(departureAirport, arrivalAirport, departureDate);
+    public List<FlightDto> findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight) {
+        logRequest(departureAirport, arrivalAirport, departureDate, weight);
 
         Stream<Flight> flights;
 
         if (departureDate != null) {
-            flights = flightRepository.findAllWithFilters(departureAirport, arrivalAirport, departureDate);
+            flights = flightRepository.findAllWithFilters(departureAirport, arrivalAirport, departureDate, weight);
         } else {
-            flights = flightRepository.findFuture(departureAirport, arrivalAirport);
+            flights = flightRepository.findFuture(departureAirport, arrivalAirport, weight);
         }
 
-        return flightAssembler.create(flights);
+        return flightAssembler.create(flights, weight);
     }
 
-    private void logRequest(String departureAirport, String arrivalAirport, LocalDateTime departureDate) {
-        String query = "Finding all flights from " + departureAirport + " to " + arrivalAirport;
+    private void logRequest(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight) {
+        String query = "Finding all flights from " + departureAirport + " to " + arrivalAirport + "with a luggage weight of " + weight + "lbs";
         if (departureDate != null) {
             query = query.concat(" on " + departureDate.toString());
         }

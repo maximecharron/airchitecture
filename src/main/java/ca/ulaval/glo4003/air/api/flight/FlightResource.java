@@ -24,7 +24,8 @@ public class FlightResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<FlightDto> findAllWithFilters(@QueryParam("from") String departureAirport,
                                               @QueryParam("to") String arrivalAirport,
-                                              @QueryParam("datetime") String departureDate) {
+                                              @QueryParam("datetime") String departureDate,
+                                              @QueryParam("weight") double weight) {
         validateAirportsArePresent(departureAirport, arrivalAirport);
 
         LocalDateTime dateTime = null;
@@ -39,7 +40,7 @@ public class FlightResource {
             }
         }
 
-        return flightService.findAllWithFilters(departureAirport, arrivalAirport, dateTime);
+        return flightService.findAllWithFilters(departureAirport, arrivalAirport, dateTime, weight);
     }
 
     private void validateAirportsArePresent(String departureAirport, String arrivalAirport) {
