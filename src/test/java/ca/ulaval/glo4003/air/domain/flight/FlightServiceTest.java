@@ -23,6 +23,7 @@ public class FlightServiceTest {
     private static final String DEPARTURE_AIRPORT = "YQB";
     private static final String ARRIVAL_AIRPORT = "DUB";
     private static final LocalDateTime DATE = LocalDateTime.of(2020, 10, 10, 21, 45);
+    private static double WEIGHT = 40.5;
 
     @Mock
     private FlightRepository flightRepository;
@@ -45,25 +46,25 @@ public class FlightServiceTest {
 
     @Test
     public void givenSearchFiltersWithADepartureDate_whenFindingAllMatchingFlights_thenTheRepositoryFindsCorrespondingFlights() {
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT);
 
-        verify(flightRepository).findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE);
+        verify(flightRepository).findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT);
     }
 
     @Test
     public void givenSearchFiltersWithNoDepartureDate_whenFindingAllMatchingFlights_thenTheRepositoryFindsFutureFlights() {
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, null);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, null, WEIGHT);
 
-        verify(flightRepository).findFuture(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT);
+        verify(flightRepository).findFuture(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, WEIGHT);
     }
 
     @Test
     public void givenPersistedFlights_whenFindingAllFlightsWithFilters_thenReturnDtos() {
         Stream<Flight> flightStream = Stream.of(flight);
-        given(flightRepository.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE)).willReturn(flightStream);
-        given(flightAssembler.create(flightStream)).willReturn(Collections.singletonList(flightDto));
+        given(flightRepository.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT)).willReturn(flightStream);
+        given(flightAssembler.create(flightStream, WEIGHT)).willReturn(Collections.singletonList(flightDto));
 
-        List<FlightDto> flightDtos = flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE);
+        List<FlightDto> flightDtos = flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT);
 
         assertThat(flightDtos, hasItem(flightDto));
     }

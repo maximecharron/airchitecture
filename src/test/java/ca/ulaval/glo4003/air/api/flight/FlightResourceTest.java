@@ -31,6 +31,8 @@ public class FlightResourceTest {
     private static final String ARRIVAL_AIRPORT = "DUB";
     private static final LocalDateTime DATE = LocalDateTime.of(2025, 12, 24, 22, 59);
     private static final String DATE_STRING = DATE.toString();
+    private static final double WEIGHT = 30.0;
+    private static final String WEIGHT_STRING = "30.0";
 
     @Mock
     private FlightService flightService;
@@ -47,11 +49,11 @@ public class FlightResourceTest {
 
     @Test
     public void givenAFlightResource_whenFindingAllFlightsWithFilters_thenItsDelegatedToTheService() {
-        given(flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE)).willReturn(Lists.newArrayList(flightDto));
+        given(flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT)).willReturn(Lists.newArrayList(flightDto));
 
-        List<FlightDto> flightDtos = flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING);
+        List<FlightDto> flightDtos = flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING, WEIGHT_STRING);
 
-        verify(flightService).findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE);
+        verify(flightService).findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT);
         assertThat(flightDtos, hasItem(flightDto));
     }
 
@@ -60,7 +62,7 @@ public class FlightResourceTest {
         String badlyFormattedDatetime = "2016-06-bacon";
 
         try {
-            flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, badlyFormattedDatetime);
+            flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, badlyFormattedDatetime, WEIGHT_STRING);
             fail("Exception not thrown");
         } catch(WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.BAD_REQUEST_400)));
@@ -72,7 +74,7 @@ public class FlightResourceTest {
         String departureAirport = null;
 
         try {
-            flightResource.findAllWithFilters(departureAirport, ARRIVAL_AIRPORT, DATE_STRING);
+            flightResource.findAllWithFilters(departureAirport, ARRIVAL_AIRPORT, DATE_STRING, WEIGHT_STRING);
             fail("Exception not thrown");
         } catch(WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.BAD_REQUEST_400)));
@@ -84,7 +86,31 @@ public class FlightResourceTest {
         String arrivalAirport = null;
 
         try {
-            flightResource.findAllWithFilters(DEPARTURE_AIRPORT, arrivalAirport, DATE_STRING);
+            flightResource.findAllWithFilters(DEPARTURE_AIRPORT, arrivalAirport, DATE_STRING, WEIGHT_STRING);
+            fail("Exception not thrown");
+        } catch(WebApplicationException e) {
+            assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.BAD_REQUEST_400)));
+        }
+    }
+
+    @Test
+    public void givenAMissingWeight_whenFindingAllFlightsWithFilters_then400IsThrown() {
+        String weight = null;
+
+        try {
+            flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING, weight);
+            fail("Exception not thrown");
+        } catch(WebApplicationException e) {
+            assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.BAD_REQUEST_400)));
+        }
+    }
+
+    @Test
+    public void givenABadWeightQueryParam_whenFindingAllFlightsWithFilters_then400IsThrown() {
+        String badlyFormattedWeight = "30.dariusruckerwagonwheel";
+
+        try {
+            flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING, badlyFormattedWeight);
             fail("Exception not thrown");
         } catch(WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.BAD_REQUEST_400)));

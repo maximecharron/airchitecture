@@ -35,6 +35,7 @@ homeApp.controller("home-controller", function ($scope, homeResource, weightDete
         }
         if($scope.formData.luggageWeight){
             $scope.formData.luggageWeight = Number((Math.ceil($scope.formData.luggageWeight * 2)/2).toFixed(1));
+            searchCriteria.weight = $scope.formData.luggageWeight;
         }
         homeResource.get(searchCriteria, function onSuccess(data) {
             $scope.flightsResults = data;

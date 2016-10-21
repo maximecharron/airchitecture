@@ -25,9 +25,9 @@ public class FlightService {
         Stream<Flight> flights;
 
         if (departureDate != null) {
-            flights = flightRepository.findAllWithFilters(departureAirport, arrivalAirport, departureDate, weight);
+            flights = flightRepository.findAllWithFilters(departureAirport, arrivalAirport, departureDate);
         } else {
-            flights = flightRepository.findFuture(departureAirport, arrivalAirport, weight);
+            flights = flightRepository.findFuture(departureAirport, arrivalAirport);
         }
 
         return flightAssembler.create(flights, weight);

@@ -1,6 +1,8 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightDto;
+import ca.ulaval.glo4003.air.domain.airplane.Airplane;
+import ca.ulaval.glo4003.air.domain.airplane.AirplaneWeightType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,7 +20,9 @@ public class FlightAssemblerTest {
     private static final String ARRIVAL_AIRPORT = "ABC";
     private static final String DEPARTURE_AIRPORT = "DEF";
     private static final LocalDateTime DATE = LocalDateTime.of(2020, 10, 2, 6, 30);
+    private static final double WEIGHT = 30.0;
     private static final String AIRLINE_COMPANY = "AirFrenette";
+    private static final AirplaneWeightType A_WEIGHT_TYPE = AirplaneWeightType.AirLeger;
 
     private FlightAssembler flightAssembler;
 
@@ -31,16 +35,7 @@ public class FlightAssemblerTest {
     public void givenAFlight_whenCreatingAFlightDto_thenItHasAllTheRelevantProperties() {
         Flight flight = givenAFlight();
 
-        FlightDto flightDto = flightAssembler.create(flight);
-
-        assertHasAllTheRelevantProperties(flight, flightDto);
-    }
-
-    @Test
-    public void givenAFlightDto_whenCreatingAFlight_thenItHasAllTheRelevantProperties() {
-        FlightDto flightDto = givenAFlightDto();
-
-        Flight flight = flightAssembler.create(flightDto);
+        FlightDto flightDto = flightAssembler.create(flight, WEIGHT);
 
         assertHasAllTheRelevantProperties(flight, flightDto);
     }
@@ -50,31 +45,15 @@ public class FlightAssemblerTest {
         Flight flight = givenAFlight();
         Stream<Flight> flightStream = Stream.of(flight);
 
-        List<FlightDto> flightDtos = flightAssembler.create(flightStream);
+        List<FlightDto> flightDtos = flightAssembler.create(flightStream, WEIGHT);
 
         assertHasAllTheRelevantProperties(flight, flightDtos.get(0));
     }
 
     private Flight givenAFlight() {
-        Flight flight = new Flight();
-        flight.setFlightNumber(FLIGHT_NUMBER);
-        flight.setAirlineCompany(AIRLINE_COMPANY);
-        flight.setAvailableSeats(SEATS);
-        flight.setDepartureAirport(DEPARTURE_AIRPORT);
-        flight.setArrivalAirport(ARRIVAL_AIRPORT);
-        flight.setDepartureDate(DATE);
+        Airplane airplane = new Airplane(SEATS, A_WEIGHT_TYPE);
+        Flight flight = new Flight(FLIGHT_NUMBER, DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, AIRLINE_COMPANY, airplane);
         return flight;
-    }
-
-    private FlightDto givenAFlightDto() {
-        FlightDto flightDto = new FlightDto();
-        flightDto.flightNumber = FLIGHT_NUMBER;
-        flightDto.availableSeats = SEATS;
-        flightDto.arrivalAirport = ARRIVAL_AIRPORT;
-        flightDto.departureAirport = DEPARTURE_AIRPORT;
-        flightDto.departureDate = DATE;
-        flightDto.airlineCompany = AIRLINE_COMPANY;
-        return flightDto;
     }
 
     private void assertHasAllTheRelevantProperties(Flight flight, FlightDto flightDto) {
@@ -84,5 +63,6 @@ public class FlightAssemblerTest {
         assertEquals(flight.getDepartureAirport(), flightDto.departureAirport);
         assertEquals(flight.getArrivalAirport(), flightDto.arrivalAirport);
         assertEquals(flight.getDepartureDate(), flightDto.departureDate);
+        assertEquals(flight.acceptsAdditionalWeight(WEIGHT), flightDto.acceptsAdditionalWeight);
     }
 }

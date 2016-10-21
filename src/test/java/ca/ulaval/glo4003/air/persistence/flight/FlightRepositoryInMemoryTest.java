@@ -21,6 +21,7 @@ import static org.mockito.BDDMockito.given;
 @RunWith(MockitoJUnitRunner.class)
 public class FlightRepositoryInMemoryTest {
 
+    private static final double A_WEIGHT = 40.5;
     private static final String FLIGHT_NUMBER = "AF215";
     private static final String ANOTHER_FLIGHT_NUMBER = "AF216";
     private static final String ARRIVAL_AIRPORT = "ABC";
@@ -46,7 +47,7 @@ public class FlightRepositoryInMemoryTest {
 
     @Test
     public void givenPersistedFlights_whenFindingAllFlightsWithFilters_thenOnlyMatchingFlightsAreReturned() {
-        Stream<Flight> matchingFlightsStream = flightRepository.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE);
+        Stream<Flight> matchingFlightsStream = flightRepository.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, A_WEIGHT);
         List<Flight> matchingFlights = matchingFlightsStream.collect(Collectors.toList());
 
         assertThat(matchingFlights, hasItem(matchingFlight));
@@ -55,7 +56,7 @@ public class FlightRepositoryInMemoryTest {
 
     @Test
     public void givenPersistedFlights_whenFindingAllFutureFlights_thenOnlyFutureFlightsAreReturned() {
-        Stream<Flight> matchingFlightsStream = flightRepository.findFuture(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT);
+        Stream<Flight> matchingFlightsStream = flightRepository.findFuture(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, A_WEIGHT);
         List<Flight> matchingFlights = matchingFlightsStream.collect(Collectors.toList());
 
         assertThat(matchingFlights, hasItem(matchingFlight));
@@ -67,11 +68,13 @@ public class FlightRepositoryInMemoryTest {
         given(matchingFlight.isGoingTo(ARRIVAL_AIRPORT)).willReturn(true);
         given(matchingFlight.isLeavingOn(DATE)).willReturn(true);
         given(matchingFlight.isFuture()).willReturn(true);
+        given(matchingFlight.acceptsWeight(A_WEIGHT)).willReturn(true);
 
         given(notMatchingFlight.isDepartingFrom(DEPARTURE_AIRPORT)).willReturn(false);
         given(notMatchingFlight.isGoingTo(ARRIVAL_AIRPORT)).willReturn(false);
         given(notMatchingFlight.isLeavingOn(DATE)).willReturn(false);
         given(notMatchingFlight.isFuture()).willReturn(false);
+        given(notMatchingFlight.acceptsWeight(A_WEIGHT)).willReturn(false);
 
         flightRepository.save(matchingFlight);
         flightRepository.save(notMatchingFlight);
