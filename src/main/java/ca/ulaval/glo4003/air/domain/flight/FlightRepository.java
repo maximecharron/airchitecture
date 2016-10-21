@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 public interface FlightRepository {
 
     Stream<Flight> findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate);
-    Stream<Flight> findFuture(String departureAirport, String arrivalAirport);
+    Stream<Flight> findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight);
 
     void save(Flight flight);
 }

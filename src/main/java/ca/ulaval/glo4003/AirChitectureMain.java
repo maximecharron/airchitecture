@@ -3,10 +3,7 @@ package ca.ulaval.glo4003;
 import ca.ulaval.glo4003.air.api.flight.FlightResource;
 import ca.ulaval.glo4003.air.api.user.UserResource;
 import ca.ulaval.glo4003.air.api.weightdetection.WeightDetectionResource;
-import ca.ulaval.glo4003.air.domain.flight.Flight;
-import ca.ulaval.glo4003.air.domain.flight.FlightAssembler;
-import ca.ulaval.glo4003.air.domain.flight.FlightRepository;
-import ca.ulaval.glo4003.air.domain.flight.FlightService;
+import ca.ulaval.glo4003.air.domain.flight.*;
 import ca.ulaval.glo4003.air.domain.user.*;
 import ca.ulaval.glo4003.air.domain.weightdetection.WeightDetectionAssembler;
 import ca.ulaval.glo4003.air.domain.weightdetection.WeightDetectionService;
@@ -87,7 +84,7 @@ public class AirChitectureMain {
     }
 
     private static FlightResource createFlightResource() {
-        FlightRepository flightRepository = new FlightRepositoryInMemory();
+        FlightRepositoryInMemory flightRepository = new FlightRepositoryInMemory();
 
         if (isDev) {
             FlightDevDataFactory flightDevDataFactory = new FlightDevDataFactory();
@@ -96,7 +93,8 @@ public class AirChitectureMain {
         }
 
         FlightAssembler flightAssembler = new FlightAssembler();
-        FlightService flightService = new FlightService(flightRepository, flightAssembler);
+        WeightFilterVerifier weightFilterVerifier = new WeightFilterVerifier(flightRepository);
+        FlightService flightService = new FlightService(flightRepository, flightAssembler, weightFilterVerifier);
 
         return new FlightResource(flightService);
     }

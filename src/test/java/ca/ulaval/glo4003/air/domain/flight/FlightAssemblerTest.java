@@ -1,6 +1,7 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightDto;
+import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchDto;
 import ca.ulaval.glo4003.air.domain.airplane.Airplane;
 import ca.ulaval.glo4003.air.domain.airplane.AirplaneWeightType;
 import org.junit.Before;
@@ -21,6 +22,7 @@ public class FlightAssemblerTest {
     private static final String DEPARTURE_AIRPORT = "DEF";
     private static final LocalDateTime DATE = LocalDateTime.of(2020, 10, 2, 6, 30);
     private static final double WEIGHT = 30.0;
+    private static final boolean A_FILTERED_BY_WEIGHT_RESULT = true;
     private static final String AIRLINE_COMPANY = "AirFrenette";
     private static final AirplaneWeightType A_WEIGHT_TYPE = AirplaneWeightType.AirLeger;
 
@@ -41,13 +43,23 @@ public class FlightAssemblerTest {
     }
 
     @Test
-    public void givenFlights_whenCreatingFlightDtos_thenFlightsAreMappedToTheirEquivalentDto() {
+    public void givenFlights_whenCreatingAFlightSearchDto_thenFlightsAreMappedToTheirEquivalentDto() {
         Flight flight = givenAFlight();
         Stream<Flight> flightStream = Stream.of(flight);
 
-        List<FlightDto> flightDtos = flightAssembler.create(flightStream, WEIGHT);
+        FlightSearchDto flightSearchDto = flightAssembler.create(flightStream, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT);
 
-        assertHasAllTheRelevantProperties(flight, flightDtos.get(0));
+        assertHasAllTheRelevantProperties(flight, flightSearchDto.flights.get(0));
+    }
+
+    @Test
+    public void givenFlightFilteredByWeightResult_whenCreatingAFlightSearchDtoWithThisResult_thenItHasTheSameFlightFilteredByWeightResult() {
+        Flight flight = givenAFlight();
+        Stream<Flight> flightStream = Stream.of(flight);
+
+        FlightSearchDto flightSearchDto = flightAssembler.create(flightStream, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT);
+
+        assertEquals(A_FILTERED_BY_WEIGHT_RESULT, flightSearchDto.flightsWereFilteredByWeight);
     }
 
     private Flight givenAFlight() {

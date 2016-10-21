@@ -1,6 +1,7 @@
 package ca.ulaval.glo4003.air.api.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightDto;
+import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchDto;
 import ca.ulaval.glo4003.air.domain.flight.FlightService;
 import jersey.repackaged.com.google.common.collect.Lists;
 import org.eclipse.jetty.http.HttpStatus;
@@ -20,6 +21,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -38,7 +40,7 @@ public class FlightResourceTest {
     private FlightService flightService;
 
     @Mock
-    private FlightDto flightDto;
+    private FlightSearchDto flightSearchDto;
 
     private FlightResource flightResource;
 
@@ -49,12 +51,11 @@ public class FlightResourceTest {
 
     @Test
     public void givenAFlightResource_whenFindingAllFlightsWithFilters_thenItsDelegatedToTheService() {
-        given(flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT)).willReturn(Lists.newArrayList(flightDto));
+        given(flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT)).willReturn(flightSearchDto);
 
-        List<FlightDto> flightDtos = flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING, WEIGHT_STRING);
+        FlightSearchDto flightSearchDto = flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING, WEIGHT_STRING);
 
-        verify(flightService).findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT);
-        assertThat(flightDtos, hasItem(flightDto));
+        assertEquals(this.flightSearchDto, flightSearchDto);
     }
 
     @Test

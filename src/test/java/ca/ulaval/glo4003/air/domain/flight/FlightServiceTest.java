@@ -32,6 +32,9 @@ public class FlightServiceTest {
     private FlightAssembler flightAssembler;
 
     @Mock
+    private WeightFilterVerifier weightFilterVerifier;
+
+    @Mock
     private Flight flight;
 
     @Mock
@@ -41,7 +44,7 @@ public class FlightServiceTest {
 
     @Before
     public void setup() {
-        flightService = new FlightService(flightRepository, flightAssembler);
+        flightService = new FlightService(flightRepository, flightAssembler, weightFilterVerifier);
     }
 
     @Test

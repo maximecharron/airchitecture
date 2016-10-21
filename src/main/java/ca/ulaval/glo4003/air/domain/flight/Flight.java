@@ -34,9 +34,7 @@ public class Flight {
         return departureDate != null && (departureDate.isAfter(date) || departureDate.isEqual(date));
     }
 
-    public boolean isFuture() {
-        return departureDate != null && departureDate.isAfter(LocalDateTime.now());
-    }
+    public boolean isLeavingAfter(LocalDateTime date) { return departureDate.isAfter(date); }
 
     public String getFlightNumber() {
         return flightNumber;

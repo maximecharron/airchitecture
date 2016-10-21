@@ -1,6 +1,7 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightDto;
+import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,24 +14,30 @@ public class FlightService {
 
     private FlightRepository flightRepository;
     private FlightAssembler flightAssembler;
+    private WeightFilterVerifier weightFilterVerifier;
 
-    public FlightService(FlightRepository flightRepository, FlightAssembler flightAssembler) {
+    public FlightService(FlightRepository flightRepository, FlightAssembler flightAssembler, WeightFilterVerifier weightFilterVerifier) {
         this.flightRepository = flightRepository;
         this.flightAssembler = flightAssembler;
+        this.weightFilterVerifier = weightFilterVerifier;
     }
 
-    public List<FlightDto> findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight) {
+    public FlightSearchDto findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight) {
         logRequest(departureAirport, arrivalAirport, departureDate, weight);
 
         Stream<Flight> flights;
 
+        boolean flightsWereFilteredByWeight;
         if (departureDate != null) {
             flights = flightRepository.findAllWithFilters(departureAirport, arrivalAirport, departureDate);
+            flightsWereFilteredByWeight = weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flights, departureAirport, arrivalAirport, departureDate);
         } else {
-            flights = flightRepository.findFuture(departureAirport, arrivalAirport);
+            LocalDateTime today = LocalDateTime.now();
+            flights = flightRepository.findAllWithFilters(departureAirport, arrivalAirport, today);
+            flightsWereFilteredByWeight = weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flights, departureAirport, arrivalAirport, today);
         }
 
-        return flightAssembler.create(flights, weight);
+        return flightAssembler.create(flights, weight, flightsWereFilteredByWeight);
     }
 
     private void logRequest(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight) {

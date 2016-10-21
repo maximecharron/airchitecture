@@ -1,6 +1,7 @@
 package ca.ulaval.glo4003.air.api.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightDto;
+import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchDto;
 import ca.ulaval.glo4003.air.domain.flight.FlightService;
 
 import javax.ws.rs.*;
@@ -22,7 +23,7 @@ public class FlightResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<FlightDto> findAllWithFilters(@QueryParam("from") String departureAirport,
+    public FlightSearchDto findAllWithFilters(@QueryParam("from") String departureAirport,
                                               @QueryParam("to") String arrivalAirport,
                                               @QueryParam("datetime") String departureDate,
                                               @QueryParam("weight") String weight) {
