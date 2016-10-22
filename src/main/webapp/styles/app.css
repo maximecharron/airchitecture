@@ -70,6 +70,10 @@ input{
 table>tbody>tr.result{
     cursor: pointer;
 }
+table>tbody>tr.result.disabled {
+    background-color: gray;
+    cursor: default;
+}
 table>tbody>tr.table-header{
     border-bottom: 1px solid #e7eaeb;
     margin-bottom: 5px;

@@ -18,13 +18,13 @@ public class FlightTest {
     private static final double A_WEIGHT = 40.5;
     private static final boolean AN_ACCEPTING_WEIGHT_RESULT = true;
     private static final boolean AN_ACCEPTING_ADDITIONAL_WEIGHT_RESULT = true;
+    private static final boolean A_CAN_ACCEPT_ADDITIONAL_WEIGHT_RESULT = true;
     private static final String FLIGHT_NUMBER = "POP1234";
     private static final String AIRPORT_A = "YQB";
     private static final String AIRPORT_B = "DUB";
     private static final String AN_AIRLINE_COMPANY = "AirDariusRuckerWagonWheel";
     private static final LocalDateTime A_DEPARTURE_DATE = LocalDateTime.of(2016, 10, 10, 9, 55);
     private static final LocalDateTime ANOTHER_DEPARTURE_DATE = LocalDateTime.of(2018, 8, 10, 9, 55);
-    private static final LocalDateTime AN_OLD_DEPARTURE_DATE = LocalDateTime.of(1990, 10, 10, 9, 55);
 
     @Mock
     private Airplane airplane;
@@ -35,22 +35,30 @@ public class FlightTest {
     }
 
     @Test
-    public void givenAnOldFlight_whenCheckingIfItsAFutureFlight_thenItsNot() {
-        Flight flight = new Flight(FLIGHT_NUMBER, AIRPORT_A, AIRPORT_B, AN_OLD_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
+    public void givenAFlight_whenCheckingIfItsLeavingAfterADateFollowingItsDepartureDate_thenItsNot() {
+        Flight flight = new Flight(FLIGHT_NUMBER, AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
 
-        boolean isFuture = flight.isFuture();
+        boolean result = flight.isLeavingAfter(A_DEPARTURE_DATE.plusDays(1));
 
-        assertFalse(isFuture);
+        assertFalse(result);
     }
 
     @Test
-    public void givenAFlightThatWillLeaveTomorrow_whenCheckingIfItsAFutureFlight_thenItIs() {
-        LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
-        Flight flight = new Flight(FLIGHT_NUMBER, AIRPORT_A, AIRPORT_B, tomorrow, AN_AIRLINE_COMPANY, airplane);
+    public void givenAFlight_whenCheckingIfItsLeavingAfterADatePriorToItsDepartureDate_thenItIs() {
+        Flight flight = new Flight(FLIGHT_NUMBER, AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
 
-        boolean isFuture = flight.isFuture();
+        boolean result = flight.isLeavingAfter(A_DEPARTURE_DATE.minusDays(1));
 
-        assertTrue(isFuture);
+        assertTrue(result);
+    }
+
+    @Test
+    public void givenAFlight_whenCheckingIfItsLeavingAfterItsDepartureDate_thenItsNot() {
+        Flight flight = new Flight(FLIGHT_NUMBER, AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
+
+        boolean result = flight.isLeavingAfter(A_DEPARTURE_DATE);
+
+        assertFalse(result);
     }
 
     @Test
@@ -113,6 +121,16 @@ public class FlightTest {
         boolean result = flight.acceptsAdditionalWeight(A_WEIGHT);
 
         assertEquals(result, AN_ACCEPTING_ADDITIONAL_WEIGHT_RESULT);
+    }
+
+    @Test
+    public void givenAFlight_whenCheckingIfCanAcceptAdditionalWeight_thenItsDelegatedToTheAirplane() {
+        Flight flight = givenAFlight();
+        given(airplane.canAcceptAdditionalWeight()).willReturn(A_CAN_ACCEPT_ADDITIONAL_WEIGHT_RESULT);
+
+        boolean result = flight.canAcceptAdditionalWeight();
+
+        assertEquals(result, A_CAN_ACCEPT_ADDITIONAL_WEIGHT_RESULT);
     }
 
     private Flight givenAFlight() {

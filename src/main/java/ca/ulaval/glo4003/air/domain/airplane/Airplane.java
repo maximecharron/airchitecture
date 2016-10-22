@@ -1,19 +1,12 @@
 package ca.ulaval.glo4003.air.domain.airplane;
 
-public class Airplane {
-
+public abstract class Airplane {
     private final int availableSeats;
-    private final AirplaneWeightType airplaneWeightType;
     private final double maximumWeight;
 
-    public Airplane(int availableSeats, AirplaneWeightType airplaneWeightType) {
-        this(availableSeats, airplaneWeightType, 0);
-    }
-
-    public Airplane(int availableSeats, AirplaneWeightType airplaneWeightType, double maximumAdditionalWeight) {
+    public Airplane(int availableSeats, double maximumWeight) {
         this.availableSeats = availableSeats;
-        this.airplaneWeightType = airplaneWeightType;
-        this.maximumWeight = this.airplaneWeightType.getMaximumWeight() + maximumAdditionalWeight;
+        this.maximumWeight = maximumWeight;
     }
 
     public int getAvailableSeats() {
@@ -21,10 +14,9 @@ public class Airplane {
     }
 
     public boolean acceptsWeight(double weight) {
-        return this.airplaneWeightType.acceptsWeight(weight);
+        return weight <= maximumWeight;
     }
 
-    public boolean acceptsAdditionalWeight(double weight) {
-        return airplaneWeightType == AirplaneWeightType.AirLourd && maximumWeight >= weight;
-    }
+    public abstract boolean canAcceptAdditionalWeight();
+    public abstract boolean acceptsAdditionalWeight(double weight);
 }

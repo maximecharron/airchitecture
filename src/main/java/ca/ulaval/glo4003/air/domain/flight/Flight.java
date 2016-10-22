@@ -64,6 +64,10 @@ public class Flight {
         return airplane.acceptsWeight(weight);
     }
 
+    public boolean canAcceptAdditionalWeight() {
+        return this.airplane.canAcceptAdditionalWeight();
+    }
+
     public boolean acceptsAdditionalWeight(double weight) {
         return airplane.acceptsAdditionalWeight(weight);
     }

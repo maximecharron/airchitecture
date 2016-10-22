@@ -13,9 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -30,7 +28,6 @@ public class FlightRepositoryInMemoryTest {
 
     @Mock
     private Flight matchingFlight;
-
     @Mock
     private Flight notMatchingFlight;
 
@@ -46,34 +43,51 @@ public class FlightRepositoryInMemoryTest {
     }
 
     @Test
-    public void givenPersistedFlights_whenFindingAllFlightsWithFilters_thenOnlyMatchingFlightsAreReturned() {
-        Stream<Flight> matchingFlightsStream = flightRepository.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, A_WEIGHT);
-        List<Flight> matchingFlights = matchingFlightsStream.collect(Collectors.toList());
+    public void givenPersistedFlights_whenFindingAllFlightsWithDepartingFromFilter_thenOnlyMatchingFlightsAreReturned() {
+        List<Flight> matchingFlights = flightRepository.query().isDepartingFrom(DEPARTURE_AIRPORT).toList();
 
-        assertThat(matchingFlights, hasItem(matchingFlight));
-        assertThat(matchingFlights, not(hasItem(notMatchingFlight)));
+        assertTrue(matchingFlights.stream().allMatch(flight -> flight.isDepartingFrom(DEPARTURE_AIRPORT)));
     }
 
     @Test
-    public void givenPersistedFlights_whenFindingAllFutureFlights_thenOnlyFutureFlightsAreReturned() {
-        Stream<Flight> matchingFlightsStream = flightRepository.findFuture(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, A_WEIGHT);
-        List<Flight> matchingFlights = matchingFlightsStream.collect(Collectors.toList());
+    public void givenPersistedFlights_whenFindingAllFlightsWithGoingToFilter_thenOnlyMatchingFlightsAreReturned() {
+        List<Flight> matchingFlights = flightRepository.query().isDepartingFrom(ARRIVAL_AIRPORT).toList();
 
-        assertThat(matchingFlights, hasItem(matchingFlight));
-        assertThat(matchingFlights, not(hasItem(notMatchingFlight)));
+        assertTrue(matchingFlights.stream().allMatch(flight -> flight.isGoingTo(ARRIVAL_AIRPORT)));
+    }
+
+    @Test
+    public void givenPersistedFlights_whenFindingAllFlightsWithIsLeavingOnFilter_thenOnlyMatchingFlightsAreReturned() {
+        List<Flight> matchingFlights = flightRepository.query().isLeavingOn(DATE).toList();
+
+        assertTrue(matchingFlights.stream().allMatch(flight -> flight.isLeavingOn(DATE)));
+    }
+
+    @Test
+    public void givenPersistedFlights_whenFindingAllFlightsWithIsLeavingAfterFilter_thenOnlyMatchingFlightsAreReturned() {
+        List<Flight> matchingFlights = flightRepository.query().isLeavingAfter(DATE).toList();
+
+        assertTrue(matchingFlights.stream().allMatch(flight -> flight.isLeavingAfter(DATE)));
+    }
+
+    @Test
+    public void givenPersistedFlights_whenFindingAllFlightsWithAcceptsWeightFilter_thenOnlyMatchingFlightsAreReturned() {
+        List<Flight> matchingFlights = flightRepository.query().acceptsWeight(A_WEIGHT).toList();
+
+        assertTrue(matchingFlights.stream().allMatch(flight -> flight.acceptsWeight(A_WEIGHT)));
     }
 
     private void givenPersistedFlights() {
         given(matchingFlight.isDepartingFrom(DEPARTURE_AIRPORT)).willReturn(true);
         given(matchingFlight.isGoingTo(ARRIVAL_AIRPORT)).willReturn(true);
         given(matchingFlight.isLeavingOn(DATE)).willReturn(true);
-        given(matchingFlight.isFuture()).willReturn(true);
+        given(matchingFlight.isLeavingAfter(DATE)).willReturn(true);
         given(matchingFlight.acceptsWeight(A_WEIGHT)).willReturn(true);
 
         given(notMatchingFlight.isDepartingFrom(DEPARTURE_AIRPORT)).willReturn(false);
         given(notMatchingFlight.isGoingTo(ARRIVAL_AIRPORT)).willReturn(false);
         given(notMatchingFlight.isLeavingOn(DATE)).willReturn(false);
-        given(notMatchingFlight.isFuture()).willReturn(false);
+        given(notMatchingFlight.isLeavingAfter(DATE)).willReturn(false);
         given(notMatchingFlight.acceptsWeight(A_WEIGHT)).willReturn(false);
 
         flightRepository.save(matchingFlight);

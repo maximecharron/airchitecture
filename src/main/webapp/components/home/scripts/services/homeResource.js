@@ -1,8 +1,7 @@
 homeApp.factory('homeResource', ["$resource", function ($resource) {
     return $resource("http://localhost:8081/api/search/flights", {}, {
-        get: {
-            method: 'GET',
-            isArray: true
+        put: {
+            method: 'GET'
         }
     });
 }]);
@@ -14,3 +13,14 @@ homeApp.factory('weightDetectionResource', ["$resource", function ($resource) {
         }
     });
 }]);
+
+homeApp.factory('userResource', function ($resource, $rootScope) {
+    return $resource("http://localhost:8081/api/users/me", {}, {
+        put: {
+            method: 'PUT',
+            headers: {
+                "X-Access-Token": $rootScope.user ? $rootScope.user.token : undefined
+            }
+        }
+    });
+});

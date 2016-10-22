@@ -1,8 +1,10 @@
 package ca.ulaval.glo4003;
 
 import ca.ulaval.glo4003.air.api.flight.FlightResource;
+import ca.ulaval.glo4003.air.api.user.AuthenticationResource;
 import ca.ulaval.glo4003.air.api.user.UserResource;
 import ca.ulaval.glo4003.air.api.weightdetection.WeightDetectionResource;
+import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.flight.*;
 import ca.ulaval.glo4003.air.domain.user.*;
 import ca.ulaval.glo4003.air.domain.weightdetection.WeightDetectionAssembler;
@@ -17,6 +19,7 @@ import ca.ulaval.glo4003.air.domain.user.hashingStrategies.HashingStrategyBCrypt
 import ca.ulaval.glo4003.air.domain.user.encoders.JWTTokenEncoder;
 import ca.ulaval.glo4003.air.domain.weightdetection.detectors.DummyWeightDetector;
 import com.auth0.jwt.JWTSigner;
+import com.auth0.jwt.JWTVerifier;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
@@ -38,7 +41,9 @@ public class AirChitectureMain {
     public static void main(String[] args) throws Exception {
         // Setup resources (API)
         FlightResource flightResource = createFlightResource();
-        UserResource userResource = createUserResource();
+        UserService userService = createUserService();
+        AuthenticationResource authenticationResource = createAuthenticationResource(userService);
+        UserResource userResource = createUserResource(userService);
         WeightDetectionResource weightDetectionResource = createWeightDetectionResource();
         // Setup API context (JERSEY + JETTY)
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
@@ -49,6 +54,7 @@ public class AirChitectureMain {
                 HashSet<Object> resources = new HashSet<>();
                 // Add resources to context
                 resources.add(flightResource);
+                resources.add(authenticationResource);
                 resources.add(userResource);
                 resources.add(weightDetectionResource);
                 return resources;
@@ -93,8 +99,9 @@ public class AirChitectureMain {
         }
 
         FlightAssembler flightAssembler = new FlightAssembler();
-        WeightFilterVerifier weightFilterVerifier = new WeightFilterVerifier(flightRepository);
-        FlightService flightService = new FlightService(flightRepository, flightAssembler, weightFilterVerifier);
+        WeightFilterVerifier weightFilterVerifier = new WeightFilterVerifier();
+        DateTimeFactory dateTimeFactory = new DateTimeFactory();
+        FlightService flightService = new FlightService(flightRepository, flightAssembler, weightFilterVerifier, dateTimeFactory);
 
         return new FlightResource(flightService);
     }
@@ -107,9 +114,9 @@ public class AirChitectureMain {
         return new WeightDetectionResource(weightDetectionService);
     }
 
-    private static UserResource createUserResource() {
+    private static UserService createUserService() {
         UserRepository userRepository = new UserRepositoryInMemory();
-        TokenEncoder tokenEncoder = new JWTTokenEncoder(new JWTSigner(JWTTokenEncoder.SECRET));
+        JWTTokenEncoder tokenEncoder = new JWTTokenEncoder(new JWTSigner(JWTTokenEncoder.SECRET), new JWTVerifier(JWTTokenEncoder.SECRET));
         HashingStrategy hashingStrategy = new HashingStrategyBCrypt();
         UserFactory userFactory = new UserFactory(tokenEncoder, hashingStrategy);
 
@@ -120,8 +127,14 @@ public class AirChitectureMain {
         }
 
         UserAssembler userAssembler = new UserAssembler();
-        UserService userService = new UserService(userRepository, userAssembler, userFactory);
+        return new UserService(userRepository, userAssembler, userFactory, tokenEncoder);
+    }
 
+    private static AuthenticationResource createAuthenticationResource(UserService userService) {
+        return new AuthenticationResource(userService);
+    }
+
+    private static UserResource createUserResource(UserService userService) {
         return new UserResource(userService);
     }
 }

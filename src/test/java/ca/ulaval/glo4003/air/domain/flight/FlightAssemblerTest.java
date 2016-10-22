@@ -2,18 +2,24 @@ package ca.ulaval.glo4003.air.domain.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightDto;
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchDto;
+import ca.ulaval.glo4003.air.domain.airplane.AirLegerAirplane;
 import ca.ulaval.glo4003.air.domain.airplane.Airplane;
-import ca.ulaval.glo4003.air.domain.airplane.AirplaneWeightType;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.anyDouble;
 
-
+@RunWith(MockitoJUnitRunner.class)
 public class FlightAssemblerTest {
 
     private static final String FLIGHT_NUMBER = "AF215";
@@ -24,12 +30,17 @@ public class FlightAssemblerTest {
     private static final double WEIGHT = 30.0;
     private static final boolean A_FILTERED_BY_WEIGHT_RESULT = true;
     private static final String AIRLINE_COMPANY = "AirFrenette";
-    private static final AirplaneWeightType A_WEIGHT_TYPE = AirplaneWeightType.AirLeger;
 
+    @Mock
+    private Airplane airplane;
     private FlightAssembler flightAssembler;
 
     @Before
     public void setup() {
+        given(airplane.canAcceptAdditionalWeight()).willReturn(true);
+        given(airplane.acceptsWeight(anyDouble())).willReturn(true);
+        given(airplane.acceptsAdditionalWeight(anyDouble())).willReturn(true);
+        given(airplane.getAvailableSeats()).willReturn(SEATS);
         flightAssembler = new FlightAssembler();
     }
 
@@ -45,7 +56,7 @@ public class FlightAssemblerTest {
     @Test
     public void givenFlights_whenCreatingAFlightSearchDto_thenFlightsAreMappedToTheirEquivalentDto() {
         Flight flight = givenAFlight();
-        Stream<Flight> flightStream = Stream.of(flight);
+        List<Flight> flightStream = Stream.of(flight).collect(Collectors.toList());
 
         FlightSearchDto flightSearchDto = flightAssembler.create(flightStream, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT);
 
@@ -55,7 +66,7 @@ public class FlightAssemblerTest {
     @Test
     public void givenFlightFilteredByWeightResult_whenCreatingAFlightSearchDtoWithThisResult_thenItHasTheSameFlightFilteredByWeightResult() {
         Flight flight = givenAFlight();
-        Stream<Flight> flightStream = Stream.of(flight);
+        List<Flight> flightStream = Stream.of(flight).collect(Collectors.toList());
 
         FlightSearchDto flightSearchDto = flightAssembler.create(flightStream, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT);
 
@@ -63,7 +74,6 @@ public class FlightAssemblerTest {
     }
 
     private Flight givenAFlight() {
-        Airplane airplane = new Airplane(SEATS, A_WEIGHT_TYPE);
         Flight flight = new Flight(FLIGHT_NUMBER, DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, AIRLINE_COMPANY, airplane);
         return flight;
     }
@@ -75,6 +85,7 @@ public class FlightAssemblerTest {
         assertEquals(flight.getDepartureAirport(), flightDto.departureAirport);
         assertEquals(flight.getArrivalAirport(), flightDto.arrivalAirport);
         assertEquals(flight.getDepartureDate(), flightDto.departureDate);
+        assertEquals(flight.canAcceptAdditionalWeight(), flightDto.canAcceptAdditionalWeight);
         assertEquals(flight.acceptsAdditionalWeight(WEIGHT), flightDto.acceptsAdditionalWeight);
     }
 }

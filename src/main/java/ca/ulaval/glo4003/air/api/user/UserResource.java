@@ -1,52 +1,43 @@
 package ca.ulaval.glo4003.air.api.user;
 
 import ca.ulaval.glo4003.air.api.user.dto.UserDto;
-import ca.ulaval.glo4003.air.domain.user.UserAlreadyExistException;
+import ca.ulaval.glo4003.air.api.user.dto.UserUpdateDto;
+import ca.ulaval.glo4003.air.domain.user.InvalidTokenException;
 import ca.ulaval.glo4003.air.domain.user.UserService;
 
-import javax.naming.AuthenticationException;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import java.util.logging.Logger;
 
-@Path("/auth")
+@Path("/users")
 public class UserResource {
-
     private Logger logger = Logger.getLogger(UserResource.class.getName());
     private UserService userService;
+    @Context
+    private HttpServletResponse response;
 
     public UserResource(UserService userService) {
         this.userService = userService;
     }
 
-    @POST
-    @Path("/login")
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @PUT
+    @Path("/me")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public UserDto login(@FormParam("email") String email, @FormParam("password") String password) {
+    public UserDto update(UserUpdateDto userUpdateDto, @HeaderParam("X-Access-Token") String token) {
+        response.setHeader("Access-Control-Allow-Headers", "X-Access-Token");
         try {
-            return userService.authenticateUser(email, password);
-        } catch (AuthenticationException e) {
-            logger.info("Login failed for user with email " + email);
-            throw new WebApplicationException(Response.status(Response.Status.FORBIDDEN)
-                                                      .entity("Authentication failed")
-                                                      .build());
+            return this.userService.updateAuthenticatedUser(token, userUpdateDto);
         }
-    }
-
-
-    @POST
-    @Path("/signup")
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public void signup(@FormParam("email") String email, @FormParam("password") String password) {
-        try {
-            userService.createUser(email, password);
-        } catch (UserAlreadyExistException e) {
-            logger.info("Signup failed for user with email " + email + " because it already exists");
-            throw new WebApplicationException(Response.status(Response.Status.CONFLICT)
-                                                      .entity("Signup failed")
-                                                      .build());
+        catch (InvalidTokenException e) {
+            logger.info("Update user failed because: " + e.getMessage());
+            throw new WebApplicationException(Response.status(Status.UNAUTHORIZED)
+                    .entity("Token is invalid.")
+                    .build());
         }
     }
 }

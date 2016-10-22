@@ -1,12 +1,12 @@
 package ca.ulaval.glo4003.air.domain.user;
 
 public class User {
-
     private String emailAddress;
     private String password;
     private String token;
     private HashingStrategy hashingStrategy;
     private TokenEncoder tokenEncoder;
+    private boolean showWeightFilteredAlert = true;
 
     public User(String emailAddress, String password, TokenEncoder tokenEncoder, HashingStrategy hashingStrategy) {
         this.emailAddress = emailAddress;
@@ -33,6 +33,14 @@ public class User {
 
     public void generateToken() {
         this.token = tokenEncoder.encode(emailAddress);
+    }
+
+    public boolean showsWeightFilteredAlert() {
+        return this.showWeightFilteredAlert;
+    }
+
+    public void stopShowingFilteredAlert() {
+        this.showWeightFilteredAlert = false;
     }
 
     private void hashPassword(String password) {
