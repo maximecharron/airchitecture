@@ -17,8 +17,6 @@ import java.util.logging.Logger;
 public class UserResource {
     private Logger logger = Logger.getLogger(UserResource.class.getName());
     private UserService userService;
-    @Context
-    private HttpServletResponse response;
 
     public UserResource(UserService userService) {
         this.userService = userService;
@@ -29,7 +27,6 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public UserDto update(UserUpdateDto userUpdateDto, @HeaderParam("X-Access-Token") String token) {
-        response.setHeader("Access-Control-Allow-Headers", "X-Access-Token");
         try {
             return this.userService.updateAuthenticatedUser(token, userUpdateDto);
         }
