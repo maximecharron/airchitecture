@@ -124,11 +124,11 @@ public class FlightTest {
     }
 
     @Test
-    public void givenAFlight_whenCheckingIfCanAcceptAdditionalWeight_thenItsDelegatedToTheAirplane() {
+    public void givenAFlight_whenCheckingIfItHasAdditionalWeightOption_thenItsDelegatedToTheAirplane() {
         Flight flight = givenAFlight();
-        given(airplane.canAcceptAdditionalWeight()).willReturn(A_CAN_ACCEPT_ADDITIONAL_WEIGHT_RESULT);
+        given(airplane.hasAdditionalWeightOption()).willReturn(A_CAN_ACCEPT_ADDITIONAL_WEIGHT_RESULT);
 
-        boolean result = flight.canAcceptAdditionalWeight();
+        boolean result = flight.hasAdditionalWeightOption();
 
         assertEquals(result, A_CAN_ACCEPT_ADDITIONAL_WEIGHT_RESULT);
     }

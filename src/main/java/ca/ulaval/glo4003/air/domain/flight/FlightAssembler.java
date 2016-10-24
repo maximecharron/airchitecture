@@ -15,7 +15,7 @@ public class FlightAssembler {
         flightDto.departureAirport = flight.getDepartureAirport();
         flightDto.arrivalAirport = flight.getArrivalAirport();
         flightDto.availableSeats = flight.getAvailableSeats();
-        flightDto.canAcceptAdditionalWeight = flight.canAcceptAdditionalWeight();
+        flightDto.hasAdditionalWeightOption = flight.hasAdditionalWeightOption();
         flightDto.acceptsAdditionalWeight = flight.acceptsAdditionalWeight(weight);
         return flightDto;
     }

@@ -3,11 +3,9 @@ package ca.ulaval.glo4003.air.domain.airplane;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.*;
-import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AirLegerAirplaneTest {
@@ -38,8 +36,8 @@ public class AirLegerAirplaneTest {
     }
 
     @Test
-    public void whenCheckingIfCanAcceptAdditionalWeight_thenItDoesNot() {
-        boolean result = airplane.canAcceptAdditionalWeight();
+    public void whenCheckingIfHasAdditionalWeightOption_thenItDoesNot() {
+        boolean result = airplane.hasAdditionalWeightOption();
 
         assertFalse(result);
     }

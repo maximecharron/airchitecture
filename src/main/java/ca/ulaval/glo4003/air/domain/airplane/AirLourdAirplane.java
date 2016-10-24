@@ -15,7 +15,7 @@ public class AirLourdAirplane extends Airplane {
     }
 
     @Override
-    public boolean canAcceptAdditionalWeight() {
+    public boolean hasAdditionalWeightOption() {
         return true;
     }
 

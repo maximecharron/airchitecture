@@ -31,8 +31,8 @@ public class AirLourdAirplaneTest {
     }
 
     @Test
-    public void whenCheckingIfCanAcceptAdditionalWeight_thenItDoes() {
-        boolean result = airplane.canAcceptAdditionalWeight();
+    public void whenCheckingIfHasAdditionalWeightOption_thenItDoes() {
+        boolean result = airplane.hasAdditionalWeightOption();
 
         assertTrue(result);
     }

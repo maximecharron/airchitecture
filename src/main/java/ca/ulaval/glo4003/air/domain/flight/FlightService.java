@@ -29,8 +29,8 @@ public class FlightService {
                 .isDepartingFrom(departureAirport)
                 .isGoingTo(arrivalAirport);
 
-        if (departureDate != null) query.isLeavingOn(departureDate);
-        else query.isLeavingAfter(dateTimeFactory.now());
+        if (departureDate != null) { query.isLeavingOn(departureDate); }
+        else { query.isLeavingAfter(dateTimeFactory.now()); }
 
         List<Flight> allFlights = query.toList();
         query.acceptsWeight(weight);

@@ -8,7 +8,7 @@ public class AirMoyenAirplane extends Airplane {
     }
 
     @Override
-    public boolean canAcceptAdditionalWeight() {
+    public boolean hasAdditionalWeightOption() {
         return false;
     }
 

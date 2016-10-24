@@ -17,6 +17,6 @@ public abstract class Airplane {
         return weight <= maximumWeight;
     }
 
-    public abstract boolean canAcceptAdditionalWeight();
+    public abstract boolean hasAdditionalWeightOption();
     public abstract boolean acceptsAdditionalWeight(double weight);
 }

@@ -2,7 +2,6 @@ package ca.ulaval.glo4003.air.domain.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightDto;
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchDto;
-import ca.ulaval.glo4003.air.domain.airplane.AirLegerAirplane;
 import ca.ulaval.glo4003.air.domain.airplane.Airplane;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +36,7 @@ public class FlightAssemblerTest {
 
     @Before
     public void setup() {
-        given(airplane.canAcceptAdditionalWeight()).willReturn(true);
+        given(airplane.hasAdditionalWeightOption()).willReturn(true);
         given(airplane.acceptsWeight(anyDouble())).willReturn(true);
         given(airplane.acceptsAdditionalWeight(anyDouble())).willReturn(true);
         given(airplane.getAvailableSeats()).willReturn(SEATS);
@@ -85,7 +84,7 @@ public class FlightAssemblerTest {
         assertEquals(flight.getDepartureAirport(), flightDto.departureAirport);
         assertEquals(flight.getArrivalAirport(), flightDto.arrivalAirport);
         assertEquals(flight.getDepartureDate(), flightDto.departureDate);
-        assertEquals(flight.canAcceptAdditionalWeight(), flightDto.canAcceptAdditionalWeight);
+        assertEquals(flight.hasAdditionalWeightOption(), flightDto.hasAdditionalWeightOption);
         assertEquals(flight.acceptsAdditionalWeight(WEIGHT), flightDto.acceptsAdditionalWeight);
     }
 }

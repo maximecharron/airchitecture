@@ -37,8 +37,8 @@ public class AirMoyenAirplaneTest {
     }
 
     @Test
-    public void whenCheckingIfCanAcceptAdditionalWeight_thenItDoesNot() {
-        boolean result = airplane.canAcceptAdditionalWeight();
+    public void whenCheckingIfHasAdditionalWeightOption_thenItDoesNot() {
+        boolean result = airplane.hasAdditionalWeightOption();
 
         assertFalse(result);
     }

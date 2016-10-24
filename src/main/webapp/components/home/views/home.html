@@ -50,7 +50,7 @@
                     <th>Available seats</th>
                     <th>Departure date</th>
                 </tr>
-                <tr ng-attr-data-toggle="{{flight.canAcceptAdditionalWeight && !flight.acceptsAdditionalWeight ? undefined : 'modal'}}" class="result" ng-class="{'disabled': flight.canAcceptAdditionalWeight && !flight.acceptsAdditionalWeight}" data-target="#{{flight.flightNumber}}" ng-repeat="flight in flightsResults">
+                <tr ng-attr-data-toggle="{{flight.hasAdditionalWeightOption && !flight.acceptsAdditionalWeight ? undefined : 'modal'}}" class="result" ng-class="{'disabled': flight.hasAdditionalWeightOption && !flight.acceptsAdditionalWeight}" data-target="#{{flight.flightNumber}}" ng-repeat="flight in flightsResults">
                     <td>{{flight.airlineCompany}}</td>
                     <td>{{flight.availableSeats}}</td>
                     <td>{{flight.departureDate}}</td>

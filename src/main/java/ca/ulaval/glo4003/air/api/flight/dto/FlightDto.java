@@ -11,6 +11,6 @@ public class FlightDto {
     public String airlineCompany;
     public int availableSeats;
 
-    public boolean canAcceptAdditionalWeight;
+    public boolean hasAdditionalWeightOption;
     public boolean acceptsAdditionalWeight;
 }
