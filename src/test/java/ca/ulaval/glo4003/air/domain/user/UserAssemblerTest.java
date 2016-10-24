@@ -31,18 +31,18 @@ public class UserAssemblerTest {
 
         UserDto userDto = userAssembler.create(user);
 
-        assertHasAllTheRelevantProperties(user, userDto);
+        assertHasAllTheRelevantProperties(userDto);
     }
 
     private void givenAUser() {
-        given(user.getEmail()).willReturn(EMAIL);
+        given(user.getEmailAddress()).willReturn(EMAIL);
         given(user.getPassword()).willReturn(PASSWORD);
         given(user.getToken()).willReturn(A_TOKEN);
     }
 
 
-    private void assertHasAllTheRelevantProperties(User user, UserDto userDto) {
-        assertEquals(EMAIL, userDto.email);
+    private void assertHasAllTheRelevantProperties(UserDto userDto) {
+        assertEquals(EMAIL, userDto.emailAddress);
         assertEquals(A_TOKEN, userDto.token);
     }
 }
