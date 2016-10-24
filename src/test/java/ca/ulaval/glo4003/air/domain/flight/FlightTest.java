@@ -13,6 +13,7 @@ public class FlightTest {
     private static final String YQB = "YQB";
     private static final String DUB = "DUB";
     private static final LocalDateTime DEPARTURE_DATE = LocalDateTime.of(2000, 10, 10, 9, 55);
+    private static final LocalDateTime ANOTHER_DATE = LocalDateTime.of(1990, 10, 10, 9, 55);
     private Flight flight;
 
     @Before
@@ -64,5 +65,19 @@ public class FlightTest {
         flight.setArrivalAirport(DUB);
 
         assertFalse(flight.isGoingTo(YQB));
+    }
+
+    @Test
+    public void givenAFlightLeavingOnADate_whenCheckingIfItsLeavingOnThisDate_thenItIs() {
+        flight.setDepartureDate(DEPARTURE_DATE);
+
+        assertTrue(flight.isLeavingOn(DEPARTURE_DATE));
+    }
+
+    @Test
+    public void givenAFlightLeavingOnDateA_whenCheckingIfItsLeavingOnDateB_thenItsNot() {
+        flight.setDepartureDate(DEPARTURE_DATE);
+
+        assertFalse(flight.isLeavingOn(ANOTHER_DATE));
     }
 }

@@ -2,21 +2,21 @@ package ca.ulaval.glo4003.air.domain.user;
 
 public class User {
 
-    private String email;
+    private String emailAddress;
     private String password;
     private String token;
     private HashingStrategy hashingStrategy;
     private TokenEncoder tokenEncoder;
 
-    public User(String email, String password, TokenEncoder tokenEncoder, HashingStrategy hashingStrategy) {
-        this.email = email;
+    public User(String emailAddress, String password, TokenEncoder tokenEncoder, HashingStrategy hashingStrategy) {
+        this.emailAddress = emailAddress;
         this.tokenEncoder = tokenEncoder;
         this.hashingStrategy = hashingStrategy;
         hashPassword(password);
     }
 
-    public String getEmail() {
-        return this.email;
+    public String getEmailAddress() {
+        return this.emailAddress;
     }
 
     public String getToken() {
@@ -32,7 +32,7 @@ public class User {
     }
 
     public void generateToken() {
-        this.token = tokenEncoder.encode(email);
+        this.token = tokenEncoder.encode(emailAddress);
     }
 
     private void hashPassword(String password) {
