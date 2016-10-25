@@ -1,6 +1,7 @@
 package ca.ulaval.glo4003.air.domain.weightdetection;
 
 import ca.ulaval.glo4003.air.api.weightdetection.dto.WeightDetectionDto;
+import ca.ulaval.glo4003.air.transfer.weightdetection.WeightDetectionAssembler;
 
 public class WeightDetectionService {
     private WeightDetector weightDetector;

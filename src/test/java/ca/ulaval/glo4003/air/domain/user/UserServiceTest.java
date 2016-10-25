@@ -2,6 +2,7 @@ package ca.ulaval.glo4003.air.domain.user;
 
 import ca.ulaval.glo4003.air.api.user.dto.UserDto;
 import ca.ulaval.glo4003.air.api.user.dto.UserUpdateDto;
+import ca.ulaval.glo4003.air.transfer.user.UserAssembler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

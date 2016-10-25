@@ -1,7 +1,5 @@
 package ca.ulaval.glo4003.air.domain.transaction;
 
-import ca.ulaval.glo4003.air.domain.transaction.cartitems.CartItem;
-
 import java.util.List;
 
 public class Transaction {

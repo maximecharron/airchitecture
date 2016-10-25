@@ -1,4 +1,4 @@
-package ca.ulaval.glo4003.air.domain.transaction.cartitems;
+package ca.ulaval.glo4003.air.domain.transaction;
 
 import java.time.LocalDateTime;
 

@@ -2,9 +2,9 @@ package ca.ulaval.glo4003.air.domain.user;
 
 import ca.ulaval.glo4003.air.api.user.dto.UserDto;
 import ca.ulaval.glo4003.air.api.user.dto.UserUpdateDto;
+import ca.ulaval.glo4003.air.transfer.user.UserAssembler;
 
 import javax.naming.AuthenticationException;
-import java.util.Optional;
 import java.util.logging.Logger;
 
 public class UserService {

@@ -1,7 +1,8 @@
-package ca.ulaval.glo4003.air.domain.user;
+package ca.ulaval.glo4003.air.transfer.user;
 
 import ca.ulaval.glo4003.air.api.user.dto.UserDto;
 import ca.ulaval.glo4003.air.api.user.dto.UserUpdateDto;
+import ca.ulaval.glo4003.air.domain.user.User;
 
 public class UserAssembler {
     public UserDto create(User user) {

@@ -2,11 +2,11 @@ package ca.ulaval.glo4003.air.domain.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchDto;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
+import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 public class FlightService {
     private Logger logger = Logger.getLogger(FlightService.class.getName());
