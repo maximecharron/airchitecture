@@ -3,6 +3,7 @@ package ca.ulaval.glo4003.air.domain.flight;
 import ca.ulaval.glo4003.air.api.flight.dto.FlightDto;
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchDto;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
+import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

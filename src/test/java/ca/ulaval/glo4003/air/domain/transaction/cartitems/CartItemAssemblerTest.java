@@ -1,6 +1,8 @@
 package ca.ulaval.glo4003.air.domain.transaction.cartitems;
 
 import ca.ulaval.glo4003.air.api.transaction.dto.CartItemDto;
+import ca.ulaval.glo4003.air.domain.transaction.CartItem;
+import ca.ulaval.glo4003.air.transfer.transaction.CartItemAssembler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

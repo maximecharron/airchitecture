@@ -23,18 +23,31 @@ public class Flight {
     }
 
     public boolean isDepartingFrom(String departureAirport) {
-        return this.departureAirport != null && this.departureAirport.equals(departureAirport);
+        return this.departureAirport.equals(departureAirport);
     }
 
     public boolean isGoingTo(String arrivalAirport) {
-        return this.arrivalAirport != null && this.arrivalAirport.equals(arrivalAirport);
+        return this.arrivalAirport.equals(arrivalAirport);
     }
 
     public boolean isLeavingOn(LocalDateTime date) {
-        return departureDate != null && (departureDate.isAfter(date) || departureDate.isEqual(date));
+        return departureDate.isEqual(date);
     }
 
     public boolean isLeavingAfter(LocalDateTime date) { return departureDate.isAfter(date); }
+
+
+    public boolean acceptsWeight(double weight) {
+        return airplane.acceptsWeight(weight);
+    }
+
+    public boolean hasAdditionalWeightOption() {
+        return this.airplane.hasAdditionalWeightOption();
+    }
+
+    public boolean acceptsAdditionalWeight(double weight) {
+        return airplane.acceptsAdditionalWeight(weight);
+    }
 
     public String getFlightNumber() {
         return flightNumber;
@@ -58,17 +71,5 @@ public class Flight {
 
     public int getAvailableSeats() {
         return airplane.getAvailableSeats();
-    }
-
-    public boolean acceptsWeight(double weight) {
-        return airplane.acceptsWeight(weight);
-    }
-
-    public boolean hasAdditionalWeightOption() {
-        return this.airplane.hasAdditionalWeightOption();
-    }
-
-    public boolean acceptsAdditionalWeight(double weight) {
-        return airplane.acceptsAdditionalWeight(weight);
     }
 }

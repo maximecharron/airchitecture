@@ -1,7 +1,8 @@
-package ca.ulaval.glo4003.air.domain.flight;
+package ca.ulaval.glo4003.air.transfer.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightDto;
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchDto;
+import ca.ulaval.glo4003.air.domain.flight.Flight;
 
 import java.util.List;
 import java.util.stream.Collectors;

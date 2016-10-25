@@ -1,6 +1,7 @@
 package ca.ulaval.glo4003.air.domain.transaction;
 
 import ca.ulaval.glo4003.air.api.transaction.dto.TransactionDto;
+import ca.ulaval.glo4003.air.transfer.transaction.TransactionAssembler;
 
 import java.util.logging.Logger;
 
