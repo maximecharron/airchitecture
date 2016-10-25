@@ -1,15 +1,16 @@
 package ca.ulaval.glo4003.air.persistence.flight;
 
 import ca.ulaval.glo4003.air.domain.flight.Flight;
+import ca.ulaval.glo4003.air.domain.flight.FlightQueryBuilder;
 import ca.ulaval.glo4003.air.domain.flight.FlightRepository;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FlightRepositoryInMemory implements FlightRepository {
-
     private Map<String, Flight> flights = new HashMap<>();
 
     @Override
@@ -18,18 +19,50 @@ public class FlightRepositoryInMemory implements FlightRepository {
     }
 
     @Override
-    public Stream<Flight> findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate) {
-        return flights.values()
-                      .stream()
-                      .filter(flight -> flight.isLeavingOn(departureDate))
-                      .filter(flight -> flight.isDepartingFrom(departureAirport))
-                      .filter(flight -> flight.isGoingTo(arrivalAirport));
+    public FlightQueryBuilder query() {
+        return new MemoryFlightQueryBuilder();
     }
 
-    @Override
-    public Stream<Flight> findFuture(String departureAirport, String arrivalAirport) {
-        return flights.values()
-                      .stream()
-                      .filter(Flight::isFuture);
+    private class MemoryFlightQueryBuilder implements FlightQueryBuilder {
+        private Set<Predicate<Flight>> predicates = new HashSet<>();
+
+        @Override
+        public FlightQueryBuilder isGoingTo(String airport) {
+            predicates.add(flight -> flight.isGoingTo(airport));
+            return this;
+        }
+
+        @Override
+        public FlightQueryBuilder isDepartingFrom(String airport) {
+            predicates.add(flight -> flight.isDepartingFrom(airport));
+            return this;
+        }
+
+        @Override
+        public FlightQueryBuilder isLeavingOn(LocalDateTime date) {
+            predicates.add(flight -> flight.isLeavingOn(date));
+            return this;
+        }
+
+        @Override
+        public FlightQueryBuilder isLeavingAfter(LocalDateTime date) {
+            predicates.add(flight -> flight.isLeavingAfter(date));
+            return this;
+        }
+
+        @Override
+        public FlightQueryBuilder acceptsWeight(double weight) {
+            predicates.add(flight -> flight.acceptsWeight(weight));
+            return this;
+        }
+
+        @Override
+        public List<Flight> toList() {
+            Stream<Flight> flightStream = flights.values().stream();
+            for (Predicate<Flight> predicate: predicates) {
+                flightStream = flightStream.filter(predicate);
+            }
+            return flightStream.collect(Collectors.toList());
+        }
     }
 }

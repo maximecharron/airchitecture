@@ -1,4 +1,4 @@
-homeApp.controller("home-controller", function ($scope, homeResource, weightDetectionResource) {
+homeApp.controller("home-controller", function ($scope, homeResource, weightDetectionResource, userResource) {
 
     $scope.isLoading = false;
 
@@ -20,6 +20,10 @@ homeApp.controller("home-controller", function ($scope, homeResource, weightDete
         })
     };
 
+    $scope.closeWeightFilteredAlert = function() {
+      $scope.showWeightFilteredAlert = false;
+    };
+
     $scope.find = function () {
         $scope.isLoading = true;
 
@@ -35,11 +39,20 @@ homeApp.controller("home-controller", function ($scope, homeResource, weightDete
         }
         if($scope.formData.luggageWeight){
             $scope.formData.luggageWeight = Number((Math.ceil($scope.formData.luggageWeight * 2)/2).toFixed(1));
+            searchCriteria.weight = $scope.formData.luggageWeight;
         }
         homeResource.get(searchCriteria, function onSuccess(data) {
-            $scope.flightsResults = data;
+            if($scope.user) $scope.showWeightFilteredAlert = $scope.user.showsWeightFilteredAlert;
+            else $scope.showWeightFilteredAlert = $scope.showWeightFilteredAlert === undefined;
+
+            $scope.flightsResults = data.flights;
+            $scope.flightsWereFilteredByWeight = data.flightsWereFilteredByWeight;
             $scope.isLoading = false;
             $scope.haveResults = true;
+
+            userResource.put({ showWeightFilteredAlert: false }, function onSuccess(data) {
+               $scope.user = data;
+            });
         }, function onError(data) {
             $scope.isLoading = false;
             $scope.hasError = true;

@@ -31,6 +31,11 @@
         </div>
     </form>
 
+    <div ng-show="showWeightFilteredAlert && flightsWereFilteredByWeight" class="alert alert-warning" role="alert">
+        <button type="button" class="close" ng-click="closeWeightFilteredAlert()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Warning!</strong> Some flights are not shown because your luggage weight exceeds their capacity.
+    </div>
+
     <div ng-show="hasError" class="alert alert-danger" role="alert">
         <strong>Oh snap!</strong> {{error}}
     </div>
@@ -45,7 +50,7 @@
                     <th>Available seats</th>
                     <th>Departure date</th>
                 </tr>
-                <tr data-toggle="modal" class="result" data-target="#{{flight.flightNumber}}" ng-repeat="flight in flightsResults">
+                <tr ng-attr-data-toggle="{{flight.hasAdditionalWeightOption && !flight.acceptsAdditionalWeight ? undefined : 'modal'}}" class="result" ng-class="{'disabled': flight.hasAdditionalWeightOption && !flight.acceptsAdditionalWeight}" data-target="#{{flight.flightNumber}}" ng-repeat="flight in flightsResults">
                     <td>{{flight.airlineCompany}}</td>
                     <td>{{flight.availableSeats}}</td>
                     <td>{{flight.departureDate}}</td>

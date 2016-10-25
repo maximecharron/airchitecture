@@ -1,6 +1,6 @@
 loginApp.controller("login-controller", function ($scope, loginService, $location, loginResource) {
 
-    $scope.emailAddress = "";
+    $scope.email = "";
     $scope.password = "";
 
     $scope.login = function () {
@@ -8,9 +8,10 @@ loginApp.controller("login-controller", function ($scope, loginService, $locatio
         $scope.loginError = false;
 
         var credentials = {
-            "email": $scope.emailAddress,
+            "email": $scope.email,
             "password": $scope.password
-        }
+        };
+
         loginResource.post(credentials, function onSuccess(data) {
             
             loginService.SetUser(data);
@@ -24,4 +25,4 @@ loginApp.controller("login-controller", function ($scope, loginService, $locatio
 
         });
     }
-})
+});

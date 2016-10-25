@@ -1,14 +1,13 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightDto;
+import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class FlightAssembler {
-
-    public FlightDto create(Flight flight) {
+    public FlightDto create(Flight flight, double weight) {
         FlightDto flightDto = new FlightDto();
         flightDto.flightNumber = flight.getFlightNumber();
         flightDto.airlineCompany = flight.getAirlineCompany();
@@ -16,21 +15,19 @@ public class FlightAssembler {
         flightDto.departureAirport = flight.getDepartureAirport();
         flightDto.arrivalAirport = flight.getArrivalAirport();
         flightDto.availableSeats = flight.getAvailableSeats();
+        flightDto.hasAdditionalWeightOption = flight.hasAdditionalWeightOption();
+        flightDto.acceptsAdditionalWeight = flight.acceptsAdditionalWeight(weight);
         return flightDto;
     }
 
-    public Flight create(FlightDto flightDto) {
-        Flight flight = new Flight();
-        flight.setFlightNumber(flightDto.flightNumber);
-        flight.setAirlineCompany(flightDto.airlineCompany);
-        flight.setDepartureDate(flightDto.departureDate);
-        flight.setDepartureAirport(flightDto.departureAirport);
-        flight.setArrivalAirport(flightDto.arrivalAirport);
-        flight.setAvailableSeats(flightDto.availableSeats);
-        return flight;
+    public FlightSearchDto create(List<Flight> flights, double weight, boolean flightsWereFilteredByWeight) {
+        FlightSearchDto flightSearchDto = new FlightSearchDto();
+        flightSearchDto.flights = this.create(flights, weight);
+        flightSearchDto.flightsWereFilteredByWeight = flightsWereFilteredByWeight;
+        return flightSearchDto;
     }
 
-    public List<FlightDto> create(Stream<Flight> flights) {
-        return flights.map(this::create).collect(Collectors.toList());
+    private List<FlightDto> create(List<Flight> flights, double weight) {
+        return flights.stream().map(flight -> create(flight, weight)).collect(Collectors.toList());
     }
 }

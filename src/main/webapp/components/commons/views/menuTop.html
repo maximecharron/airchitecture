@@ -21,8 +21,8 @@
 
                 <div class="navbar-text pull-right" ng-show="user && user != {}">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="true">{{user.email}}<span class="caret"></span></a>
-                    <img id="avatar" gravatar-src="'{{user.email}}'" gravatar-size="45">
+                       aria-expanded="true">{{user.emailAddress}}<span class="caret"></span></a>
+                    <img id="avatar" gravatar-src="'{{user.emailAddress}}'" gravatar-size="45">
 
                     <ul class="dropdown-menu pull-right">
                         <li><a ng-click="logout()">Logout</a></li>
