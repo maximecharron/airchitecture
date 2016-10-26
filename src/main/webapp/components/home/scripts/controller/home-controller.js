@@ -1,9 +1,3 @@
-homeApp.controller('ModalController', function($scope, close) {
-    $scope.close = function(result) {
-        close(result, 500);
-    };
-});
-
 homeApp.controller("home-controller", function ($scope, homeResource, weightDetectionResource, userResource, ModalService) {
 
     $scope.isLoading = false;
@@ -26,8 +20,8 @@ homeApp.controller("home-controller", function ($scope, homeResource, weightDete
         })
     };
 
-    $scope.closeWeightFilteredAlert = function() {
-      $scope.showWeightFilteredAlert = false;
+    $scope.closeWeightFilteredAlert = function () {
+        $scope.showWeightFilteredAlert = false;
     };
 
     $scope.find = function () {
@@ -43,12 +37,12 @@ homeApp.controller("home-controller", function ($scope, homeResource, weightDete
         if ($scope.formData.date) {
             searchCriteria.datetime = new Date($scope.formData.date).toISOString().slice(0, 16);
         }
-        if($scope.formData.luggageWeight){
-            $scope.formData.luggageWeight = Number((Math.ceil($scope.formData.luggageWeight * 2)/2).toFixed(1));
+        if ($scope.formData.luggageWeight) {
+            $scope.formData.luggageWeight = Number((Math.ceil($scope.formData.luggageWeight * 2) / 2).toFixed(1));
             searchCriteria.weight = $scope.formData.luggageWeight;
         }
         homeResource.get(searchCriteria, function onSuccess(data) {
-            if($scope.user) $scope.showWeightFilteredAlert = $scope.user.showsWeightFilteredAlert;
+            if ($scope.user) $scope.showWeightFilteredAlert = $scope.user.showsWeightFilteredAlert;
             else $scope.showWeightFilteredAlert = $scope.showWeightFilteredAlert === undefined;
 
             $scope.flightsResults = data.flights;
@@ -56,8 +50,8 @@ homeApp.controller("home-controller", function ($scope, homeResource, weightDete
             $scope.isLoading = false;
             $scope.haveResults = true;
 
-            userResource.put({ showWeightFilteredAlert: false }, function onSuccess(data) {
-               $scope.user = data;
+            userResource.put({showWeightFilteredAlert: false}, function onSuccess(data) {
+                $scope.user = data;
             });
         }, function onError(data) {
             $scope.isLoading = false;
@@ -76,15 +70,18 @@ homeApp.controller("home-controller", function ($scope, homeResource, weightDete
 
         ModalService.showModal({
             templateUrl: "/components/home/views/ReturnDateSelectionDlg.html",
-            controller: "ModalController"
-        }).then(function(modal) {
+            controller: "ModalFormController",
+            inputs: {
+                title: "Please enter a new departure date!"
+            }
+        }).then(function (modal) {
             modal.element.modal();
-            modal.close.then(function(result) {
+            modal.close.then(function (result) {
                 console.log(result);
-                $scope.formData.date = result;
+                $scope.formData.date = result.departureDate;
             });
         });
-
+        
         $scope.find();
     };
 });
