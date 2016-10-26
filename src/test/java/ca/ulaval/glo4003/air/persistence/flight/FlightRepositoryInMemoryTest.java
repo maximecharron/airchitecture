@@ -82,10 +82,17 @@ public class FlightRepositoryInMemoryTest {
     }
 
     @Test
+    public void givenPersitedFlights_whenFindingAllFlightsWithFlightNumber_thenOnlyMatchingFlightsAreReturned() {
+        List<Flight> matchingFlights = flightRepository.query().hasFlightNumber(FLIGHT_NUMBER).toList();
+
+        assertTrue(matchingFlights.stream().allMatch(flight -> flight.getFlightNumber().equals(FLIGHT_NUMBER)));
+    }
+
+    @Test
     public void givenPersistedFlights_whenFindingExistingFlight_thenMatchingFlightIsReturned() {
         givenPersistedFlights();
 
-        Optional<Flight> flight = flightRepository.findOne(FLIGHT_NUMBER, DATE);
+        Optional<Flight> flight = flightRepository.query().hasFlightNumber(FLIGHT_NUMBER).isLeavingOn(DATE).findOne();
 
         assertEquals(matchingFlight, flight.get());
     }
@@ -94,7 +101,7 @@ public class FlightRepositoryInMemoryTest {
     public void givenPersistedFlights_whenFindingNonExistingFlight_thenNullIsReturned() {
         givenPersistedFlights();
 
-        Optional<Flight> flight = flightRepository.findOne(INVALID_FLIGHT_NUMBER, DATE);
+        Optional<Flight> flight = flightRepository.query().hasFlightNumber(INVALID_FLIGHT_NUMBER).isLeavingOn(DATE).findOne();
 
         assertFalse(flight.isPresent());
     }

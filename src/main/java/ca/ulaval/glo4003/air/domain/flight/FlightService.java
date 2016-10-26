@@ -64,6 +64,6 @@ public class FlightService {
     }
 
     private Flight findFlight(String flightNumber, LocalDateTime departureDate) throws NoSuchFlightException {
-        return flightRepository.findOne(flightNumber, departureDate).orElseThrow(() -> new NoSuchFlightException("Flight " + flightNumber + " does not exists."));
+        return flightRepository.query().hasFlightNumber(flightNumber).isLeavingOn(departureDate).findOne().orElseThrow(() -> new NoSuchFlightException("Flight " + flightNumber + " does not exists."));
     }
 }

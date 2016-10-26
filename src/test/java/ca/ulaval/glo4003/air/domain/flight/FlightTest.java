@@ -148,7 +148,7 @@ public class FlightTest {
     }
 
     @Test
-    public void givenAFlight_whenReleasingPlaces_thenAvailableSeatsDecreases() {
+    public void givenAFlight_whenReleasingPlaces_thenAvailableSeatsIncreases() {
         willReturn(A_NUMBER_OF_AVAILABLE_SEATS).given(airplane).getAvailableSeats();
         Flight flight = givenAFlight();
 

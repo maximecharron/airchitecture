@@ -6,6 +6,4 @@ import java.util.Optional;
 public interface FlightRepository {
     void save(Flight flight);
     FlightQueryBuilder query();
-
-    Optional<Flight> findOne(String flightNumber, LocalDateTime departureDate);
 }
