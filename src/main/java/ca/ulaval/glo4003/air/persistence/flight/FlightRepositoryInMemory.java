@@ -23,6 +23,14 @@ public class FlightRepositoryInMemory implements FlightRepository {
         return new MemoryFlightQueryBuilder();
     }
 
+    @Override
+    public Optional<Flight> findOne(String flightNumber, LocalDateTime departureDate) {
+        return flights.values()
+                .stream()
+                .filter(flight -> flight.getFlightNumber().equals(flightNumber)
+                        && flight.isLeavingOn(departureDate)).findFirst();
+    }
+
     private class MemoryFlightQueryBuilder implements FlightQueryBuilder {
         private Set<Predicate<Flight>> predicates = new HashSet<>();
 

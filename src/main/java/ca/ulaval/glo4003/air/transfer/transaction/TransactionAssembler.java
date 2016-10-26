@@ -7,15 +7,4 @@ import ca.ulaval.glo4003.air.domain.transaction.CartItem;
 import java.util.List;
 
 public class TransactionAssembler {
-
-    private final CartItemAssembler cartItemAssembler;
-
-    public TransactionAssembler(CartItemAssembler cartItemAssembler) {
-        this.cartItemAssembler = cartItemAssembler;
-    }
-
-    public Transaction create(TransactionDto transactionDto) {
-        List<CartItem> cartItems = cartItemAssembler.create(transactionDto.cartItemDtos);
-        return new Transaction(transactionDto.emailAddress, cartItems);
-    }
 }

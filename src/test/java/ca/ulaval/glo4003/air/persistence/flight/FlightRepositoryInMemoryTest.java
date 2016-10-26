@@ -10,9 +10,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 
@@ -22,6 +25,7 @@ public class FlightRepositoryInMemoryTest {
     private static final double A_WEIGHT = 40.5;
     private static final String FLIGHT_NUMBER = "AF215";
     private static final String ANOTHER_FLIGHT_NUMBER = "AF216";
+    private static final String INVALID_FLIGHT_NUMBER= "NJ098";
     private static final String ARRIVAL_AIRPORT = "ABC";
     private static final String DEPARTURE_AIRPORT = "DEF";
     private static final LocalDateTime DATE = LocalDateTime.of(2020, 10, 2, 6, 30);
@@ -75,6 +79,24 @@ public class FlightRepositoryInMemoryTest {
         List<Flight> matchingFlights = flightRepository.query().acceptsWeight(A_WEIGHT).toList();
 
         assertTrue(matchingFlights.stream().allMatch(flight -> flight.acceptsWeight(A_WEIGHT)));
+    }
+
+    @Test
+    public void givenPersistedFlights_whenFindingExistingFlight_thenMatchingFlightIsReturned() {
+        givenPersistedFlights();
+
+        Optional<Flight> flight = flightRepository.findOne(FLIGHT_NUMBER, DATE);
+
+        assertEquals(matchingFlight, flight.get());
+    }
+
+    @Test
+    public void givenPersistedFlights_whenFindingNonExistingFlight_thenNullIsReturned() {
+        givenPersistedFlights();
+
+        Optional<Flight> flight = flightRepository.findOne(INVALID_FLIGHT_NUMBER, DATE);
+
+        assertFalse(flight.isPresent());
     }
 
     private void givenPersistedFlights() {

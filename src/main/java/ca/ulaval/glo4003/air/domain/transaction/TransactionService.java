@@ -11,18 +11,18 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final EmailSender emailSender;
-    private final TransactionAssembler transactionAssembler;
+    private final TransactionFactory transactionFactory;
 
-    public TransactionService(TransactionRepository transactionRepository, EmailSender emailSender, TransactionAssembler transactionAssembler) {
+    public TransactionService(TransactionRepository transactionRepository, EmailSender emailSender, TransactionFactory transactionFactory) {
         this.transactionRepository = transactionRepository;
         this.emailSender = emailSender;
-        this.transactionAssembler = transactionAssembler;
+        this.transactionFactory = transactionFactory;
     }
 
     public void buyTickets(TransactionDto transactionDto) {
         logTransaction(transactionDto);
 
-        Transaction transaction = transactionAssembler.create(transactionDto);
+        Transaction transaction = transactionFactory.create(transactionDto);
 
         transactionRepository.save(transaction);
         emailSender.sendTransactionDetails(transaction);

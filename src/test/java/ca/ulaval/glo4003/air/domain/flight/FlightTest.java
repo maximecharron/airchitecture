@@ -11,10 +11,13 @@ import java.time.LocalDateTime;
 
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willReturn;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FlightTest {
 
+    private static final int A_TICKETS_QUANTITY = 2;
+    private static final int A_NUMBER_OF_AVAILABLE_SEATS = 42;
     private static final double A_WEIGHT = 40.5;
     private static final boolean AN_ACCEPTING_WEIGHT_RESULT = true;
     private static final boolean AN_ACCEPTING_ADDITIONAL_WEIGHT_RESULT = true;
@@ -131,6 +134,28 @@ public class FlightTest {
         boolean result = flight.hasAdditionalWeightOption();
 
         assertEquals(result, A_CAN_ACCEPT_ADDITIONAL_WEIGHT_RESULT);
+    }
+
+    @Test
+    public void givenAFlight_whenReservingPlaces_thenAvailableSeatsDecreases() {
+        willReturn(A_NUMBER_OF_AVAILABLE_SEATS).given(airplane).getAvailableSeats();
+        Flight flight = givenAFlight();
+
+        flight.reservePlaces(A_TICKETS_QUANTITY);
+
+        int availableSeatsLeft = A_NUMBER_OF_AVAILABLE_SEATS - A_TICKETS_QUANTITY;
+        assertEquals(flight.getAvailableSeats(), availableSeatsLeft);
+    }
+
+    @Test
+    public void givenAFlight_whenReleasingPlaces_thenAvailableSeatsDecreases() {
+        willReturn(A_NUMBER_OF_AVAILABLE_SEATS).given(airplane).getAvailableSeats();
+        Flight flight = givenAFlight();
+
+        flight.releasePlaces(A_TICKETS_QUANTITY);
+
+        int availableSeatsLeft = A_NUMBER_OF_AVAILABLE_SEATS + A_TICKETS_QUANTITY;
+        assertEquals(flight.getAvailableSeats(), availableSeatsLeft);
     }
 
     private Flight givenAFlight() {
