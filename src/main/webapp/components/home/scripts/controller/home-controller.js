@@ -1,4 +1,10 @@
-homeApp.controller("home-controller", function ($scope, homeResource, weightDetectionResource, userResource) {
+homeApp.controller('ModalController', function($scope, close) {
+    $scope.close = function(result) {
+        close(result, 500);
+    };
+});
+
+homeApp.controller("home-controller", function ($scope, homeResource, weightDetectionResource, userResource, ModalService) {
 
     $scope.isLoading = false;
 
@@ -65,6 +71,19 @@ homeApp.controller("home-controller", function ($scope, homeResource, weightDete
 
         $scope.formData.from = $scope.formData.to;
         $scope.formData.to = previousFrom;
+
+        $scope.formData.date = null;
+
+        ModalService.showModal({
+            templateUrl: "/components/home/views/ReturnDateSelectionDlg.html",
+            controller: "ModalController"
+        }).then(function(modal) {
+            modal.element.modal();
+            modal.close.then(function(result) {
+                console.log(result);
+                $scope.formData.date = result;
+            });
+        });
 
         $scope.find();
     };
