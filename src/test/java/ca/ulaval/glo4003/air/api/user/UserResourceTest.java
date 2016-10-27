@@ -1,8 +1,9 @@
 package ca.ulaval.glo4003.air.api.user;
 
 import ca.ulaval.glo4003.air.api.user.dto.UserDto;
+import ca.ulaval.glo4003.air.api.user.dto.UserUpdateDto;
+import ca.ulaval.glo4003.air.domain.user.InvalidTokenException;
 import ca.ulaval.glo4003.air.domain.user.UserService;
-import ca.ulaval.glo4003.air.domain.user.UserAlreadyExistException;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Rule;
@@ -12,7 +13,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.naming.AuthenticationException;
 import javax.ws.rs.WebApplicationException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -21,23 +21,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserResourceTest {
-
-    private static final String EMAIL = "test@test.com";
-    private static final String PASSWORD = "DUB";
-    private static final String BAD_PASSWORD = "";
+    private static final UserUpdateDto USER_UPDATE_DTO = new UserUpdateDto();
+    private static final String TOKEN = "foxpidesfoisfalco";
 
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
     @Mock
     private UserService userService;
-
     @Mock
     private UserDto userDtoMock;
 
@@ -49,42 +43,25 @@ public class UserResourceTest {
     }
 
     @Test
-    public void givenAUserResource_whenLogin_thenItsDelegatedToTheService() throws AuthenticationException {
-        given(userService.authenticateUser(EMAIL, PASSWORD)).willReturn(userDtoMock);
+    public void givenAValidToken_whenUpdate_thenItsDelegatedToTheService() throws InvalidTokenException {
+        given(userService.updateAuthenticatedUser(TOKEN, USER_UPDATE_DTO)).willReturn(userDtoMock);
 
-        UserDto userDto = userResource.login(EMAIL, PASSWORD);
+        UserDto result = userResource.update(USER_UPDATE_DTO, TOKEN);
 
-        verify(userService).authenticateUser(EMAIL, PASSWORD);
-        assertEquals(userDto, userDtoMock);
+        assertEquals(result, userDtoMock);
     }
 
     @Test
-    public void givenABadPassword_whenLogin_then403IsThrown() throws AuthenticationException {
-        given(userService.authenticateUser(EMAIL, BAD_PASSWORD)).willThrow(AuthenticationException.class);
+    public void givenAnInvalidToken_whenUpdate_thenItsDelegatedToTheService() throws InvalidTokenException {
+        given(userService.updateAuthenticatedUser(TOKEN, USER_UPDATE_DTO)).willThrow(new InvalidTokenException());
+
+        UserDto result = null;
         try {
-            userResource.login(EMAIL, BAD_PASSWORD);
+            result = userResource.update(USER_UPDATE_DTO, TOKEN);
             fail("Exception not thrown");
-        } catch(WebApplicationException e) {
-            assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.FORBIDDEN_403)));
         }
-    }
-
-    @Test
-    public void givenAUserResource_whenSignup_thenItsDelegatedToTheService() throws AuthenticationException, UserAlreadyExistException {
-
-        userResource.signup(EMAIL, PASSWORD);
-
-        verify(userService).createUser(EMAIL, PASSWORD);
-    }
-
-    @Test
-    public void givenAlreadyExsitingEmail_whenSignup_then409IsThrown() throws AuthenticationException, UserAlreadyExistException{
-        doThrow(UserAlreadyExistException.class).when(userService).createUser(anyString(), anyString());
-        try {
-            userResource.signup(EMAIL, PASSWORD);
-            fail("Exception not thrown");
-        } catch(WebApplicationException e) {
-            assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.CONFLICT_409)));
+        catch (WebApplicationException e) {
+            assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.UNAUTHORIZED_401)));
         }
     }
 }

@@ -57,4 +57,11 @@ public class UserTest {
 
         assertNotNull(user.getToken());
     }
+
+    @Test
+    public void givenAUser_whenStopShowingFilteredAlert_thenShowingFilteredAlertIsFalse() {
+        user.stopShowingFilteredAlert();
+
+        assertFalse(user.showsWeightFilteredAlert());
+    }
 }

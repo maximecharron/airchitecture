@@ -9,7 +9,7 @@ loginApp.factory('loginResource', ["$resource", function($resource){
         var str = [];
         for (var d in data)
           str.push(encodeURIComponent(d) + "=" + encodeURIComponent(data[d]));
-          return str.join("&");
+        return str.join("&");
      }
     }
   });

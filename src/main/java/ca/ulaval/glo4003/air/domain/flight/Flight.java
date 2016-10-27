@@ -1,15 +1,26 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
+import ca.ulaval.glo4003.air.domain.airplane.Airplane;
+
 import java.time.LocalDateTime;
 
 public class Flight {
 
-    private String flightNumber;
-    private String departureAirport;
-    private String arrivalAirport;
-    private LocalDateTime departureDate;
-    private String airlineCompany;
-    private int availableSeats;
+    private final String flightNumber;
+    private final String departureAirport;
+    private final String arrivalAirport;
+    private final LocalDateTime departureDate;
+    private final String airlineCompany;
+    private final Airplane airplane;
+
+    public Flight(String flightNumber, String departureAirport, String arrivalAirport, LocalDateTime departureDate, String airlineCompany, Airplane airplane) {
+        this.flightNumber = flightNumber;
+        this.departureAirport = departureAirport;
+        this.arrivalAirport = arrivalAirport;
+        this.departureDate = departureDate;
+        this.airlineCompany = airlineCompany;
+        this.airplane = airplane;
+    }
 
     public boolean isDepartingFrom(String departureAirport) {
         return this.departureAirport.equals(departureAirport);
@@ -23,55 +34,42 @@ public class Flight {
         return departureDate.isEqual(date);
     }
 
-    public boolean isFuture() {
-        return departureDate.isAfter(LocalDateTime.now());
+    public boolean isLeavingAfter(LocalDateTime date) { return departureDate.isAfter(date); }
+
+
+    public boolean acceptsWeight(double weight) {
+        return airplane.acceptsWeight(weight);
+    }
+
+    public boolean hasAdditionalWeightOption() {
+        return this.airplane.hasAdditionalWeightOption();
+    }
+
+    public boolean acceptsAdditionalWeight(double weight) {
+        return airplane.acceptsAdditionalWeight(weight);
     }
 
     public String getFlightNumber() {
         return flightNumber;
     }
 
-    public void setFlightNumber(String flightNumber) {
-        this.flightNumber = flightNumber;
-    }
-
     public String getDepartureAirport() {
         return departureAirport;
-    }
-
-    public void setDepartureAirport(String departureAirport) {
-        this.departureAirport = departureAirport;
     }
 
     public String getArrivalAirport() {
         return arrivalAirport;
     }
 
-    public void setArrivalAirport(String arrivalAirport) {
-        this.arrivalAirport = arrivalAirport;
-    }
-
     public LocalDateTime getDepartureDate() {
         return departureDate;
-    }
-
-    public void setDepartureDate(LocalDateTime departureDate) {
-        this.departureDate = departureDate;
     }
 
     public String getAirlineCompany() {
         return airlineCompany;
     }
 
-    public void setAirlineCompany(String airlineCompany) {
-        this.airlineCompany = airlineCompany;
-    }
-
     public int getAvailableSeats() {
-        return availableSeats;
-    }
-
-    public void setAvailableSeats(int availableSeats) {
-        this.availableSeats = availableSeats;
+        return airplane.getAvailableSeats();
     }
 }

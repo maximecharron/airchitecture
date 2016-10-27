@@ -13,4 +13,4 @@ registerApp.factory('registerResource', ["$resource", function($resource){
      }
     }
   });
-}])
+}]);

@@ -1,6 +1,7 @@
 package ca.ulaval.glo4003.air.api.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightDto;
+import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchDto;
 import ca.ulaval.glo4003.air.domain.flight.FlightService;
 
 import javax.ws.rs.*;
@@ -22,24 +23,20 @@ public class FlightResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<FlightDto> findAllWithFilters(@QueryParam("from") String departureAirport,
+    public FlightSearchDto findAllWithFilters(@QueryParam("from") String departureAirport,
                                               @QueryParam("to") String arrivalAirport,
-                                              @QueryParam("datetime") String departureDate) {
+                                              @QueryParam("datetime") String departureDate,
+                                              @QueryParam("weight") String weight) {
         validateAirportsArePresent(departureAirport, arrivalAirport);
+        validateWeightIsPresent(weight);
 
-        LocalDateTime dateTime = null;
+        LocalDateTime parsedDate = null;
 
         if (departureDate != null) {
-            try {
-                dateTime = LocalDateTime.parse(departureDate, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            } catch (DateTimeParseException e) {
-                throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
-                                                          .entity("Invalid datetime format. " + e.getMessage())
-                                                          .build());
-            }
+            parsedDate = parseDate(departureDate);
         }
 
-        return flightService.findAllWithFilters(departureAirport, arrivalAirport, dateTime);
+        return flightService.findAllWithFilters(departureAirport, arrivalAirport, parsedDate, parseWeight(weight));
     }
 
     private void validateAirportsArePresent(String departureAirport, String arrivalAirport) {
@@ -47,6 +44,34 @@ public class FlightResource {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
                                                       .entity("Missing departure or arrival airport.")
                                                       .build());
+        }
+    }
+
+    private void validateWeightIsPresent(String weight) {
+        if (weight == null) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Missing luggage weight.")
+                    .build());
+        }
+    }
+
+    private LocalDateTime parseDate(String date) {
+        try {
+            return LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        } catch (DateTimeParseException e) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Invalid datetime format. " + e.getMessage())
+                    .build());
+        }
+    }
+
+    private double parseWeight(String weight) {
+        try {
+            return Double.parseDouble(weight);
+        } catch (NumberFormatException e) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Invalid weight format. " + e.getMessage())
+                    .build());
         }
     }
 }
