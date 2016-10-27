@@ -9,6 +9,7 @@ var homeApp = angular.module('airchitecture', [
     "airchitecture.login",
     "validation.match",
     "ui.gravatar",
+    "angularModalService",
     "airchitecture.register"
 ]).run(['$rootScope', '$cookies', '$location', function ($rootScope, $cookies, $location) {
 
