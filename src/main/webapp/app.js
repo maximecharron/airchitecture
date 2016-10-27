@@ -12,7 +12,8 @@ var homeApp = angular.module('airchitecture', [
     "ui.gravatar",
     "airchitecture.register",
     "airchitecture.cart",
-    "ui.bootstrap"
+    "ui.bootstrap",
+    "angularModalService"
 ]).run(['$rootScope', '$cookies', '$location', function ($rootScope, $cookies, $location) {
 
     if ($cookies.getObject('user') != null) {

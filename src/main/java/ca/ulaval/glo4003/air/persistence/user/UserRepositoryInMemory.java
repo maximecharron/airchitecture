@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.Optional;
 
 public class UserRepositoryInMemory implements UserRepository {
-
-
     private Map<String, User> users = new HashMap<>();
 
     @Override
@@ -19,8 +17,8 @@ public class UserRepositoryInMemory implements UserRepository {
     }
 
     @Override
-    public Optional<User> findUserByEmail(String username) {
-        return Optional.ofNullable(users.get(username));
+    public Optional<User> findUserByEmail(String email) {
+        return Optional.ofNullable(users.get(email));
     }
 
     @Override
@@ -30,6 +28,5 @@ public class UserRepositoryInMemory implements UserRepository {
         } else {
             users.put(user.getEmailAddress(), user);
         }
-
     }
 }

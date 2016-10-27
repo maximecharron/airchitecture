@@ -2,9 +2,9 @@ package ca.ulaval.glo4003.air.domain.transaction;
 
 import ca.ulaval.glo4003.air.api.transaction.dto.CartItemDto;
 import ca.ulaval.glo4003.air.api.transaction.dto.TransactionDto;
-import ca.ulaval.glo4003.air.domain.transaction.cartitems.CartItem;
-import ca.ulaval.glo4003.air.domain.transaction.cartitems.CartItemAssembler;
-import ca.ulaval.glo4003.air.domain.user.UserAssembler;
+import ca.ulaval.glo4003.air.transfer.transaction.CartItemAssembler;
+import ca.ulaval.glo4003.air.transfer.user.UserAssembler;
+import ca.ulaval.glo4003.air.transfer.transaction.TransactionAssembler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,12 +19,12 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.BDDMockito.willReturn;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TransactionAssemblerTest {
+public class TransactionFactoryTest {
 
     private static final String EMAIL_ADDRESS = "hey@ho.com";
 
     @Mock
-    private CartItemAssembler cartItemAssembler;
+    private CartItemFactory cartItemFactory;
 
     @Mock
     private UserAssembler userAssembler;
@@ -35,11 +35,11 @@ public class TransactionAssemblerTest {
     private CartItemDto cartItemDto;
     private TransactionDto transactionDto;
 
-    private TransactionAssembler transactionAssembler;
+    private TransactionFactory transactionFactory;
 
     @Before
     public void setup() {
-        transactionAssembler = new TransactionAssembler(cartItemAssembler);
+        transactionFactory = new TransactionFactory(cartItemFactory);
         cartItemDto = new CartItemDto();
         setupCartItemMock();
         setupTransactionDto();
@@ -47,9 +47,9 @@ public class TransactionAssemblerTest {
 
     @Test
     public void givenATransactionDto_whenAssemblingATransactionObject_thenItsWellAssembled() {
-        willReturn(Collections.singletonList(cartItem)).given(cartItemAssembler).create(Collections.singletonList(cartItemDto));
+        willReturn(Collections.singletonList(cartItem)).given(cartItemFactory).create(Collections.singletonList(cartItemDto));
 
-        Transaction transaction = transactionAssembler.create(transactionDto);
+        Transaction transaction = transactionFactory.create(transactionDto);
 
         assertHasAllTheRightProperties(transaction);
     }

@@ -1,9 +1,10 @@
 package ca.ulaval.glo4003.air.domain.user;
 
 import ca.ulaval.glo4003.air.api.user.dto.UserDto;
+import ca.ulaval.glo4003.air.api.user.dto.UserUpdateDto;
+import ca.ulaval.glo4003.air.transfer.user.UserAssembler;
 
 import javax.naming.AuthenticationException;
-import java.util.Optional;
 import java.util.logging.Logger;
 
 public class UserService {
@@ -12,11 +13,13 @@ public class UserService {
     private UserRepository userRepository;
     private UserAssembler userAssembler;
     private UserFactory userFactory;
+    private TokenDecoder tokenDecoder;
 
-    public UserService(UserRepository userRepository, UserAssembler userAssembler, UserFactory userFactory) {
+    public UserService(UserRepository userRepository, UserAssembler userAssembler, UserFactory userFactory, TokenDecoder tokenDecoder) {
         this.userRepository = userRepository;
         this.userAssembler = userAssembler;
         this.userFactory = userFactory;
+        this.tokenDecoder = tokenDecoder;
     }
 
     public UserDto authenticateUser(String email, String password) throws AuthenticationException {
@@ -24,7 +27,7 @@ public class UserService {
             User user = findUser(email);
             verifyPassword(user, password);
             generateToken(user);
-            updateUser(user);
+            userRepository.update(user);
             return userAssembler.create(user);
         } catch (NoSuchUserException e) {
             logger.info("Unable to authenticate user with email " + email + " because it doesn't exist");
@@ -43,24 +46,37 @@ public class UserService {
             logger.info("Unable to persist user with email " + email + " because it already exists");
             throw e;
         }
+    }
 
+    public UserDto updateAuthenticatedUser(String token, UserUpdateDto userUpdateDto) throws InvalidTokenException {
+        try {
+            User user = findUserWithToken(token);
+            updateUser(user, userUpdateDto);
+            userRepository.update(user);
+            return userAssembler.create(user);
+        }
+        catch (InvalidTokenException | NoSuchUserException e) {
+            logger.info("Unable to find the authenticated user because the token is invalid.");
+            throw new InvalidTokenException("Invalid token.", e);
+        }
+    }
+
+    private void updateUser(User user, UserUpdateDto userUpdateDto) {
+        if (!userUpdateDto.showWeightFilteredAlert) {
+            user.stopShowingFilteredAlert();
+        }
+    }
+
+    private User findUserWithToken(String token) throws NoSuchUserException, InvalidTokenException {
+        return findUser(tokenDecoder.decode(token));
     }
 
     private User findUser(String email) throws NoSuchUserException {
-        Optional<User> user = userRepository.findUserByEmail(email);
-        if (!user.isPresent()) {
-            logger.info("Unable to login with email " + email + " because user does not exist");
-            throw new NoSuchUserException("User " + email + " does not exists");
-        }
-        return user.get();
+        return userRepository.findUserByEmail(email).orElseThrow(() -> new NoSuchUserException("User " + email + " does not exists."));
     }
 
     private void generateToken(User user) {
         user.generateToken();
-    }
-
-    private void updateUser(User user) {
-        userRepository.update(user);
     }
 
     private void verifyPassword(User user, String password) throws InvalidPasswordException {
@@ -69,5 +85,4 @@ public class UserService {
             throw new InvalidPasswordException("Password is invalid");
         }
     }
-
 }

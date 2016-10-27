@@ -1,8 +1,6 @@
 package ca.ulaval.glo4003.air.domain.transaction;
 
 import ca.ulaval.glo4003.air.api.transaction.dto.TransactionDto;
-import ca.ulaval.glo4003.air.domain.flight.FlightRepository;
-import ca.ulaval.glo4003.air.domain.transaction.cartitems.CartItem;
 
 import java.util.logging.Logger;
 
@@ -12,31 +10,21 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final EmailSender emailSender;
-    private final TransactionAssembler transactionAssembler;
-    private final FlightRepository flightRepository;
+    private final TransactionFactory transactionFactory;
 
-    public TransactionService(TransactionRepository transactionRepository, FlightRepository flightRepository, EmailSender emailSender, TransactionAssembler transactionAssembler) {
+    public TransactionService(TransactionRepository transactionRepository, EmailSender emailSender, TransactionFactory transactionFactory) {
         this.transactionRepository = transactionRepository;
-        this.flightRepository = flightRepository;
         this.emailSender = emailSender;
-        this.transactionAssembler = transactionAssembler;
+        this.transactionFactory = transactionFactory;
     }
 
     public void buyTickets(TransactionDto transactionDto) {
         logTransaction(transactionDto);
 
-        Transaction transaction = transactionAssembler.create(transactionDto);
+        Transaction transaction = transactionFactory.create(transactionDto);
 
         transactionRepository.save(transaction);
         emailSender.sendTransactionDetails(transaction);
-    }
-
-    public void reserveTickets(CartItem cartItem){
-        updateFlight(cartItem);
-    }
-
-    private void updateFlight(CartItem cartItem){
-        flightRepository.findOne(cartItem.getAirlineCompany(), cartItem.getArrivalAirport(), cartItem.getDepartureDate());
     }
 
     private void logTransaction(TransactionDto transactionDto) {

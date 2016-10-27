@@ -1,15 +1,9 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
 import java.time.LocalDateTime;
-import java.util.stream.Stream;
+import java.util.Optional;
 
 public interface FlightRepository {
-
-    Stream<Flight> findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate);
-
-    Flight findOne(String airlineCompany, String arrivalAirport, LocalDateTime departureDate);
-
-    Stream<Flight> findFuture(String departureAirport, String arrivalAirport);
-
     void save(Flight flight);
+    FlightQueryBuilder query();
 }

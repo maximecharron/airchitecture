@@ -1,4 +1,4 @@
-package ca.ulaval.glo4003.air.domain.weightdetection;
+package ca.ulaval.glo4003.air.transfer.weightdetection;
 
 import ca.ulaval.glo4003.air.api.weightdetection.dto.WeightDetectionDto;
 

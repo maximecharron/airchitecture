@@ -1,11 +1,12 @@
-package ca.ulaval.glo4003.air.domain.transaction.cartitems;
+package ca.ulaval.glo4003.air.domain.transaction;
 
 import ca.ulaval.glo4003.air.api.transaction.dto.CartItemDto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CartItemAssembler {
+public class CartItemFactory {
 
     public CartItem create(CartItemDto cartItemDto) {
         return new CartItem(cartItemDto.ticketsQuantity, cartItemDto.arrivalAirport, cartItemDto.airlineCompany, cartItemDto.departureDate);

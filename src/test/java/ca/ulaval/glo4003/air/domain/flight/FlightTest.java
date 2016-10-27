@@ -1,83 +1,163 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
+import ca.ulaval.glo4003.air.domain.airplane.Airplane;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willReturn;
 
+@RunWith(MockitoJUnitRunner.class)
 public class FlightTest {
 
-    private static final String YQB = "YQB";
-    private static final String DUB = "DUB";
-    private static final LocalDateTime DEPARTURE_DATE = LocalDateTime.of(2000, 10, 10, 9, 55);
-    private static final LocalDateTime ANOTHER_DATE = LocalDateTime.of(1990, 10, 10, 9, 55);
-    private Flight flight;
+    private static final int A_TICKETS_QUANTITY = 2;
+    private static final int A_NUMBER_OF_AVAILABLE_SEATS = 42;
+    private static final double A_WEIGHT = 40.5;
+    private static final boolean AN_ACCEPTING_WEIGHT_RESULT = true;
+    private static final boolean AN_ACCEPTING_ADDITIONAL_WEIGHT_RESULT = true;
+    private static final boolean A_CAN_ACCEPT_ADDITIONAL_WEIGHT_RESULT = true;
+    private static final String AIRPORT_A = "YQB";
+    private static final String AIRPORT_B = "DUB";
+    private static final String AN_AIRLINE_COMPANY = "AirDariusRuckerWagonWheel";
+    private static final LocalDateTime A_DEPARTURE_DATE = LocalDateTime.of(2016, 10, 10, 9, 55);
+    private static final LocalDateTime ANOTHER_DEPARTURE_DATE = LocalDateTime.of(2018, 8, 10, 9, 55);
+
+    @Mock
+    private Airplane airplane;
 
     @Before
-    public void setup() {
-        flight = new Flight();
+    public void setUp() throws Exception {
+
     }
 
     @Test
-    public void givenAnOldFlight_whenCheckingIfItsAFutureFlight_thenItsNot() {
-        flight.setDepartureDate(DEPARTURE_DATE);
+    public void givenAFlight_whenCheckingIfItsLeavingAfterADateFollowingItsDepartureDate_thenItsNot() {
+        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
 
-        boolean isFuture = flight.isFuture();
+        boolean result = flight.isLeavingAfter(A_DEPARTURE_DATE.plusDays(1));
 
-        assertFalse(isFuture);
+        assertFalse(result);
     }
 
     @Test
-    public void givenAFlightThatWillLeaveTomorrow_whenCheckingIfItsAFutureFlight_thenItIs() {
-        flight.setDepartureDate(LocalDateTime.now().plusDays(1));
+    public void givenAFlight_whenCheckingIfItsLeavingAfterADatePriorToItsDepartureDate_thenItIs() {
+        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
 
-        boolean isFuture = flight.isFuture();
+        boolean result = flight.isLeavingAfter(A_DEPARTURE_DATE.minusDays(1));
 
-        assertTrue(isFuture);
+        assertTrue(result);
     }
 
     @Test
-    public void givenAFlighDepartingFromA_whenCheckingIfItsLeavingFromA_thenItIs() {
-        flight.setDepartureAirport(YQB);
+    public void givenAFlight_whenCheckingIfItsLeavingAfterItsDepartureDate_thenItsNot() {
+        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
 
-        assertTrue(flight.isDepartingFrom(YQB));
+        boolean result = flight.isLeavingAfter(A_DEPARTURE_DATE);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void givenAFlightDepartingFromA_whenCheckingIfItsLeavingFromA_thenItIs() {
+        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
+
+        assertTrue(flight.isDepartingFrom(AIRPORT_A));
     }
 
     @Test
     public void givenAFlightLeavingToB_whenCheckingIfItsGoingToB_thenItIs() {
-        flight.setArrivalAirport(DUB);
+        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
 
-        assertTrue(flight.isGoingTo(DUB));
+        assertTrue(flight.isGoingTo(AIRPORT_B));
     }
 
     @Test
-    public void givenAFlighDepartingFromA_whenCheckingIfItsLeavingFromB_thenItIsNot() {
-        flight.setDepartureAirport(YQB);
+    public void givenAFlightDepartingFromA_whenCheckingIfItsLeavingFromB_thenItIsNot() {
+        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
 
-        assertFalse(flight.isDepartingFrom(DUB));
+        assertFalse(flight.isDepartingFrom(AIRPORT_B));
     }
 
     @Test
     public void givenAFlightLeavingToB_whenCheckingIfItsGoingToA_thenItIsNot() {
-        flight.setArrivalAirport(DUB);
+        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
 
-        assertFalse(flight.isGoingTo(YQB));
+        assertFalse(flight.isGoingTo(AIRPORT_A));
     }
 
     @Test
     public void givenAFlightLeavingOnADate_whenCheckingIfItsLeavingOnThisDate_thenItIs() {
-        flight.setDepartureDate(DEPARTURE_DATE);
+        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
 
-        assertTrue(flight.isLeavingOn(DEPARTURE_DATE));
+        assertTrue(flight.isLeavingOn(A_DEPARTURE_DATE));
     }
 
     @Test
     public void givenAFlightLeavingOnDateA_whenCheckingIfItsLeavingOnDateB_thenItsNot() {
-        flight.setDepartureDate(DEPARTURE_DATE);
+        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
 
-        assertFalse(flight.isLeavingOn(ANOTHER_DATE));
+        assertFalse(flight.isLeavingOn(ANOTHER_DEPARTURE_DATE));
+    }
+
+    @Test
+    public void givenAFlight_whenCheckingIfAcceptingWeight_thenItsDelegatedToTheAirplane() {
+        Flight flight = givenAFlight();
+        given(airplane.acceptsWeight(A_WEIGHT)).willReturn(AN_ACCEPTING_WEIGHT_RESULT);
+
+        boolean result = flight.acceptsWeight(A_WEIGHT);
+
+        assertEquals(result, AN_ACCEPTING_WEIGHT_RESULT);
+    }
+
+    @Test
+    public void givenAFlight_whenCheckingIfAcceptingAdditionalWeight_thenItsDelegatedToTheAirplane() {
+        Flight flight = givenAFlight();
+        given(airplane.acceptsAdditionalWeight(A_WEIGHT)).willReturn(AN_ACCEPTING_ADDITIONAL_WEIGHT_RESULT);
+
+        boolean result = flight.acceptsAdditionalWeight(A_WEIGHT);
+
+        assertEquals(result, AN_ACCEPTING_ADDITIONAL_WEIGHT_RESULT);
+    }
+
+    @Test
+    public void givenAFlight_whenCheckingIfItHasAdditionalWeightOption_thenItsDelegatedToTheAirplane() {
+        Flight flight = givenAFlight();
+        given(airplane.hasAdditionalWeightOption()).willReturn(A_CAN_ACCEPT_ADDITIONAL_WEIGHT_RESULT);
+
+        boolean result = flight.hasAdditionalWeightOption();
+
+        assertEquals(result, A_CAN_ACCEPT_ADDITIONAL_WEIGHT_RESULT);
+    }
+
+    @Test
+    public void givenAFlight_whenReservingPlaces_thenAvailableSeatsDecreases() {
+        willReturn(A_NUMBER_OF_AVAILABLE_SEATS).given(airplane).getAvailableSeats();
+        Flight flight = givenAFlight();
+
+        flight.reservePlaces(A_TICKETS_QUANTITY);
+
+        int availableSeatsLeft = A_NUMBER_OF_AVAILABLE_SEATS - A_TICKETS_QUANTITY;
+        assertEquals(flight.getAvailableSeats(), availableSeatsLeft);
+    }
+
+    @Test
+    public void givenAFlight_whenReleasingPlaces_thenAvailableSeatsIncreases() {
+        willReturn(A_NUMBER_OF_AVAILABLE_SEATS).given(airplane).getAvailableSeats();
+        Flight flight = givenAFlight();
+
+        flight.releasePlaces(A_TICKETS_QUANTITY);
+
+        int availableSeatsLeft = A_NUMBER_OF_AVAILABLE_SEATS + A_TICKETS_QUANTITY;
+        assertEquals(flight.getAvailableSeats(), availableSeatsLeft);
+    }
+
+    private Flight givenAFlight() {
+        return new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
     }
 }

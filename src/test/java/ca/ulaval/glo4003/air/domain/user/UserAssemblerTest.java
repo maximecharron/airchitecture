@@ -1,6 +1,7 @@
 package ca.ulaval.glo4003.air.domain.user;
 
 import ca.ulaval.glo4003.air.api.user.dto.UserDto;
+import ca.ulaval.glo4003.air.transfer.user.UserAssembler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +13,6 @@ import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserAssemblerTest {
-
     private static final String EMAIL = "test@test.com";
     private static final String PASSWORD = "DEF";
     private static final String A_TOKEN = "aToken";
@@ -39,7 +39,6 @@ public class UserAssemblerTest {
         given(user.getPassword()).willReturn(PASSWORD);
         given(user.getToken()).willReturn(A_TOKEN);
     }
-
 
     private void assertHasAllTheRelevantProperties(UserDto userDto) {
         assertEquals(EMAIL, userDto.emailAddress);

@@ -1,44 +1,90 @@
 package ca.ulaval.glo4003.air.persistence.flight;
 
 import ca.ulaval.glo4003.air.domain.flight.Flight;
+import ca.ulaval.glo4003.air.domain.flight.FlightQueryBuilder;
 import ca.ulaval.glo4003.air.domain.flight.FlightRepository;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FlightRepositoryInMemory implements FlightRepository {
-
     private Map<String, Flight> flights = new HashMap<>();
 
     @Override
     public void save(Flight flight) {
-        flights.put(flight.getFlightNumber(), flight);
+        flights.put(createFlightKey(flight), flight);
+    }
+
+    private String createFlightKey(Flight flight){
+        return flight.getAirlineCompany()+flight.getArrivalAirport()+flight.getDepartureDate().toString();
     }
 
     @Override
-    public Stream<Flight> findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate) {
-        return flights.values()
-                      .stream()
-                      .filter(flight -> flight.isLeavingOn(departureDate))
-                      .filter(flight -> flight.isDepartingFrom(departureAirport))
-                      .filter(flight -> flight.isGoingTo(arrivalAirport));
+    public FlightQueryBuilder query() {
+        return new MemoryFlightQueryBuilder();
     }
 
-    @Override
-    public Flight findOne(String airlineCompany, String arrivalAirport, LocalDateTime departureDate) {
-        return flights.values()
-                      .stream()
-                      .filter(flight -> flight.isLeavingOn(departureDate))
-                      .filter(flight -> flight.isFromCompany(airlineCompany))
-                      .filter(flight -> flight.isGoingTo(arrivalAirport));
+    private class MemoryFlightQueryBuilder implements FlightQueryBuilder {
+        private Set<Predicate<Flight>> predicates = new HashSet<>();
+
+        @Override
+        public FlightQueryBuilder isGoingTo(String airport) {
+            predicates.add(flight -> flight.isGoingTo(airport));
+            return this;
+        }
+
+        @Override
+        public FlightQueryBuilder isDepartingFrom(String airport) {
+            predicates.add(flight -> flight.isDepartingFrom(airport));
+            return this;
+        }
+
+        @Override
+        public FlightQueryBuilder isLeavingOn(LocalDateTime date) {
+            predicates.add(flight -> flight.isLeavingOn(date));
+            return this;
+        }
+
+        @Override
+        public FlightQueryBuilder isLeavingAfter(LocalDateTime date) {
+            predicates.add(flight -> flight.isLeavingAfter(date));
+            return this;
+        }
+
+        @Override
+        public FlightQueryBuilder acceptsWeight(double weight) {
+            predicates.add(flight -> flight.acceptsWeight(weight));
+            return this;
+        }
+
+        @Override
+        public FlightQueryBuilder hasAirlineCompany(String airlineCompany) {
+            predicates.add(flight -> flight.getAirlineCompany().equals(airlineCompany));
+            return this;
+        }
+
+        @Override
+        public List<Flight> toList() {
+            Stream<Flight> flightStream = filterFlightStream();
+            return flightStream.collect(Collectors.toList());
+        }
+
+        @Override
+        public Optional<Flight> findOne() {
+            Stream<Flight> flightStream = filterFlightStream();
+            return flightStream.findFirst();
+        }
+
+        private Stream<Flight> filterFlightStream() {
+            Stream<Flight> flightStream = flights.values().stream();
+            for (Predicate<Flight> predicate: predicates) {
+                flightStream = flightStream.filter(predicate);
+            }
+            return flightStream;
+        }
     }
 
-    @Override
-    public Stream<Flight> findFuture(String departureAirport, String arrivalAirport) {
-        return flights.values()
-                      .stream()
-                      .filter(Flight::isFuture);
-    }
 }
