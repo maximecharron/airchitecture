@@ -6,4 +6,19 @@ homeApp.
             controller: "cart-controller"
 
         });
+
+        $routeProvider.when('/checkout', {
+            templateUrl: "components/cart/views/checkoutinfo.html",
+            controller: "cart-controller"
+
+        });
+
+
+        $routeProvider.when('/checkoutsummary', {
+            templateUrl: "components/cart/views/checkoutsummary.html",
+            controller: "cart-controller"
+
+        });
+
+
     }]);

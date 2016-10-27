@@ -14,13 +14,14 @@ public class Flight {
     private int availableSeats;
     private float seatPrice;
 
-    public Flight(String departureAirport, String arrivalAirport, LocalDateTime departureDate, String airlineCompany, Airplane airplane) {
+    public Flight(String departureAirport, String arrivalAirport, LocalDateTime departureDate, String airlineCompany, Airplane airplane, float seatPrice) {
         this.departureAirport = departureAirport;
         this.arrivalAirport = arrivalAirport;
         this.departureDate = departureDate;
         this.airlineCompany = airlineCompany;
         this.airplane = airplane;
         this.availableSeats = this.airplane.getAvailableSeats();
+        this.seatPrice = seatPrice;
     }
 
     public boolean isDepartingFrom(String departureAirport) {

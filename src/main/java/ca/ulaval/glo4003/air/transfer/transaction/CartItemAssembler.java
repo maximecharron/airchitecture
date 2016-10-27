@@ -12,7 +12,7 @@ public class CartItemAssembler {
         CartItemDto cartItemDto = new CartItemDto();
         cartItemDto.airlineCompany = cartItem.getAirlineCompany();
         cartItemDto.arrivalAirport = cartItem.getArrivalAirport();
-        cartItemDto.departureDate = cartItem.getDepartureDate();
+        cartItemDto.departureDate = cartItem.getDepartureDate().toString();
         cartItemDto.ticketsQuantity = cartItem.getTicketsQuantity();
         return cartItemDto;
     }

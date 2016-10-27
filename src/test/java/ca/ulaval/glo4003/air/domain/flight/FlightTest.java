@@ -22,6 +22,7 @@ public class FlightTest {
     private static final boolean AN_ACCEPTING_WEIGHT_RESULT = true;
     private static final boolean AN_ACCEPTING_ADDITIONAL_WEIGHT_RESULT = true;
     private static final boolean A_CAN_ACCEPT_ADDITIONAL_WEIGHT_RESULT = true;
+    private static final float A_PRICE = 124f;
     private static final String AIRPORT_A = "YQB";
     private static final String AIRPORT_B = "DUB";
     private static final String AN_AIRLINE_COMPANY = "AirDariusRuckerWagonWheel";
@@ -38,7 +39,7 @@ public class FlightTest {
 
     @Test
     public void givenAFlight_whenCheckingIfItsLeavingAfterADateFollowingItsDepartureDate_thenItsNot() {
-        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
+        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, A_PRICE);
 
         boolean result = flight.isLeavingAfter(A_DEPARTURE_DATE.plusDays(1));
 
@@ -47,7 +48,7 @@ public class FlightTest {
 
     @Test
     public void givenAFlight_whenCheckingIfItsLeavingAfterADatePriorToItsDepartureDate_thenItIs() {
-        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
+        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, A_PRICE);
 
         boolean result = flight.isLeavingAfter(A_DEPARTURE_DATE.minusDays(1));
 
@@ -56,7 +57,7 @@ public class FlightTest {
 
     @Test
     public void givenAFlight_whenCheckingIfItsLeavingAfterItsDepartureDate_thenItsNot() {
-        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
+        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, A_PRICE);
 
         boolean result = flight.isLeavingAfter(A_DEPARTURE_DATE);
 
@@ -65,42 +66,42 @@ public class FlightTest {
 
     @Test
     public void givenAFlightDepartingFromA_whenCheckingIfItsLeavingFromA_thenItIs() {
-        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
+        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, A_PRICE);
 
         assertTrue(flight.isDepartingFrom(AIRPORT_A));
     }
 
     @Test
     public void givenAFlightLeavingToB_whenCheckingIfItsGoingToB_thenItIs() {
-        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
+        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, A_PRICE);
 
         assertTrue(flight.isGoingTo(AIRPORT_B));
     }
 
     @Test
     public void givenAFlightDepartingFromA_whenCheckingIfItsLeavingFromB_thenItIsNot() {
-        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
+        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, A_PRICE);
 
         assertFalse(flight.isDepartingFrom(AIRPORT_B));
     }
 
     @Test
     public void givenAFlightLeavingToB_whenCheckingIfItsGoingToA_thenItIsNot() {
-        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
+        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, A_PRICE);
 
         assertFalse(flight.isGoingTo(AIRPORT_A));
     }
 
     @Test
     public void givenAFlightLeavingOnADate_whenCheckingIfItsLeavingOnThisDate_thenItIs() {
-        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
+        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, A_PRICE);
 
         assertTrue(flight.isLeavingOn(A_DEPARTURE_DATE));
     }
 
     @Test
     public void givenAFlightLeavingOnDateA_whenCheckingIfItsLeavingOnDateB_thenItsNot() {
-        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
+        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, A_PRICE);
 
         assertFalse(flight.isLeavingOn(ANOTHER_DEPARTURE_DATE));
     }
@@ -158,6 +159,6 @@ public class FlightTest {
     }
 
     private Flight givenAFlight() {
-        return new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane);
+        return new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, A_PRICE);
     }
 }

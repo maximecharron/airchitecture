@@ -1,10 +1,7 @@
-<<<<<<< HEAD
-homeApp.controller("home-controller", function ($scope, $http, homeResource, weightDetectionResource) {
-=======
-homeApp.controller("home-controller", function ($scope, homeResource, weightDetectionResource, userResource, ModalService) {
->>>>>>> master
+homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cookies, homeResource, weightDetectionResource, userResource, ModalService) {
 
     $scope.isLoading = false;
+    $scope.doNotShow = false;
 
     $scope.formData = {
         from: "",
@@ -31,6 +28,13 @@ homeApp.controller("home-controller", function ($scope, homeResource, weightDete
 
     $scope.closeWeightFilteredAlert = function () {
         $scope.showWeightFilteredAlert = false;
+        if ($rootScope.user && $scope.doNotShow){
+            userResource.put({showWeightFilteredAlert: false}, function onSuccess(data) {
+                $rootScope.user = data;
+            });
+        } else if ($scope.doNotShow){
+            $cookies.putObject("showWeightFilteredAlert", false);
+        }
     };
 
     $scope.find = function () {
@@ -51,17 +55,23 @@ homeApp.controller("home-controller", function ($scope, homeResource, weightDete
             searchCriteria.weight = $scope.formData.luggageWeight;
         }
         homeResource.get(searchCriteria, function onSuccess(data) {
-            if ($scope.user) $scope.showWeightFilteredAlert = $scope.user.showsWeightFilteredAlert;
-            else $scope.showWeightFilteredAlert = $scope.showWeightFilteredAlert === undefined;
+            var flights = [];
+            for (index in data.flights) {
+                var flight = data.flights[index];
+                flight.id = flight.airlineCompany + flight.departureDate + flight.arrivalAirport;
+                flight.humanArrivalAirport = $scope.formData.to.name;
+                flight.humanDepartureAirport = $scope.formData.from.name;
+                flight.name = flight.airlineCompany + " from " + flight.humanDepartureAirport + " to "+ flight.humanArrivalAirport;
+                flights.push(flight);
+            }
+            if ($rootScope.user) {$scope.showWeightFilteredAlert = $scope.user.showsWeightFilteredAlert}
+            else {$scope.showWeightFilteredAlert = $cookies.getObject("showWeightFilteredAlert") || $scope.showWeightFilteredAlert === undefined;}
 
-            $scope.flightsResults = data.flights;
+            $scope.flightsResults = flights;
             $scope.flightsWereFilteredByWeight = data.flightsWereFilteredByWeight;
             $scope.isLoading = false;
             $scope.haveResults = true;
 
-            userResource.put({showWeightFilteredAlert: false}, function onSuccess(data) {
-                $scope.user = data;
-            });
         }, function onError(data) {
             $scope.isLoading = false;
             $scope.hasError = true;

@@ -9,21 +9,21 @@
     <form name="form" ng-submit="find()" role="form">
         <div class="form-group">
             <label>From</label>
-            <input type="text" name="from" id="from" class="form-control" ng-model="formData.from" placeholder="From"
+            <input type="text" autocomplete="off" name="from" id="from" class="form-control" ng-model="formData.from" placeholder="From"
                    uib-typeahead="airport as airport.name for airport in airports | filter:$viewValue | limitTo:8" typeahead-show-hint="true"/>
         </div>
         <div class="form-group">
             <label>To</label>
-            <input type="text" name="to" id="to" class="form-control" ng-model="formData.to" placeholder="To"
+            <input type="text" autocomplete="off" name="to" id="to" class="form-control" ng-model="formData.to" placeholder="To"
                    uib-typeahead="airport as airport.name for airport in airports | filter:$viewValue | limitTo:8" typeahead-show-hint="true"/>
         </div>
         <div class="form-group">
             <label>Departure date</label>
-            <input type="datetime-local" value="" name="date" id="date" class="form-control" ng-model="formData.date"/>
+            <input type="datetime-local" autocomplete="off" value="" name="date" id="date" class="form-control" ng-model="formData.date"/>
         </div>
         <div class="form-group">
             <label>Luggage Weight</label>
-            <input type="number" pattern="[0-9]+(\.[0-9]+)?" step="0.01" value="" name="luggageWeight" id="luggage-weight" class="form-control" ng-model="formData.luggageWeight"/>
+            <input type="number" autocomplete="off" pattern="[0-9]+(\.[0-9]+)?" step="0.01" value="" name="luggageWeight" id="luggage-weight" class="form-control" ng-model="formData.luggageWeight"/>
         </div>
         <div class="form-group">
             <input type="button" class="btn btn-primary" ng-click="detectWeight()" value="Detect Weight Automatically" />
@@ -36,6 +36,7 @@
     <div ng-show="showWeightFilteredAlert && flightsWereFilteredByWeight" class="alert alert-warning" role="alert">
         <button type="button" class="close" ng-click="closeWeightFilteredAlert()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <strong>Warning!</strong> Some flights are not shown because your luggage weight exceeds their capacity.
+        <span><input  type="checkbox" ng-model="doNotShow"/>Do not show me this alert again</span>
     </div>
 
     <div ng-show="hasError" class="alert alert-danger" role="alert">
@@ -52,7 +53,7 @@
                     <th>Available seats</th>
                     <th>Departure date</th>
                 </tr>
-                <tr ng-attr-data-toggle="{{flight.hasAdditionalWeightOption && !flight.acceptsAdditionalWeight ? undefined : 'modal'}}" class="result" ng-class="{'disabled': flight.hasAdditionalWeightOption && !flight.acceptsAdditionalWeight}" data-target="#{{flight.flightNumber}}" ng-repeat="flight in flightsResults">
+                <tr ng-attr-data-toggle="{{flight.hasAdditionalWeightOption && !flight.acceptsAdditionalWeight ? undefined : 'modal'}}" class="result" ng-class="{'disabled': flight.hasAdditionalWeightOption && !flight.acceptsAdditionalWeight}" data-target="#{{$index}}" ng-repeat="flight in flightsResults">
                     <td>{{flight.airlineCompany}}</td>
                     <td>{{flight.availableSeats}}</td>
                     <td>{{flight.departureDate}}</td>
@@ -64,30 +65,32 @@
         </div>
     </div>
 
-    <div class="modal fade" id="{{flight.flightNumber}}" ng-repeat="flight in flightsResults" tabindex="-1"
+    <div class="modal fade" id="{{$index}}" ng-repeat="flight in flightsResults" tabindex="-1"
          role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">{{flight.flightNumber}}</h4>
+                    <h4 class="modal-title" id="myModalLabel">{{flight.airlineCompany}}</h4>
                 </div>
                 <div class="modal-body">
                     <label>Airline company</label>
                     <p>{{flight.airlineCompany}}</p>
                     <label>Departure airport</label>
-                    <p>{{flight.departureAirport}}</p>
+                    <p>{{flight.humanDepartureAirport}}</p>
                     <label>Arrival airport</label>
-                    <p>{{flight.arrivalAirport}}</p>
+                    <p>{{flight.humanArrivalAirport}}</p>
                     <label>Available seats</label>
                     <p>{{flight.availableSeats}}</p>
+                    <label>Seat price</label>
+                    <p>{{flight.seatPrice | currency}}}</p>
                     <label>Departure date</label>
                     <p>{{flight.departureDate}}</p>
                 </div>
 
                 <div class="modal-footer">
-                    <ngcart-addtocart id="flight.flightNumber" name="My Item #1" price="10.99" quantity="1">Add to Cart</ngcart-addtocart>
+                    <ngcart-addtocart id="{{flight.id}}" name="{{flight.name}}" price="{{flight.seatPrice}}" quantity="1" data="flight">Add to Cart</ngcart-addtocart>
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                 </div>
             </div>

@@ -5,13 +5,13 @@ var homeApp = angular.module('airchitecture', [
     'ngRoute',
     'ngResource',
     'ngCookies',
-    'ngCart',
     'airchitecture.user',
     "airchitecture.login",
     "validation.match",
     "ui.gravatar",
     "airchitecture.register",
     "airchitecture.cart",
+    'ngCart',
     "ui.bootstrap",
     "angularModalService"
 ]).run(['$rootScope', '$cookies', '$location', function ($rootScope, $cookies, $location) {

@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
 @RunWith(MockitoJUnitRunner.class)
 public class CartItemFactoryTest {
 
-    private static final LocalDateTime DEPARTURE_DATE = LocalDateTime.now();
+    private static final String DEPARTURE_DATE = LocalDateTime.now().toString();
     private static final String AIRLINE_COMPANY = "AirFrenette";
     private static final String ARRIVAL_AIRPORT = "YQB";
     private static final int NUMBER_OF_TICKETS = 2;
@@ -59,7 +59,7 @@ public class CartItemFactoryTest {
     }
 
     private void assertCartItemIsWellAssembled(CartItem cartItem) {
-        assertThat(cartItem.getDepartureDate(), is(equalTo(DEPARTURE_DATE)));
+        assertThat(cartItem.getDepartureDate(), is(equalTo(LocalDateTime.parse(DEPARTURE_DATE))));
         assertThat(cartItem.getAirlineCompany(), is(equalTo(AIRLINE_COMPANY)));
         assertThat(cartItem.getArrivalAirport(), is(equalTo(ARRIVAL_AIRPORT)));
         assertThat(cartItem.getTicketsQuantity(), is(equalTo(NUMBER_OF_TICKETS)));
