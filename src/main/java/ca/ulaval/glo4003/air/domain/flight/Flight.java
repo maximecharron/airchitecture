@@ -12,6 +12,7 @@ public class Flight {
     private final LocalDateTime departureDate;
     private final String airlineCompany;
     private final Airplane airplane;
+    private int availableSeats;
 
     public Flight(String flightNumber, String departureAirport, String arrivalAirport, LocalDateTime departureDate, String airlineCompany, Airplane airplane) {
         this.flightNumber = flightNumber;
@@ -20,6 +21,7 @@ public class Flight {
         this.departureDate = departureDate;
         this.airlineCompany = airlineCompany;
         this.airplane = airplane;
+        this.availableSeats = this.airplane.getAvailableSeats();
     }
 
     public boolean isDepartingFrom(String departureAirport) {
@@ -70,6 +72,14 @@ public class Flight {
     }
 
     public int getAvailableSeats() {
-        return airplane.getAvailableSeats();
+        return this.availableSeats;
+    }
+
+    public void reservePlaces(int ticketsQuantity) {
+        availableSeats = availableSeats - ticketsQuantity;
+    }
+
+    public void releasePlaces(int ticketsQuantity) {
+        availableSeats = availableSeats + ticketsQuantity;
     }
 }

@@ -8,11 +8,11 @@ import java.util.stream.Collectors;
 
 public class CartItemAssembler {
 
-    public CartItem create(CartItemDto cartItemDto) {
-        return new CartItem(cartItemDto.ticketsQuantity, cartItemDto.flightNumber, cartItemDto.departureDate);
-    }
-
-    public List<CartItem> create(List<CartItemDto> cartItemDtos) {
-        return cartItemDtos.stream().map(this::create).collect(Collectors.toList());
+    public CartItemDto create(CartItem cartItem) {
+        CartItemDto cartItemDto = new CartItemDto();
+        cartItemDto.flightNumber = cartItem.getFlightNumber();
+        cartItemDto.departureDate = cartItem.getDepartureDate().toString();
+        cartItemDto.ticketsQuantity = cartItem.getTicketsQuantity();
+        return cartItemDto;
     }
 }
