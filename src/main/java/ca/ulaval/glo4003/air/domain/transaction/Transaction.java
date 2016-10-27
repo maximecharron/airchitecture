@@ -15,4 +15,8 @@ public class Transaction {
     public String getEmailAddress() {
         return emailAddress;
     }
+
+    public List<CartItem> getCartItems() {
+        return cartItems;
+    }
 }

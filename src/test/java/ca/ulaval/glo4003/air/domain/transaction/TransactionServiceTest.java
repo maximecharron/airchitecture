@@ -1,6 +1,7 @@
 package ca.ulaval.glo4003.air.domain.transaction;
 
 import ca.ulaval.glo4003.air.api.transaction.dto.TransactionDto;
+import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifier;
 import ca.ulaval.glo4003.air.transfer.transaction.TransactionAssembler;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class TransactionServiceTest {
     private TransactionRepository transactionRepository;
 
     @Mock
-    private EmailSender emailSender;
+    private EmailTransactionNotifier emailSender;
 
     @Mock
     private TransactionAssembler transactionAssembler;
@@ -51,6 +52,6 @@ public class TransactionServiceTest {
     public void givenATransaction_whenTheServiceProceedsWithTheTransaction_thenAnEmailIsSentToTheCustomer() {
         transactionService.buyTickets(transactionDto);
 
-        verify(emailSender).sendTransactionDetails(transaction);
+        verify(emailSender).notifyOnNewCompletedTransaction(transaction);
     }
 }
