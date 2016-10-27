@@ -7,6 +7,8 @@ public interface FlightRepository {
 
     Stream<Flight> findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate);
 
+    Flight findOne(String airlineCompany, String arrivalAirport, LocalDateTime departureDate);
+
     Stream<Flight> findFuture(String departureAirport, String arrivalAirport);
 
     void save(Flight flight);

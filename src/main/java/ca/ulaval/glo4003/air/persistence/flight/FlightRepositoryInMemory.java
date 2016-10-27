@@ -27,6 +27,15 @@ public class FlightRepositoryInMemory implements FlightRepository {
     }
 
     @Override
+    public Flight findOne(String airlineCompany, String arrivalAirport, LocalDateTime departureDate) {
+        return flights.values()
+                      .stream()
+                      .filter(flight -> flight.isLeavingOn(departureDate))
+                      .filter(flight -> flight.isFromCompany(airlineCompany))
+                      .filter(flight -> flight.isGoingTo(arrivalAirport));
+    }
+
+    @Override
     public Stream<Flight> findFuture(String departureAirport, String arrivalAirport) {
         return flights.values()
                       .stream()

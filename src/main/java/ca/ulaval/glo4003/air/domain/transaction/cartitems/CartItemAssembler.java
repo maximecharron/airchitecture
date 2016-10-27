@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 public class CartItemAssembler {
 
     public CartItem create(CartItemDto cartItemDto) {
-        return new CartItem(cartItemDto.ticketsQuantity, cartItemDto.flightNumber, cartItemDto.departureDate);
+        return new CartItem(cartItemDto.ticketsQuantity, cartItemDto.arrivalAirport, cartItemDto.airlineCompany, cartItemDto.departureDate);
     }
 
     public List<CartItem> create(List<CartItemDto> cartItemDtos) {

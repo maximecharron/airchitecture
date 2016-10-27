@@ -16,6 +16,7 @@ public class FlightAssembler {
         flightDto.departureAirport = flight.getDepartureAirport();
         flightDto.arrivalAirport = flight.getArrivalAirport();
         flightDto.availableSeats = flight.getAvailableSeats();
+        flightDto.seatPrice = flight.getSeatPrice();
         return flightDto;
     }
 
@@ -27,6 +28,7 @@ public class FlightAssembler {
         flight.setDepartureAirport(flightDto.departureAirport);
         flight.setArrivalAirport(flightDto.arrivalAirport);
         flight.setAvailableSeats(flightDto.availableSeats);
+        flight.setSeatPrice(flightDto.seatPrice);
         return flight;
     }
 
