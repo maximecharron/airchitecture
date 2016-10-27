@@ -7,16 +7,25 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class SMTPEmailSender implements EmailSender {
 
-    private final String smtpHost = "localhost"; // Would be in a configuration file or store.
     private Session session;
 
     public SMTPEmailSender() {
         Properties properties = System.getProperties();
-        properties.setProperty("mail.smtp.host", smtpHost);
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream("smtpConfigurations.properties");
+
+        try {
+            properties.load(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         this.session = Session.getDefaultInstance(properties);
     }
 
@@ -24,7 +33,7 @@ public class SMTPEmailSender implements EmailSender {
         this.session = session;
     }
 
-    public void sendEmail(ca.ulaval.glo4003.air.domain.notification.Message message) throws NotificationFailedException{
+    public void sendEmail(ca.ulaval.glo4003.air.domain.notification.Message message) throws NotificationFailedException {
         try {
             MimeMessage mimeMessage = new MimeMessage(this.session);
 
