@@ -4,4 +4,5 @@ public class UserDto {
     public String emailAddress;
     public String token;
     public boolean showsWeightFilteredAlert;
+    public boolean isAdmin;
 }

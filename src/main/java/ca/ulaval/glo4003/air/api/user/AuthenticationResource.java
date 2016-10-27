@@ -40,7 +40,7 @@ public class AuthenticationResource {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public void signup(@FormParam("email") String email, @FormParam("password") String password) {
         try {
-            userService.createUser(email, password);
+            userService.createUser(email, password, false);
         } catch (UserAlreadyExistException e) {
             logger.info("Signup failed for user with email " + email + " because it already exists");
             throw new WebApplicationException(Response.status(Response.Status.CONFLICT)

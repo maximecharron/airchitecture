@@ -7,5 +7,8 @@ homeApp.
         }).when('/lost', {
             templateUrl: "components/commons/views/lost.html",
             controller: "home-controller"
-        });
+        }).when('/unauthorized', {
+            templateUrl: "components/commons/views/unauthorized.html",
+            controller: "home-controller"
+        })
     }]);

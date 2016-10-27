@@ -10,6 +10,7 @@ public class UserAssembler {
         userDto.token = user.getToken();
         userDto.emailAddress = user.getEmailAddress();
         userDto.showsWeightFilteredAlert = user.showsWeightFilteredAlert();
+        userDto.isAdmin = user.isAdmin();
         return userDto;
     }
 }

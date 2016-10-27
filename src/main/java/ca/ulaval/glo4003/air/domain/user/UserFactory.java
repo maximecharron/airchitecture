@@ -10,8 +10,8 @@ public class UserFactory {
         this.hashingStrategy = hashingStrategy;
     }
 
-    public User createUser(String email, String password){
-        return new User(email, password, tokenEncoder, hashingStrategy);
+    public User createUser(String email, String password, boolean isAdmin){
+        return new User(email, password, tokenEncoder, hashingStrategy, isAdmin);
     }
 
 }
