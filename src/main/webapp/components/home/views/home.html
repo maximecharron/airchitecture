@@ -27,7 +27,7 @@
             <input type="button" class="btn btn-primary" ng-click="detectWeight()" value="Detect Weight Automatically" />
         </div>
         <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Find flights!</button>
+            <button type="submit" ng-disabled="!(formData.luggageWeight && formData.from && formData.to)" class="btn btn-primary">Find flights!</button>
         </div>
     </form>
 

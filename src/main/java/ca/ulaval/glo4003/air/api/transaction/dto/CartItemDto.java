@@ -6,5 +6,5 @@ public class CartItemDto {
 
     public int ticketsQuantity;
     public String flightNumber;
-    public LocalDateTime departureDate;
+    public String departureDate;
 }

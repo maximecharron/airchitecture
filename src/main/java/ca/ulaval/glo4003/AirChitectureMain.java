@@ -1,12 +1,16 @@
 package ca.ulaval.glo4003;
 
 import ca.ulaval.glo4003.air.api.flight.FlightResource;
+import ca.ulaval.glo4003.air.api.transaction.CartItemResource;
+import ca.ulaval.glo4003.air.api.transaction.TransactionResource;
 import ca.ulaval.glo4003.air.api.user.AuthenticationResource;
 import ca.ulaval.glo4003.air.api.user.UserResource;
 import ca.ulaval.glo4003.air.api.weightdetection.WeightDetectionResource;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.flight.*;
+import ca.ulaval.glo4003.air.domain.transaction.*;
 import ca.ulaval.glo4003.air.domain.user.*;
+import ca.ulaval.glo4003.air.persistence.transaction.TransactionRepositoryInMemory;
 import ca.ulaval.glo4003.air.transfer.weightdetection.WeightDetectionAssembler;
 import ca.ulaval.glo4003.air.domain.weightdetection.WeightDetectionService;
 import ca.ulaval.glo4003.air.domain.weightdetection.WeightDetector;
@@ -42,10 +46,14 @@ public class AirChitectureMain {
 
     public static void main(String[] args) throws Exception {
         // Setup resources (API)
-        FlightResource flightResource = createFlightResource();
+        FlightService flightService = createFlightService();
+        FlightResource flightResource = createFlightResource(flightService);
         UserService userService = createUserService();
         AuthenticationResource authenticationResource = createAuthenticationResource(userService);
         UserResource userResource = createUserResource(userService);
+        CartItemFactory cartItemFactory = createCartItemFactory();
+        CartItemResource cartItemResource = createCartItemResource(flightService, cartItemFactory);
+        TransactionResource transactionResource = createTransactionResource(cartItemFactory);
         WeightDetectionResource weightDetectionResource = createWeightDetectionResource();
         // Setup API context (JERSEY + JETTY)
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
@@ -58,6 +66,8 @@ public class AirChitectureMain {
                 resources.add(flightResource);
                 resources.add(authenticationResource);
                 resources.add(userResource);
+                resources.add(cartItemResource);
+                resources.add(transactionResource);
                 resources.add(weightDetectionResource);
                 return resources;
             }
@@ -91,7 +101,26 @@ public class AirChitectureMain {
         }
     }
 
-    private static FlightResource createFlightResource() {
+    private static CartItemFactory createCartItemFactory() {
+        return new CartItemFactory();
+    }
+
+    private static TransactionResource createTransactionResource(CartItemFactory cartItemFactory) {
+        TransactionRepository transactionRepository = new TransactionRepositoryInMemory();
+        EmailSender emailSender = transaction -> {};
+
+        TransactionFactory transactionFactory = new TransactionFactory(cartItemFactory);
+
+        TransactionService transactionService = new TransactionService(transactionRepository, emailSender, transactionFactory);
+        return new TransactionResource(transactionService);
+    }
+
+    private static CartItemResource createCartItemResource(FlightService flightService, CartItemFactory cartItemFactory) {
+        CartItemService cartItemService = new CartItemService(flightService, cartItemFactory);
+        return new CartItemResource(cartItemService);
+    }
+
+    private static FlightService createFlightService() {
         FlightRepositoryInMemory flightRepository = new FlightRepositoryInMemory();
 
         if (isDev) {
@@ -103,8 +132,10 @@ public class AirChitectureMain {
         FlightAssembler flightAssembler = new FlightAssembler();
         WeightFilterVerifier weightFilterVerifier = new WeightFilterVerifier();
         DateTimeFactory dateTimeFactory = new DateTimeFactory();
-        FlightService flightService = new FlightService(flightRepository, flightAssembler, weightFilterVerifier, dateTimeFactory);
+        return new FlightService(flightRepository, flightAssembler, weightFilterVerifier, dateTimeFactory);
+    }
 
+    private static FlightResource createFlightResource(FlightService flightService) {
         return new FlightResource(flightService);
     }
 

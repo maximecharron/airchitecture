@@ -2,6 +2,8 @@ package ca.ulaval.glo4003.air.domain.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchDto;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
+import ca.ulaval.glo4003.air.domain.transaction.CartItem;
+import ca.ulaval.glo4003.air.domain.user.NoSuchUserException;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 
 import java.time.LocalDateTime;
@@ -47,5 +49,21 @@ public class FlightService {
             query = query.concat(" on " + departureDate.toString());
         }
         logger.info(query);
+    }
+
+    public void reservePlacesInFlight(String flightNumber, LocalDateTime departureDate, int ticketsQuantity) throws NoSuchFlightException {
+        Flight flight = findFlight(flightNumber, departureDate);
+        flight.reservePlaces(ticketsQuantity);
+        this.flightRepository.save(flight);
+    }
+
+    public void releasePlacesInFlight(String flightNumber, LocalDateTime departureDate, int ticketsQuantity) throws NoSuchFlightException {
+        Flight flight = findFlight(flightNumber, departureDate);
+        flight.releasePlaces(ticketsQuantity);
+        this.flightRepository.save(flight);
+    }
+
+    private Flight findFlight(String flightNumber, LocalDateTime departureDate) throws NoSuchFlightException {
+        return flightRepository.query().hasFlightNumber(flightNumber).isLeavingOn(departureDate).findOne().orElseThrow(() -> new NoSuchFlightException("Flight " + flightNumber + " does not exists."));
     }
 }
