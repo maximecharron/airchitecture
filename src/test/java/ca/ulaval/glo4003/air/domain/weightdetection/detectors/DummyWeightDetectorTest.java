@@ -1,5 +1,6 @@
 package ca.ulaval.glo4003.air.domain.weightdetection.detectors;
 
+import ca.ulaval.glo4003.air.infrastructure.weightdetection.DummyWeightDetector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,5 +1,7 @@
 package ca.ulaval.glo4003.air.domain.user;
 
+import ca.ulaval.glo4003.air.domain.user.encoding.TokenEncoder;
+import ca.ulaval.glo4003.air.domain.user.hashing.HashingStrategy;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
