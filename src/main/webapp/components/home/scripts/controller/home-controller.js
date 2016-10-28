@@ -1,4 +1,4 @@
-homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cookies, homeResource, weightDetectionResource, userResource, ModalService) {
+homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cookies, $window, homeResource, weightDetectionResource, userResource, ModalService) {
 
     $scope.isLoading = false;
     $scope.doNotShow = false;
@@ -26,14 +26,15 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
         })
     };
 
-    $scope.closeWeightFilteredAlert = function () {
+    $scope.closeWeightFilteredAlert = function (doNotShow) {
         $scope.showWeightFilteredAlert = false;
-        if ($rootScope.user && $scope.doNotShow){
+        if ($rootScope.user && doNotShow){
             userResource.put({showWeightFilteredAlert: false}, function onSuccess(data) {
                 $rootScope.user = data;
+                $cookies.putObject("user", $rootScope.user);
             });
         } else if ($scope.doNotShow){
-            $cookies.putObject("showWeightFilteredAlert", false);
+            $window.localStorage.setItem("showWeightFilteredAlert", false);
         }
     };
 
@@ -56,7 +57,7 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
         }
         homeResource.get(searchCriteria, function onSuccess(data) {
             var flights = [];
-            for (index in data.flights) {
+            for (var index in data.flights) {
                 var flight = data.flights[index];
                 flight.id = flight.airlineCompany + flight.departureDate + flight.arrivalAirport;
                 flight.humanArrivalAirport = $scope.formData.to.name;
@@ -64,8 +65,8 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
                 flight.name = flight.airlineCompany + " from " + flight.humanDepartureAirport + " to "+ flight.humanArrivalAirport;
                 flights.push(flight);
             }
-            if ($rootScope.user) {$scope.showWeightFilteredAlert = $scope.user.showsWeightFilteredAlert}
-            else {$scope.showWeightFilteredAlert = $cookies.getObject("showWeightFilteredAlert") || $scope.showWeightFilteredAlert === undefined;}
+            if ($rootScope.user) {$scope.showWeightFilteredAlert = $rootScope.user.showsWeightFilteredAlert}
+            else {$scope.showWeightFilteredAlert = $window.localStorage.getItem("showWeightFilteredAlert") || $scope.showWeightFilteredAlert === undefined;}
 
             $scope.flightsResults = flights;
             $scope.flightsWereFilteredByWeight = data.flightsWereFilteredByWeight;
@@ -98,9 +99,84 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
             modal.close.then(function (result) {
                 console.log(result);
                 $scope.formData.date = result.departureDate;
+                $scope.find();
             });
         });
-        
-        $scope.find();
     };
+
+    $scope.today = function() {
+        $scope.formData.date = new Date();
+    };
+
+    $scope.clear = function() {
+        $scope.formData.date = null;
+    };
+
+    $scope.inlineOptions = {
+        customClass: getDayClass,
+        minDate: new Date(),
+        showWeeks: true
+    };
+
+    $scope.dateOptions = {
+        formatYear: 'yy',
+        minDate: new Date(),
+        startingDay: 1
+    };
+
+    $scope.toggleMin = function() {
+        $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
+        $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+    };
+
+    $scope.toggleMin();
+
+    $scope.open1 = function() {
+        $scope.popup1.opened = true;
+    };
+
+    $scope.setDate = function(year, month, day) {
+        $scope.formData.date = new Date(year, month, day);
+    };
+
+    $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+    $scope.format = $scope.formats[0];
+    $scope.altInputFormats = ['M!/d!/yyyy'];
+
+    $scope.popup1 = {
+        opened: false
+    };
+
+    var tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    var afterTomorrow = new Date();
+    afterTomorrow.setDate(tomorrow.getDate() + 1);
+    $scope.events = [
+        {
+            date: tomorrow,
+            status: 'full'
+        },
+        {
+            date: afterTomorrow,
+            status: 'partially'
+        }
+    ];
+
+    function getDayClass(data) {
+        var date = data.date,
+            mode = data.mode;
+        if (mode === 'day') {
+            var dayToCheck = new Date(date).setHours(0,0,0,0);
+
+            for (var i = 0; i < $scope.events.length; i++) {
+                var currentDay = new Date($scope.events[i].date).setHours(0,0,0,0);
+
+                if (dayToCheck === currentDay) {
+                    return $scope.events[i].status;
+                }
+            }
+        }
+
+        return '';
+    }
 });

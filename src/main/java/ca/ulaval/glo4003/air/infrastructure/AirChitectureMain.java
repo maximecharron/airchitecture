@@ -11,12 +11,13 @@ import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.flight.Flight;
 import ca.ulaval.glo4003.air.domain.flight.FlightService;
 import ca.ulaval.glo4003.air.domain.flight.WeightFilterVerifier;
+import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifier;
+import ca.ulaval.glo4003.air.domain.notification.TransactionNotifier;
 import ca.ulaval.glo4003.air.domain.transaction.TransactionFactory;
 import ca.ulaval.glo4003.air.domain.transaction.TransactionRepository;
 import ca.ulaval.glo4003.air.domain.transaction.TransactionService;
 import ca.ulaval.glo4003.air.domain.transaction.cart.CartItemFactory;
 import ca.ulaval.glo4003.air.domain.transaction.cart.CartItemService;
-import ca.ulaval.glo4003.air.domain.transaction.notification.EmailSender;
 import ca.ulaval.glo4003.air.domain.user.User;
 import ca.ulaval.glo4003.air.domain.user.UserFactory;
 import ca.ulaval.glo4003.air.domain.user.UserRepository;
@@ -47,6 +48,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 import javax.ws.rs.core.Application;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -116,14 +118,15 @@ public class  AirChitectureMain {
         return new CartItemFactory();
     }
 
-    private static TransactionResource createTransactionResource(CartItemFactory cartItemFactory) {
+    private static TransactionResource createTransactionResource(CartItemFactory cartItemFactory) throws IOException {
         TransactionRepository transactionRepository = new TransactionRepositoryInMemory();
-        EmailSender emailSender = transaction -> {
-        };
+        SmtpEmailSender smtpEmailSender = new SmtpEmailSender();
+        EmailTransactionNotifierConfiguration emailConfiguration = new ResourcesEmailTransactionNotifierConfiguration();
+        TransactionNotifier transactionNotifier = new EmailTransactionNotifier(smtpEmailSender, emailConfiguration);
 
         TransactionFactory transactionFactory = new TransactionFactory(cartItemFactory);
 
-        TransactionService transactionService = new TransactionService(transactionRepository, emailSender, transactionFactory);
+        TransactionService transactionService = new TransactionService(transactionRepository, transactionNotifier, transactionFactory);
         return new TransactionResource(transactionService);
     }
 
