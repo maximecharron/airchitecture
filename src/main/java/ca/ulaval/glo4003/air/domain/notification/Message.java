@@ -7,7 +7,7 @@ public class Message {
     private final String body;
     private final String subject;
 
-    public Message(final String from, final String to, final String subject, final String body) {
+    public Message(String from, String to, String subject, String body) {
         this.from = from;
         this.to = to;
         this.body = body;

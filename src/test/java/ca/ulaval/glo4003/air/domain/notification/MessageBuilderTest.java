@@ -13,11 +13,16 @@ public class MessageBuilderTest {
     @Test
     public void givenASetOfData_whenMessageIsBuilt_thenMessageDataIsValid() throws Exception {
         Message expectedMessage = new Message(ADDRESS_FROM, ADDRESS_TO, SUBJECT_LINE, BODY_CONTENT);
-        Message aktualMessage = new MessageBuilder().addFrom(ADDRESS_FROM).addTo(ADDRESS_TO).addSubject(SUBJECT_LINE).addBody(BODY_CONTENT).build();
 
-        Assert.assertEquals(expectedMessage.getFrom(), aktualMessage.getFrom());
-        Assert.assertEquals(expectedMessage.getTo(), aktualMessage.getTo());
-        Assert.assertEquals(expectedMessage.getSubject(), aktualMessage.getSubject());
-        Assert.assertEquals(expectedMessage.getBody(), aktualMessage.getBody());
+        Message actualMessage = new MessageBuilder().addFrom(ADDRESS_FROM)
+                                                    .addTo(ADDRESS_TO)
+                                                    .addSubject(SUBJECT_LINE)
+                                                    .addBody(BODY_CONTENT)
+                                                    .build();
+
+        Assert.assertEquals(expectedMessage.getFrom(), actualMessage.getFrom());
+        Assert.assertEquals(expectedMessage.getTo(), actualMessage.getTo());
+        Assert.assertEquals(expectedMessage.getSubject(), actualMessage.getSubject());
+        Assert.assertEquals(expectedMessage.getBody(), actualMessage.getBody());
     }
 }

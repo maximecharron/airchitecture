@@ -1,25 +1,27 @@
 package ca.ulaval.glo4003.air.infrastructure;
 
+import ca.ulaval.glo4003.air.domain.notification.Message;
 import ca.ulaval.glo4003.air.domain.notification.NotificationFailedException;
 
-import javax.mail.Message;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+
 public class SmtpEmailSender implements EmailSender {
 
+    private static final String SMTP_CONFIGURATIONS_PROPERTIES_FILE = "smtpConfigurations.properties";
+    private static final String PROPERTY_SMTP_USER = "mail.smtp.user";
+    private static final String PROPERTY_SMTP_PASSWORD = "mail.smtp.password";
     private Session session;
 
     public SmtpEmailSender() {
         Properties properties = new Properties();
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream("smtpConfigurations.properties");
+        InputStream inputStream = classLoader.getResourceAsStream(SMTP_CONFIGURATIONS_PROPERTIES_FILE);
 
         try {
             properties.load(inputStream);
@@ -30,8 +32,8 @@ public class SmtpEmailSender implements EmailSender {
         this.session = Session.getInstance(properties, new javax.mail.Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(properties.getProperty("mail.smtp.user"),
-                        properties.getProperty("mail.smtp.password"));
+                return new PasswordAuthentication(properties.getProperty(PROPERTY_SMTP_USER),
+                        properties.getProperty(PROPERTY_SMTP_PASSWORD));
             }
         });
     }
@@ -40,21 +42,24 @@ public class SmtpEmailSender implements EmailSender {
         this.session = session;
     }
 
-    public void sendEmail(ca.ulaval.glo4003.air.domain.notification.Message message) throws NotificationFailedException {
-        try {
-            MimeMessage mimeMessage = new MimeMessage(this.session);
+    public void sendEmail(Message message) throws NotificationFailedException {
+        MimeMessage mimeMessage = new MimeMessage(this.session);
+        Transport transport;
 
+        try {
             mimeMessage.setFrom(new InternetAddress(message.getFrom()));
-            mimeMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(message.getTo()));
+            mimeMessage.addRecipient(MimeMessage.RecipientType.TO, new InternetAddress(message.getTo()));
             mimeMessage.setSubject(message.getSubject());
             mimeMessage.setText(message.getBody());
 
-            Transport transport = this.session.getTransport();
+            transport = this.session.getTransport();
+
             transport.connect();
             transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
             transport.close();
-
-        } catch (Exception e) {
+        } catch (NoSuchProviderException e) {
+            throw new NotificationFailedException(e);
+        } catch (MessagingException e) {
             throw new NotificationFailedException(e);
         }
     }

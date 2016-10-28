@@ -50,7 +50,7 @@ public class SmtpEmailSenderTest {
     }
 
     @Test
-    public void sendEmailUsingSmtpConfigurationProperties() throws Exception {
+    public void givenNoSession_whenAnEmailIsSent_thenPropertiesAreReadAndCorrectlyApplied() throws Exception {
         this.emailSender = new SmtpEmailSender();
         this.emailSender.sendEmail(this.message);
 
@@ -61,7 +61,7 @@ public class SmtpEmailSenderTest {
     }
 
     @Test
-    public void sendEmailActuallySendsEmailsThroughGivenSession() throws Exception {
+    public void givenASession_whenAnEmailIsSent_thenEmailIsCorrectlySent() throws Exception {
         this.emailSender = new SmtpEmailSender(smtpSession);
         this.emailSender.sendEmail(this.message);
 

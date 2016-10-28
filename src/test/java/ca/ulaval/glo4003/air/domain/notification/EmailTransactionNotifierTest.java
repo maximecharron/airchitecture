@@ -34,13 +34,14 @@ public class EmailTransactionNotifierTest {
 
         Mockito.doReturn(TO_ADDRESS).when(transaction).getEmailAddress();
         Mockito.doReturn(cartItems).when(transaction).getCartItems();
-
-        transactionNotifier = new EmailTransactionNotifier(emailSender);
     }
 
     @Test
-    public void emailIsSentOnANewCompletedTransaction() throws Exception {
+    public void gienANewTransctionIsCompleted_whenNotificationIsCalled_thenAnEmailIsSent() throws Exception {
+        transactionNotifier = new EmailTransactionNotifier(emailSender);
+
         transactionNotifier.notifyOnNewCompletedTransaction(transaction);
+
         verify(emailSender).sendEmail(any(Message.class));
     }
 }
