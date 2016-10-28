@@ -2,8 +2,7 @@ package ca.ulaval.glo4003.air.api.transaction;
 
 import ca.ulaval.glo4003.air.api.transaction.dto.CartItemDto;
 import ca.ulaval.glo4003.air.domain.flight.NoSuchFlightException;
-import ca.ulaval.glo4003.air.domain.transaction.CartItemService;
-import ca.ulaval.glo4003.air.domain.user.UserAlreadyExistException;
+import ca.ulaval.glo4003.air.domain.transaction.cart.CartItemService;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +16,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 

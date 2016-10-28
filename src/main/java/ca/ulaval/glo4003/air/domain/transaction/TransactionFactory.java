@@ -1,6 +1,8 @@
 package ca.ulaval.glo4003.air.domain.transaction;
 
 import ca.ulaval.glo4003.air.api.transaction.dto.TransactionDto;
+import ca.ulaval.glo4003.air.domain.transaction.cart.CartItem;
+import ca.ulaval.glo4003.air.domain.transaction.cart.CartItemFactory;
 
 import java.util.List;
 
