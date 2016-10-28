@@ -2,6 +2,7 @@ package ca.ulaval.glo4003.air.domain.user;
 
 import ca.ulaval.glo4003.air.api.user.dto.UserDto;
 import ca.ulaval.glo4003.air.api.user.dto.UserUpdateDto;
+import ca.ulaval.glo4003.air.domain.user.encoding.TokenDecoder;
 import ca.ulaval.glo4003.air.transfer.user.UserAssembler;
 
 import javax.naming.AuthenticationException;
@@ -54,8 +55,7 @@ public class UserService {
             updateUser(user, userUpdateDto);
             userRepository.update(user);
             return userAssembler.create(user);
-        }
-        catch (InvalidTokenException | NoSuchUserException e) {
+        } catch (InvalidTokenException | NoSuchUserException e) {
             logger.info("Unable to find the authenticated user because the token is invalid.");
             throw new InvalidTokenException("Invalid token.", e);
         }

@@ -1,6 +1,6 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
-import ca.ulaval.glo4003.air.domain.airplane.Airplane;
+import ca.ulaval.glo4003.air.domain.flight.airplane.Airplane;
 
 import java.time.LocalDateTime;
 
@@ -33,14 +33,16 @@ public class Flight {
     }
 
     public boolean isLeavingOn(LocalDateTime date) {
-        return departureDate.isEqual(date);
+        return isOnSameDay(date, departureDate);
     }
 
     public boolean isFromCompany(String airlineCompany) {
         return this.airlineCompany.equals(airlineCompany);
     }
 
-    public boolean isLeavingAfter(LocalDateTime date) { return departureDate.isAfter(date); }
+    public boolean isLeavingAfter(LocalDateTime date) {
+        return departureDate.isAfter(date);
+    }
 
     public boolean acceptsWeight(double weight) {
         return airplane.acceptsWeight(weight);
@@ -84,6 +86,10 @@ public class Flight {
 
     public float getSeatPrice() {
         return seatPrice;
+    }
+
+    private boolean isOnSameDay(LocalDateTime date1, LocalDateTime date2){
+        return date1.getDayOfYear() == date2.getDayOfYear() && date1.getYear() == date2.getYear();
     }
 
 }

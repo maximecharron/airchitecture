@@ -1,5 +1,7 @@
 package ca.ulaval.glo4003.air.domain.transaction;
 
+import ca.ulaval.glo4003.air.domain.transaction.cart.CartItem;
+
 import java.time.LocalDateTime;
 import java.util.List;
 

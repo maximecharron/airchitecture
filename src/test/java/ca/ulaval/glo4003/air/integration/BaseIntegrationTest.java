@@ -1,6 +1,6 @@
 package ca.ulaval.glo4003.air.integration;
 
-import ca.ulaval.glo4003.AirChitectureMain;
+import ca.ulaval.glo4003.air.infrastructure.AirChitectureMain;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

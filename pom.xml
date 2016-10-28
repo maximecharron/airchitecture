@@ -132,7 +132,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.2.1</version>
                 <configuration>
-                    <mainClass>ca.ulaval.glo4003.AirChitectureMain</mainClass>
+                    <mainClass>ca.ulaval.glo4003.air.infrastructure.AirChitectureMain</mainClass>
                 </configuration>
             </plugin>
         </plugins>

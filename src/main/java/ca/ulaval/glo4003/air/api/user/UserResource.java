@@ -5,9 +5,7 @@ import ca.ulaval.glo4003.air.api.user.dto.UserUpdateDto;
 import ca.ulaval.glo4003.air.domain.user.InvalidTokenException;
 import ca.ulaval.glo4003.air.domain.user.UserService;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -29,12 +27,11 @@ public class UserResource {
     public UserDto update(UserUpdateDto userUpdateDto, @HeaderParam("X-Access-Token") String token) {
         try {
             return this.userService.updateAuthenticatedUser(token, userUpdateDto);
-        }
-        catch (InvalidTokenException e) {
+        } catch (InvalidTokenException e) {
             logger.info("Update user failed because: " + e.getMessage());
             throw new WebApplicationException(Response.status(Status.UNAUTHORIZED)
-                    .entity("Token is invalid.")
-                    .build());
+                                                      .entity("Token is invalid.")
+                                                      .build());
         }
     }
 }

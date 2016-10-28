@@ -1,6 +1,6 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
-import ca.ulaval.glo4003.air.domain.airplane.Airplane;
+import ca.ulaval.glo4003.air.domain.flight.airplane.Airplane;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
