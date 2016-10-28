@@ -38,8 +38,8 @@ public class UserService {
         }
     }
 
-    public void createUser(String email, String password) throws UserAlreadyExistException {
-        User user = userFactory.createUser(email, password);
+    public void createUser(String email, String password, boolean isAdmin) throws UserAlreadyExistException {
+        User user = userFactory.createUser(email, password, isAdmin);
         try {
             userRepository.persist(user);
         } catch (UserAlreadyExistException e) {

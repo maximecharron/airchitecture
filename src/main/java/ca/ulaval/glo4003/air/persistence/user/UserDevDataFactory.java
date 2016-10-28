@@ -16,8 +16,10 @@ public class UserDevDataFactory {
 
     public List<User> createMockData() {
         List<User> users = new ArrayList<>();
-        User user = userFactory.createUser("bob@test.com", "1234");
+        User user = userFactory.createUser("bob@test.com", "1234", false);
         users.add(user);
+        User admin = userFactory.createUser("admin@airchitecture.com", "admin", true);
+        users.add(admin);
         return users;
     }
 }
