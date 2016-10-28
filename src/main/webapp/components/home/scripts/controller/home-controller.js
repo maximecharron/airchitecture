@@ -99,19 +99,17 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
             modal.close.then(function (result) {
                 console.log(result);
                 $scope.formData.date = result.departureDate;
+                $scope.find();
             });
         });
-        
-        $scope.find();
     };
 
     $scope.today = function() {
-        $scope.dt = new Date();
+        $scope.formData.date = new Date();
     };
-    $scope.today();
 
     $scope.clear = function() {
-        $scope.dt = null;
+        $scope.formData.date = null;
     };
 
     $scope.inlineOptions = {
@@ -122,7 +120,6 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
 
     $scope.dateOptions = {
         formatYear: 'yy',
-        maxDate: new Date(2020, 5, 22),
         minDate: new Date(),
         startingDay: 1
     };
@@ -138,12 +135,8 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
         $scope.popup1.opened = true;
     };
 
-    $scope.open2 = function() {
-        $scope.popup2.opened = true;
-    };
-
     $scope.setDate = function(year, month, day) {
-        $scope.dt = new Date(year, month, day);
+        $scope.formData.date = new Date(year, month, day);
     };
 
     $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
@@ -151,10 +144,6 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
     $scope.altInputFormats = ['M!/d!/yyyy'];
 
     $scope.popup1 = {
-        opened: false
-    };
-
-    $scope.popup2 = {
         opened: false
     };
 
