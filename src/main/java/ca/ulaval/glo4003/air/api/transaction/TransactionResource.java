@@ -1,5 +1,6 @@
 package ca.ulaval.glo4003.air.api.transaction;
 
+import ca.ulaval.glo4003.air.api.transaction.dto.CartItemDto;
 import ca.ulaval.glo4003.air.api.transaction.dto.TransactionDto;
 import ca.ulaval.glo4003.air.domain.transaction.TransactionService;
 

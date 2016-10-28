@@ -24,6 +24,7 @@ import static org.mockito.Mockito.verify;
 public class CartItemServiceTest {
     private final static LocalDateTime A_DATE = LocalDateTime.now();
     private final static String A_FLIGHT_NUMBER = "A345E";
+    private final static String ARRIVAL_AIRPORT = "YQB";
     private final static int A_TICKETS_QUANTITY = 3;
 
     @Mock
@@ -46,7 +47,8 @@ public class CartItemServiceTest {
 
         willReturn(cartItem).given(cartItemFactory).create(cartItemDto);
         willReturn(A_DATE).given(cartItem).getDepartureDate();
-        willReturn(A_FLIGHT_NUMBER).given(cartItem).getFlightNumber();
+        willReturn(A_FLIGHT_NUMBER).given(cartItem).getAirlineCompany();
+        willReturn(ARRIVAL_AIRPORT).given(cartItem).getArrivalAirport();
         willReturn(A_TICKETS_QUANTITY).given(cartItem).getTicketsQuantity();
     }
 
@@ -54,12 +56,12 @@ public class CartItemServiceTest {
     public void givenACartItem_whenReservingTickets_thenReservePlacesInFlight() throws NoSuchFlightException {
         cartItemService.reserveTickets(cartItemDto);
 
-        verify(flightService).reservePlacesInFlight(A_FLIGHT_NUMBER, A_DATE, A_TICKETS_QUANTITY);
+        verify(flightService).reservePlacesInFlight(A_FLIGHT_NUMBER, ARRIVAL_AIRPORT, A_DATE, A_TICKETS_QUANTITY);
     }
 
     @Test(expected = NoSuchFlightException.class)
     public void givenACartItem_whenReservingTicketsForANonExistentFlight_thenThrowException() throws NoSuchFlightException {
-        willThrow(new NoSuchFlightException("")).given(flightService).reservePlacesInFlight(A_FLIGHT_NUMBER, A_DATE, A_TICKETS_QUANTITY);
+        willThrow(new NoSuchFlightException("")).given(flightService).reservePlacesInFlight(A_FLIGHT_NUMBER, ARRIVAL_AIRPORT, A_DATE, A_TICKETS_QUANTITY);
         cartItemService.reserveTickets(cartItemDto);
     }
 
@@ -67,12 +69,12 @@ public class CartItemServiceTest {
     public void givenACartItem_whenReleasingTickets_thenReleasePlacesInFlight() throws NoSuchFlightException {
         cartItemService.releaseTickets(cartItemDto);
 
-        verify(flightService).releasePlacesInFlight(A_FLIGHT_NUMBER, A_DATE, A_TICKETS_QUANTITY);
+        verify(flightService).releasePlacesInFlight(A_FLIGHT_NUMBER, ARRIVAL_AIRPORT, A_DATE, A_TICKETS_QUANTITY);
     }
 
     @Test(expected = NoSuchFlightException.class)
     public void givenACartItem_whenReleasingTicketsForANonExistentFlight_thenThrowException() throws NoSuchFlightException {
-        willThrow(new NoSuchFlightException("")).given(flightService).releasePlacesInFlight(A_FLIGHT_NUMBER, A_DATE, A_TICKETS_QUANTITY);
+        willThrow(new NoSuchFlightException("")).given(flightService).releasePlacesInFlight(A_FLIGHT_NUMBER, ARRIVAL_AIRPORT, A_DATE, A_TICKETS_QUANTITY);
         cartItemService.releaseTickets(cartItemDto);
     }
 }

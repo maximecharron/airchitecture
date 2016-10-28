@@ -3,7 +3,6 @@ package ca.ulaval.glo4003.air.domain.transaction.cartitems;
 import ca.ulaval.glo4003.air.api.transaction.dto.CartItemDto;
 import ca.ulaval.glo4003.air.domain.transaction.CartItem;
 import ca.ulaval.glo4003.air.domain.transaction.CartItemFactory;
-import ca.ulaval.glo4003.air.transfer.transaction.CartItemAssembler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +20,8 @@ import static org.junit.Assert.assertThat;
 public class CartItemFactoryTest {
 
     private static final String DEPARTURE_DATE = LocalDateTime.now().toString();
-    private static final String FLIGHT_NUMBER = "AL0400";
+    private static final String AIRLINE_COMPANY = "AirFrenette";
+    private static final String ARRIVAL_AIRPORT = "YQB";
     private static final int NUMBER_OF_TICKETS = 2;
 
     private CartItemFactory cartItemFactory;
@@ -52,14 +52,16 @@ public class CartItemFactoryTest {
     private CartItemDto givenACartItemDto() {
         CartItemDto cartItemDto = new CartItemDto();
         cartItemDto.departureDate = DEPARTURE_DATE;
-        cartItemDto.flightNumber = FLIGHT_NUMBER;
+        cartItemDto.airlineCompany = AIRLINE_COMPANY;
+        cartItemDto.arrivalAirport = ARRIVAL_AIRPORT;
         cartItemDto.ticketsQuantity = NUMBER_OF_TICKETS;
         return cartItemDto;
     }
 
     private void assertCartItemIsWellAssembled(CartItem cartItem) {
         assertThat(cartItem.getDepartureDate(), is(equalTo(LocalDateTime.parse(DEPARTURE_DATE))));
-        assertThat(cartItem.getFlightNumber(), is(equalTo(FLIGHT_NUMBER)));
+        assertThat(cartItem.getAirlineCompany(), is(equalTo(AIRLINE_COMPANY)));
+        assertThat(cartItem.getArrivalAirport(), is(equalTo(ARRIVAL_AIRPORT)));
         assertThat(cartItem.getTicketsQuantity(), is(equalTo(NUMBER_OF_TICKETS)));
     }
 }

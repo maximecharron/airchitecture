@@ -22,10 +22,10 @@ public class CartItemService {
     public CartItemDto reserveTickets(CartItemDto cartItemDto) throws NoSuchFlightException {
         CartItem cartItem = cartItemFactory.create(cartItemDto);
         try {
-            this.flightService.reservePlacesInFlight(cartItem.getFlightNumber(), cartItem.getDepartureDate(), cartItem.getTicketsQuantity());
+            this.flightService.reservePlacesInFlight(cartItem.getAirlineCompany(), cartItem.getArrivalAirport(), cartItem.getDepartureDate(), cartItem.getTicketsQuantity());
         }
         catch (NoSuchFlightException e) {
-            logger.info("Unable to reserve tickets for flight " + cartItemDto.flightNumber + " because it doesn't exist");
+            logger.info("Unable to reserve tickets for flight " + cartItem.getAirlineCompany() + " " + cartItem.getArrivalAirport() + " because it doesn't exist");
             throw e;
         }
         return cartItemDto;
@@ -34,16 +34,12 @@ public class CartItemService {
     public CartItemDto releaseTickets(CartItemDto cartItemDto) throws NoSuchFlightException {
         CartItem cartItem = cartItemFactory.create(cartItemDto);
         try {
-            this.flightService.releasePlacesInFlight(cartItem.getFlightNumber(), cartItem.getDepartureDate(), cartItem.getTicketsQuantity());
+            this.flightService.releasePlacesInFlight(cartItem.getAirlineCompany(), cartItem.getArrivalAirport(), cartItem.getDepartureDate(), cartItem.getTicketsQuantity());
         }
         catch (NoSuchFlightException e) {
-            logger.info("Unable to release tickets for flight " + cartItemDto.flightNumber + " because it doesn't exist");
+            logger.info("Unable to release tickets for flight " + cartItem.getAirlineCompany() + " " + cartItem.getArrivalAirport() + " because it doesn't exist");
             throw e;
         }
         return cartItemDto;
-    }
-
-    private LocalDateTime parseDate(String date) {
-        return LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }
 }

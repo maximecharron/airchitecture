@@ -27,6 +27,7 @@ public class FlightAssemblerTest {
     private static final String ARRIVAL_AIRPORT = "ABC";
     private static final String DEPARTURE_AIRPORT = "DEF";
     private static final LocalDateTime DATE = LocalDateTime.of(2020, 10, 2, 6, 30);
+    private static final float A_PRICE = 124f;
     private static final double WEIGHT = 30.0;
     private static final boolean A_FILTERED_BY_WEIGHT_RESULT = true;
     private static final String AIRLINE_COMPANY = "AirFrenette";
@@ -74,12 +75,11 @@ public class FlightAssemblerTest {
     }
 
     private Flight givenAFlight() {
-        Flight flight = new Flight(FLIGHT_NUMBER, DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, AIRLINE_COMPANY, airplane);
+        Flight flight = new Flight(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, AIRLINE_COMPANY, airplane, A_PRICE);
         return flight;
     }
 
     private void assertHasAllTheRelevantProperties(Flight flight, FlightDto flightDto) {
-        assertEquals(flight.getFlightNumber(), flightDto.flightNumber);
         assertEquals(flight.getAirlineCompany(), flightDto.airlineCompany);
         assertEquals(flight.getAvailableSeats(), flightDto.availableSeats);
         assertEquals(flight.getDepartureAirport(), flightDto.departureAirport);

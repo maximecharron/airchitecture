@@ -10,12 +10,12 @@ import java.util.stream.Collectors;
 public class FlightAssembler {
     public FlightDto create(Flight flight, double weight) {
         FlightDto flightDto = new FlightDto();
-        flightDto.flightNumber = flight.getFlightNumber();
         flightDto.airlineCompany = flight.getAirlineCompany();
         flightDto.departureDate = flight.getDepartureDate();
         flightDto.departureAirport = flight.getDepartureAirport();
         flightDto.arrivalAirport = flight.getArrivalAirport();
         flightDto.availableSeats = flight.getAvailableSeats();
+        flightDto.seatPrice = flight.getSeatPrice();
         flightDto.hasAdditionalWeightOption = flight.hasAdditionalWeightOption();
         flightDto.acceptsAdditionalWeight = flight.acceptsAdditionalWeight(weight);
         return flightDto;

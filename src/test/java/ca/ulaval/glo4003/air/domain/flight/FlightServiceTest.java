@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class FlightServiceTest {
     private static final int TICKETS_QUANTITY = 54;
-    private static final String FLIGHT_NUMBER = "AT030";
+    private static final String AIRLINE_COMPANY = "AirFrenette";
     private static final String DEPARTURE_AIRPORT = "YQB";
     private static final String ARRIVAL_AIRPORT = "DUB";
     private static final LocalDateTime DATE = LocalDateTime.of(2020, 10, 10, 21, 45);
@@ -68,7 +68,7 @@ public class FlightServiceTest {
         given(flightQueryBuilder.isLeavingAfter(any())).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.isLeavingOn(any())).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.acceptsWeight(anyDouble())).willReturn(flightQueryBuilder);
-        given(flightQueryBuilder.hasFlightNumber(anyString())).willReturn(flightQueryBuilder);
+        given(flightQueryBuilder.hasAirlineCompany(anyString())).willReturn(flightQueryBuilder);
         flightService = new FlightService(flightRepository, flightAssembler, weightFilterVerifier, dateTimeFactory);
     }
 
@@ -130,9 +130,9 @@ public class FlightServiceTest {
     public void givenAValidFlightIdentifier_whenReservingPlacesForFlight_thenFindFlight() throws NoSuchFlightException {
         willReturn(Optional.of(flight)).given(flightQueryBuilder).findOne();
 
-        flightService.reservePlacesInFlight(FLIGHT_NUMBER, DATE, TICKETS_QUANTITY);
+        flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
 
-        verify(flightQueryBuilder).hasFlightNumber(FLIGHT_NUMBER);
+        verify(flightQueryBuilder).hasAirlineCompany(AIRLINE_COMPANY);
         verify(flightQueryBuilder).isLeavingOn(DATE);
         verify(flightQueryBuilder).findOne();
     }
@@ -141,7 +141,7 @@ public class FlightServiceTest {
     public void givenAValidFlightIdentifier_whenReservingPlacesForFlight_thenReservesPlaces() throws NoSuchFlightException {
         willReturn(Optional.of(flight)).given(flightQueryBuilder).findOne();
 
-        flightService.reservePlacesInFlight(FLIGHT_NUMBER, DATE, TICKETS_QUANTITY);
+        flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
 
         verify(flight).reservePlaces(TICKETS_QUANTITY);
     }
@@ -150,7 +150,7 @@ public class FlightServiceTest {
     public void givenAValidFlightIdentifier_whenReservingPlacesForFlight_thenUpdateFlight() throws NoSuchFlightException {
         willReturn(Optional.of(flight)).given(flightQueryBuilder).findOne();
 
-        flightService.reservePlacesInFlight(FLIGHT_NUMBER, DATE, TICKETS_QUANTITY);
+        flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
 
         verify(flightRepository).save(flight);
     }
@@ -159,16 +159,16 @@ public class FlightServiceTest {
     public void givenAnInValidFlightIdentifier_whenReservingPlacesForFlight_thenUpdateFlight() throws NoSuchFlightException {
         willReturn(Optional.empty()).given(flightQueryBuilder).findOne();
 
-        flightService.reservePlacesInFlight(FLIGHT_NUMBER, DATE, TICKETS_QUANTITY);
+        flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
     }
 
     @Test
     public void givenAValidFlightIdentifier_whenReleasingPlacesForFlight_thenFindFlight() throws NoSuchFlightException {
         willReturn(Optional.of(flight)).given(flightQueryBuilder).findOne();
 
-        flightService.releasePlacesInFlight(FLIGHT_NUMBER, DATE, TICKETS_QUANTITY);
+        flightService.releasePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
 
-        verify(flightQueryBuilder).hasFlightNumber(FLIGHT_NUMBER);
+        verify(flightQueryBuilder).hasAirlineCompany(AIRLINE_COMPANY);
         verify(flightQueryBuilder).isLeavingOn(DATE);
         verify(flightQueryBuilder).findOne();
     }
@@ -177,7 +177,7 @@ public class FlightServiceTest {
     public void givenAValidFlightIdentifier_whenReleasingPlacesForFlight_thenReleasesPlaces() throws NoSuchFlightException {
         willReturn(Optional.of(flight)).given(flightQueryBuilder).findOne();
 
-        flightService.releasePlacesInFlight(FLIGHT_NUMBER, DATE, TICKETS_QUANTITY);
+        flightService.releasePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
 
         verify(flight).releasePlaces(TICKETS_QUANTITY);
     }
@@ -186,7 +186,7 @@ public class FlightServiceTest {
     public void givenAValidFlightIdentifier_whenReleasingPlacesForFlight_thenUpdateFlight() throws NoSuchFlightException {
         willReturn(Optional.of(flight)).given(flightQueryBuilder).findOne();
 
-        flightService.reservePlacesInFlight(FLIGHT_NUMBER, DATE, TICKETS_QUANTITY);
+        flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
 
         verify(flightRepository).save(flight);
     }
@@ -195,6 +195,6 @@ public class FlightServiceTest {
     public void givenAnInValidFlightIdentifier_whenReleasingPlacesForFlight_thenUpdateFlight() throws NoSuchFlightException {
         willReturn(Optional.empty()).given(flightQueryBuilder).findOne();
 
-        flightService.releasePlacesInFlight(FLIGHT_NUMBER, DATE, TICKETS_QUANTITY);
+        flightService.releasePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
     }
 }
