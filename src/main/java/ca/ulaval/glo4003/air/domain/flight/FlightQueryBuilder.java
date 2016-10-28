@@ -2,6 +2,7 @@ package ca.ulaval.glo4003.air.domain.flight;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface FlightQueryBuilder {
     FlightQueryBuilder isGoingTo(String airport);
@@ -14,5 +15,9 @@ public interface FlightQueryBuilder {
 
     FlightQueryBuilder acceptsWeight(double weight);
 
+    FlightQueryBuilder hasAirlineCompany(String flightNumber);
+
     List<Flight> toList();
+
+    Optional<Flight> findOne();
 }

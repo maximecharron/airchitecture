@@ -6,20 +6,22 @@ import java.time.LocalDateTime;
 
 public class Flight {
 
-    private final String flightNumber;
     private final String departureAirport;
     private final String arrivalAirport;
     private final LocalDateTime departureDate;
     private final String airlineCompany;
     private final Airplane airplane;
+    private int availableSeats;
+    private float seatPrice;
 
-    public Flight(String flightNumber, String departureAirport, String arrivalAirport, LocalDateTime departureDate, String airlineCompany, Airplane airplane) {
-        this.flightNumber = flightNumber;
+    public Flight(String departureAirport, String arrivalAirport, LocalDateTime departureDate, String airlineCompany, Airplane airplane, float seatPrice) {
         this.departureAirport = departureAirport;
         this.arrivalAirport = arrivalAirport;
         this.departureDate = departureDate;
         this.airlineCompany = airlineCompany;
         this.airplane = airplane;
+        this.availableSeats = this.airplane.getAvailableSeats();
+        this.seatPrice = seatPrice;
     }
 
     public boolean isDepartingFrom(String departureAirport) {
@@ -34,8 +36,11 @@ public class Flight {
         return departureDate.isEqual(date);
     }
 
-    public boolean isLeavingAfter(LocalDateTime date) { return departureDate.isAfter(date); }
+    public boolean isFromCompany(String airlineCompany) {
+        return this.airlineCompany.equals(airlineCompany);
+    }
 
+    public boolean isLeavingAfter(LocalDateTime date) { return departureDate.isAfter(date); }
 
     public boolean acceptsWeight(double weight) {
         return airplane.acceptsWeight(weight);
@@ -47,10 +52,6 @@ public class Flight {
 
     public boolean acceptsAdditionalWeight(double weight) {
         return airplane.acceptsAdditionalWeight(weight);
-    }
-
-    public String getFlightNumber() {
-        return flightNumber;
     }
 
     public String getDepartureAirport() {
@@ -70,6 +71,19 @@ public class Flight {
     }
 
     public int getAvailableSeats() {
-        return airplane.getAvailableSeats();
+        return this.availableSeats;
     }
+
+    public void reservePlaces(int ticketsQuantity) {
+        availableSeats = availableSeats - ticketsQuantity;
+    }
+
+    public void releasePlaces(int ticketsQuantity) {
+        availableSeats = availableSeats + ticketsQuantity;
+    }
+
+    public float getSeatPrice() {
+        return seatPrice;
+    }
+
 }

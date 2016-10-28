@@ -15,7 +15,11 @@ public class FlightRepositoryInMemory implements FlightRepository {
 
     @Override
     public void save(Flight flight) {
-        flights.put(flight.getFlightNumber(), flight);
+        flights.put(createFlightKey(flight), flight);
+    }
+
+    private String createFlightKey(Flight flight){
+        return flight.getAirlineCompany() + flight.getArrivalAirport() + flight.getDepartureDate().toString();
     }
 
     @Override
@@ -57,12 +61,30 @@ public class FlightRepositoryInMemory implements FlightRepository {
         }
 
         @Override
+        public FlightQueryBuilder hasAirlineCompany(String airlineCompany) {
+            predicates.add(flight -> flight.getAirlineCompany().equals(airlineCompany));
+            return this;
+        }
+
+        @Override
         public List<Flight> toList() {
+            Stream<Flight> flightStream = filterFlightStream();
+            return flightStream.collect(Collectors.toList());
+        }
+
+        @Override
+        public Optional<Flight> findOne() {
+            Stream<Flight> flightStream = filterFlightStream();
+            return flightStream.findFirst();
+        }
+
+        private Stream<Flight> filterFlightStream() {
             Stream<Flight> flightStream = flights.values().stream();
             for (Predicate<Flight> predicate: predicates) {
                 flightStream = flightStream.filter(predicate);
             }
-            return flightStream.collect(Collectors.toList());
+            return flightStream;
         }
     }
+
 }

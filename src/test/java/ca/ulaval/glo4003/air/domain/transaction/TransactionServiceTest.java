@@ -24,7 +24,7 @@ public class TransactionServiceTest {
     private EmailTransactionNotifier emailSender;
 
     @Mock
-    private TransactionAssembler transactionAssembler;
+    private TransactionFactory transactionFactory;
 
     @Mock
     private Transaction transaction;
@@ -35,10 +35,10 @@ public class TransactionServiceTest {
 
     @Before
     public void setup() {
-        transactionService = new TransactionService(transactionRepository, emailSender, transactionAssembler);
+        transactionService = new TransactionService(transactionRepository, emailSender, transactionFactory);
         transactionDto = new TransactionDto();
 
-        willReturn(transaction).given(transactionAssembler).create(transactionDto);
+        willReturn(transaction).given(transactionFactory).create(transactionDto);
     }
 
     @Test

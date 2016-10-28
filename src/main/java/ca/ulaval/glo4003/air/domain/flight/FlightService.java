@@ -48,4 +48,20 @@ public class FlightService {
         }
         logger.info(query);
     }
+
+    public void reservePlacesInFlight(String airlineCompany, String arrivalAirport,  LocalDateTime departureDate, int ticketsQuantity) throws NoSuchFlightException {
+        Flight flight = findFlight(airlineCompany, arrivalAirport, departureDate);
+        flight.reservePlaces(ticketsQuantity);
+        this.flightRepository.save(flight);
+    }
+
+    public void releasePlacesInFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate, int ticketsQuantity) throws NoSuchFlightException {
+        Flight flight = findFlight(airlineCompany, arrivalAirport, departureDate);
+        flight.releasePlaces(ticketsQuantity);
+        this.flightRepository.save(flight);
+    }
+
+    private Flight findFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate) throws NoSuchFlightException {
+        return flightRepository.query().hasAirlineCompany(airlineCompany).isGoingTo(arrivalAirport).isLeavingOn(departureDate).findOne().orElseThrow(() -> new NoSuchFlightException("Flight " + airlineCompany+ " " + arrivalAirport + " does not exists."));
+    }
 }
