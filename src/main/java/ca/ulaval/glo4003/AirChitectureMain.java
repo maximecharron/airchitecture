@@ -1,5 +1,6 @@
 package ca.ulaval.glo4003;
 
+import ca.ulaval.glo4003.air.api.config.CORSResponseFilter;
 import ca.ulaval.glo4003.air.api.flight.FlightResource;
 import ca.ulaval.glo4003.air.api.transaction.CartItemResource;
 import ca.ulaval.glo4003.air.api.transaction.TransactionResource;
@@ -7,26 +8,29 @@ import ca.ulaval.glo4003.air.api.user.AuthenticationResource;
 import ca.ulaval.glo4003.air.api.user.UserResource;
 import ca.ulaval.glo4003.air.api.weightdetection.WeightDetectionResource;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
-import ca.ulaval.glo4003.air.domain.flight.*;
+import ca.ulaval.glo4003.air.domain.flight.Flight;
+import ca.ulaval.glo4003.air.domain.flight.FlightService;
+import ca.ulaval.glo4003.air.domain.flight.WeightFilterVerifier;
 import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifier;
 import ca.ulaval.glo4003.air.domain.notification.TransactionNotifier;
 import ca.ulaval.glo4003.air.domain.transaction.*;
 import ca.ulaval.glo4003.air.domain.user.*;
-import ca.ulaval.glo4003.air.infrastructure.SmtpEmailSender;
-import ca.ulaval.glo4003.air.persistence.transaction.TransactionRepositoryInMemory;
-import ca.ulaval.glo4003.air.transfer.weightdetection.WeightDetectionAssembler;
+import ca.ulaval.glo4003.air.domain.user.encoders.JWTTokenEncoder;
+import ca.ulaval.glo4003.air.domain.user.hashingStrategies.HashingStrategyBCrypt;
 import ca.ulaval.glo4003.air.domain.weightdetection.WeightDetectionService;
 import ca.ulaval.glo4003.air.domain.weightdetection.WeightDetector;
-import ca.ulaval.glo4003.air.api.config.CORSResponseFilter;
+import ca.ulaval.glo4003.air.domain.weightdetection.detectors.DummyWeightDetector;
+import ca.ulaval.glo4003.air.infrastructure.EmailTransactionNotifierConfiguration;
+import ca.ulaval.glo4003.air.infrastructure.ResourcesEmailTransactionNotifierConfiguration;
+import ca.ulaval.glo4003.air.infrastructure.SmtpEmailSender;
 import ca.ulaval.glo4003.air.persistence.flight.FlightDevDataFactory;
 import ca.ulaval.glo4003.air.persistence.flight.FlightRepositoryInMemory;
+import ca.ulaval.glo4003.air.persistence.transaction.TransactionRepositoryInMemory;
 import ca.ulaval.glo4003.air.persistence.user.UserDevDataFactory;
 import ca.ulaval.glo4003.air.persistence.user.UserRepositoryInMemory;
-import ca.ulaval.glo4003.air.domain.user.hashingStrategies.HashingStrategyBCrypt;
-import ca.ulaval.glo4003.air.domain.user.encoders.JWTTokenEncoder;
-import ca.ulaval.glo4003.air.domain.weightdetection.detectors.DummyWeightDetector;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 import ca.ulaval.glo4003.air.transfer.user.UserAssembler;
+import ca.ulaval.glo4003.air.transfer.weightdetection.WeightDetectionAssembler;
 import com.auth0.jwt.JWTSigner;
 import com.auth0.jwt.JWTVerifier;
 import org.eclipse.jetty.server.Handler;
@@ -39,6 +43,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 import javax.ws.rs.core.Application;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -108,10 +113,11 @@ public class AirChitectureMain {
         return new CartItemFactory();
     }
 
-    private static TransactionResource createTransactionResource(CartItemFactory cartItemFactory) {
+    private static TransactionResource createTransactionResource(CartItemFactory cartItemFactory) throws IOException {
         TransactionRepository transactionRepository = new TransactionRepositoryInMemory();
         SmtpEmailSender smtpEmailSender = new SmtpEmailSender();
-        TransactionNotifier transactionNotifier = new EmailTransactionNotifier(smtpEmailSender);
+        EmailTransactionNotifierConfiguration emailConfiguration = new ResourcesEmailTransactionNotifierConfiguration();
+        TransactionNotifier transactionNotifier = new EmailTransactionNotifier(smtpEmailSender, emailConfiguration);
 
         TransactionFactory transactionFactory = new TransactionFactory(cartItemFactory);
 
