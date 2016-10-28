@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -75,12 +76,12 @@ public class AuthenticationResourceTest
 
         authenticationResource.signup(EMAIL, PASSWORD);
 
-        verify(userService).createUser(EMAIL, PASSWORD);
+        verify(userService).createUser(EMAIL, PASSWORD, false);
     }
 
     @Test
     public void givenAlreadyExsitingEmail_whenSignup_then409IsThrown() throws AuthenticationException, UserAlreadyExistException{
-        doThrow(UserAlreadyExistException.class).when(userService).createUser(anyString(), anyString());
+        doThrow(UserAlreadyExistException.class).when(userService).createUser(anyString(), anyString(), anyBoolean());
         try {
             authenticationResource.signup(EMAIL, PASSWORD);
             fail("Exception not thrown");

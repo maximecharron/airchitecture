@@ -3,13 +3,33 @@
 ## Qu'est-ce que c'est
 Une petite web app pour acheter des billets d'avion.
 
+## Installer Node JS
+1. Installer Node JS en fonction de votre OS:
+
+    * SUr Windows : http://nodejs.org/download/
+    * Sur Mac : http://nodejs.org/download/
+    * Sur Ubuntu 14.04 (Voir node Linux pour d'autres distributions)
+        <code>sudo apt-get update</code>
+        <code>sudo apt-get install nodejs</code>
+        <code>sudo apt-get install npm</code>
+
+2. Vérifier que NodeJS est correctement installer en utilisant cette commande:
+    <code>node -v</code>
+
+3. Vérifier que Node Package Manager (npm) est correctement installer en utilisant cette commande:
+    <code>npm -v</code>
+4. Installer bower
+    <code>npm install -g bower</code>
+
 ## Comment l'utiliser
 * Se rendre au répertoire `/src/main/webapp` et effectuer la commande `bower install` pour installer les dépendances client
+* Revenir à la racine du projet
+* Exécuter `mvn clean install` pour installer le projet
 * Exécuter `mvn exec:java` pour lancer le serveur
 * L'application est alors disponible au `localhost:8081`
 * L'API est disponible au `localhost:8081/api`
-* `mvn exec:java` pour faire tourner le serveur web sur le port `8081`
-* Les tests d'intégrations utilisent le port `8080`
+* `mvn test` pour faire rouler les tests
+* Les tests d'intégrations utilisent le port `8888`
 
 ## API   
    
@@ -49,8 +69,35 @@ Une petite web app pour acheter des billets d'avion.
 ]
 ```
 
-### Weight Detector   
-    
+### Login
+
+**Route** : `/api/auth/login`
+**Form params(url-encoded)** :
+- `email`
+- `password`
+
+**Exemple 1** : `http://localhost:8081/api/auth/login`
+```
+{
+    "email":"bob@test3.com",
+    "token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJib2JAdGVzdDMuY29tIiwiZXhwIjoxNDc1ODY1OTEwLCJpYXQiOjE0NzU3Nzk1MTB9.4sAjY41_LopDvem72qlJVFVWoajq7vh55912QYWRv-M"
+}
+```
+
+### Signup
+
+**Route** : `/api/auth/signup`
+**Form params(url-encoded)** :
+- `email`
+- `password`
+
+**Exemple 1** : `http://localhost:8081/api/auth/signup`
+```
+204 - No Content
+```
+
+### Weight Detector
+
  **Route** : `api/weightDetection`   
  
  **Exemple** : `http://localhost:8081/api/weightDetection`   
