@@ -2,7 +2,7 @@ package ca.ulaval.glo4003.air.api.transaction;
 
 import ca.ulaval.glo4003.air.api.transaction.dto.CartItemDto;
 import ca.ulaval.glo4003.air.domain.flight.NoSuchFlightException;
-import ca.ulaval.glo4003.air.domain.transaction.CartItemService;
+import ca.ulaval.glo4003.air.domain.transaction.cart.CartItemService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -28,8 +28,8 @@ public class CartItemResource {
         } catch (NoSuchFlightException e) {
             logger.info("Reservation failed because: " + e.getMessage());
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("No such flight.")
-                    .build());
+                                                      .entity("No such flight.")
+                                                      .build());
         }
     }
 
@@ -42,8 +42,8 @@ public class CartItemResource {
         } catch (NoSuchFlightException e) {
             logger.info("Reservation cancellation failed because: " + e.getMessage());
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("No such flight.")
-                    .build());
+                                                      .entity("No such flight.")
+                                                      .build());
         }
     }
 }

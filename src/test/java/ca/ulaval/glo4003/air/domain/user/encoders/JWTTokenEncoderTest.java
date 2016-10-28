@@ -1,7 +1,7 @@
 package ca.ulaval.glo4003.air.domain.user.encoders;
 
 import ca.ulaval.glo4003.air.domain.user.InvalidTokenException;
-import ca.ulaval.glo4003.air.domain.user.encoders.JWTTokenEncoder;
+import ca.ulaval.glo4003.air.infrastructure.user.encoding.JWTTokenEncoder;
 import com.auth0.jwt.JWTSigner;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.JWTVerifyException;
@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;

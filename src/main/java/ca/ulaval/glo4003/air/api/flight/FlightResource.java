@@ -1,6 +1,5 @@
 package ca.ulaval.glo4003.air.api.flight;
 
-import ca.ulaval.glo4003.air.api.flight.dto.FlightDto;
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchDto;
 import ca.ulaval.glo4003.air.domain.flight.FlightService;
 
@@ -10,7 +9,6 @@ import javax.ws.rs.core.Response;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.List;
 
 @Path("/search/flights")
 public class FlightResource {
@@ -50,8 +48,8 @@ public class FlightResource {
     private void validateWeightIsPresent(String weight) {
         if (weight == null) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Missing luggage weight.")
-                    .build());
+                                                      .entity("Missing luggage weight.")
+                                                      .build());
         }
     }
 
@@ -60,8 +58,8 @@ public class FlightResource {
             return LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         } catch (DateTimeParseException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Invalid datetime format. " + e.getMessage())
-                    .build());
+                                                      .entity("Invalid datetime format. " + e.getMessage())
+                                                      .build());
         }
     }
 
@@ -70,8 +68,8 @@ public class FlightResource {
             return Double.parseDouble(weight);
         } catch (NumberFormatException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Invalid weight format. " + e.getMessage())
-                    .build());
+                                                      .entity("Invalid weight format. " + e.getMessage())
+                                                      .build());
         }
     }
 }
