@@ -3,6 +3,7 @@ package ca.ulaval.glo4003.air.infrastructure;
 import ca.ulaval.glo4003.air.domain.notification.NotificationFailedException;
 
 import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -11,12 +12,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class SMTPEmailSender implements EmailSender {
+public class SmtpEmailSender implements EmailSender {
 
     private Session session;
 
-    public SMTPEmailSender() {
-        Properties properties = System.getProperties();
+    public SmtpEmailSender() {
+        Properties properties = new Properties();
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream("smtpConfigurations.properties");
 
@@ -26,10 +27,16 @@ public class SMTPEmailSender implements EmailSender {
             e.printStackTrace();
         }
 
-        this.session = Session.getDefaultInstance(properties);
+        this.session = Session.getInstance(properties, new javax.mail.Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(properties.getProperty("mail.smtp.user"),
+                        properties.getProperty("mail.smtp.password"));
+            }
+        });
     }
 
-    public SMTPEmailSender(final Session session) {
+    public SmtpEmailSender(final Session session) {
         this.session = session;
     }
 
@@ -42,10 +49,13 @@ public class SMTPEmailSender implements EmailSender {
             mimeMessage.setSubject(message.getSubject());
             mimeMessage.setText(message.getBody());
 
-            Transport.send(mimeMessage);
+            Transport transport = this.session.getTransport();
+            transport.connect();
+            transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
+            transport.close();
+
         } catch (Exception e) {
             throw new NotificationFailedException(e);
         }
     }
-
 }

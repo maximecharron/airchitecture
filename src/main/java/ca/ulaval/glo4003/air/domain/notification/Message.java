@@ -29,5 +29,4 @@ public class Message {
     public String getBody() {
         return this.body;
     }
-
 }

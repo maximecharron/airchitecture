@@ -7,7 +7,7 @@ import ca.ulaval.glo4003.air.infrastructure.EmailSender;
 public class EmailTransactionNotifier implements TransactionNotifier {
 
     private final EmailSender emailSender;
-    private final static String NOTIFICATION_MESSAGE_SUBJECT = "Here are you transaction informations";
+    private final static String NOTIFICATION_MESSAGE_SUBJECT = "Here are your transaction informations";
     private final static String NOTIFICATION_MESSAGE_BODY = "Here are the details of your last transaction with us: %s";
 
     public EmailTransactionNotifier(EmailSender emailSender) {
@@ -30,5 +30,4 @@ public class EmailTransactionNotifier implements TransactionNotifier {
 
         this.emailSender.sendEmail(message);
     }
-
 }
