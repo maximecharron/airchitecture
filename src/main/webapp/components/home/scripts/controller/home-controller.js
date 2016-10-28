@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cookies, $window, homeResource, weightDetectionResource, userResource, ModalService) {
-=======
-homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cookies, homeResource, weightDetectionResource, userResource, ModalService) {
->>>>>>> master
 
     $scope.isLoading = false;
     $scope.doNotShow = false;
@@ -30,11 +26,12 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
         })
     };
 
-    $scope.closeWeightFilteredAlert = function () {
+    $scope.closeWeightFilteredAlert = function (doNotShow) {
         $scope.showWeightFilteredAlert = false;
-        if ($rootScope.user && $scope.doNotShow){
+        if ($rootScope.user && doNotShow){
             userResource.put({showWeightFilteredAlert: false}, function onSuccess(data) {
                 $rootScope.user = data;
+                $cookies.putObject("user", $rootScope.user);
             });
         } else if ($scope.doNotShow){
             $window.localStorage.setItem("showWeightFilteredAlert", false);
