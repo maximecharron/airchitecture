@@ -369,7 +369,7 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
             set: function (key, val) {
 
                 if (val === undefined) {
-                    $window.localStorage .removeItem(key);
+                    $window.localStorage.removeItem(key);
                 } else {
                     $window.localStorage [key] = angular.toJson(val);
                 }

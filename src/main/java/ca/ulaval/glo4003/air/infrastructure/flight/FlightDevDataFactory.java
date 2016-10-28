@@ -28,14 +28,14 @@ public class FlightDevDataFactory {
         Flight torontoToLondon = new Flight("YXU", "YYZ", LocalDateTime.of(2016, 10, 20, 9, 45), AIR_MOYEN, airplane2, 134.00f);
 
         Airplane airplane3 = new AirLegerAirplane(42);
-        Flight montrealToOslo = new Flight("OSL", "YUL", LocalDateTime.of(2018, 6, 14, 21, 0), AIR_LEGER, airplane3, 54.98f);
+        Flight osloToMontreal = new Flight("OSL", "YUL", LocalDateTime.of(2018, 6, 14, 21, 0), AIR_LEGER, airplane3, 54.98f);
 
         Airplane airplane4 = new AirLourdAirplane(17, 1000);
         Flight montrealToOslo2 = new Flight("YUL", "OSL", LocalDateTime.of(2018, 8, 15, 21, 0), AIR_LOURD, airplane4, 245.45f);
 
         Airplane airplane5 = new AirLourdAirplane(13, 0);
-        Flight osloToMontreal = new Flight("YUL", "OSL", LocalDateTime.of(2018, 8, 16, 21, 2), AIR_LOURD, airplane5, 890.65f);
-
+        Flight montrealToOslo = new Flight("YUL", "OSL", LocalDateTime.of(2018, 8, 16, 21, 2), AIR_LOURD, airplane5, 890.65f);
+        
         flights.addAll(Arrays.asList(quebecToDublin, torontoToLondon, montrealToOslo, montrealToOslo2, osloToMontreal));
         return flights;
     }
