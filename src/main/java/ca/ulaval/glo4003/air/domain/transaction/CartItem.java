@@ -5,12 +5,14 @@ import java.time.LocalDateTime;
 public class CartItem {
 
     private int ticketsQuantity;
-    private String flightNumber;
+    private String arrivalAirport;
+    private String airlineCompany;
     private LocalDateTime departureDate;
 
-    public CartItem(int ticketsQuantity, String flightNumber, LocalDateTime departureDate) {
+    public CartItem(int ticketsQuantity, String arrivalAirport, String airlineCompany, LocalDateTime departureDate) {
         this.ticketsQuantity = ticketsQuantity;
-        this.flightNumber = flightNumber;
+        this.arrivalAirport = arrivalAirport;
+        this.airlineCompany = airlineCompany;
         this.departureDate = departureDate;
     }
 
@@ -22,19 +24,27 @@ public class CartItem {
         this.ticketsQuantity = ticketsQuantity;
     }
 
-    public String getFlightNumber() {
-        return flightNumber;
-    }
-
-    public void setFlightNumber(String flightNumber) {
-        this.flightNumber = flightNumber;
-    }
-
     public LocalDateTime getDepartureDate() {
         return departureDate;
     }
 
     public void setDepartureDate(LocalDateTime departureDate) {
         this.departureDate = departureDate;
+    }
+
+    public String getAirlineCompany() {
+        return airlineCompany;
+    }
+
+    public void setAirlineCompany(String airlineCompany) {
+        this.airlineCompany = airlineCompany;
+    }
+
+    public String getArrivalAirport() {
+        return arrivalAirport;
+    }
+
+    public void setArrivalAirport(String arrivalAirport) {
+        this.arrivalAirport = arrivalAirport;
     }
 }

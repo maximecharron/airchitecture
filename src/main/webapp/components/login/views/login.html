@@ -1,4 +1,7 @@
 <div class="col-md-6 col-md-offset-3 panel-body">
+    <div class="ajax-loading" ng-show="isLoading">
+        <img src="img/cat-mouse_Transparent.gif">
+    </div>
     <div ng-show="!isLoading">
         <div>
             <h2>Login</h2>
@@ -22,9 +25,6 @@
                     <a href="#/register" class="btn btn-primary">Register</a>
                 </div>
             </form>
-        </div>
-        <div class="ajax-loading" ng-show="isLoading">
-            <img src="img/cat-mouse_Transparent.gif">
         </div>
     </div>
 </div>

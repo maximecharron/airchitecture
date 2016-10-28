@@ -9,8 +9,11 @@ var homeApp = angular.module('airchitecture', [
     "airchitecture.login",
     "validation.match",
     "ui.gravatar",
-    "angularModalService",
     "airchitecture.register",
+    "airchitecture.cart",
+    'ngCart',
+    "ui.bootstrap",
+    "angularModalService",
     "airchitecture.admin"
 ]).run(['$rootScope', '$cookies', '$location', function ($rootScope, $cookies, $location) {
 

@@ -11,7 +11,9 @@ body{
 .title {
     color: #ffffff;
 }
-
+.form-control{
+    width: 300px;
+}
 .ajax-loading {
     margin-left: 35%;
     margin-right: 35%;

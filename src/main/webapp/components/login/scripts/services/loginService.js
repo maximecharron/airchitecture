@@ -12,6 +12,7 @@ loginApp.factory('loginService', ["loginResource", "$cookies", "$rootScope", fun
     function clearUser() {
         $rootScope.user = null;
         $rootScope.showWeightFilteredAlert = undefined;
+        $cookies.remove("showWeightFilteredAlert");
         $cookies.remove('user');
     }
 

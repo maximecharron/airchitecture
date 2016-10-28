@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public class CartItemDto {
 
     public int ticketsQuantity;
-    public String flightNumber;
+    public String arrivalAirport;
+    public String airlineCompany;
     public String departureDate;
 }

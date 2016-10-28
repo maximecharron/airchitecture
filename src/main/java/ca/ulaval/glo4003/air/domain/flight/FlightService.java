@@ -2,8 +2,6 @@ package ca.ulaval.glo4003.air.domain.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchDto;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
-import ca.ulaval.glo4003.air.domain.transaction.CartItem;
-import ca.ulaval.glo4003.air.domain.user.NoSuchUserException;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 
 import java.time.LocalDateTime;
@@ -51,19 +49,19 @@ public class FlightService {
         logger.info(query);
     }
 
-    public void reservePlacesInFlight(String flightNumber, LocalDateTime departureDate, int ticketsQuantity) throws NoSuchFlightException {
-        Flight flight = findFlight(flightNumber, departureDate);
+    public void reservePlacesInFlight(String airlineCompany, String arrivalAirport,  LocalDateTime departureDate, int ticketsQuantity) throws NoSuchFlightException {
+        Flight flight = findFlight(airlineCompany, arrivalAirport, departureDate);
         flight.reservePlaces(ticketsQuantity);
         this.flightRepository.save(flight);
     }
 
-    public void releasePlacesInFlight(String flightNumber, LocalDateTime departureDate, int ticketsQuantity) throws NoSuchFlightException {
-        Flight flight = findFlight(flightNumber, departureDate);
+    public void releasePlacesInFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate, int ticketsQuantity) throws NoSuchFlightException {
+        Flight flight = findFlight(airlineCompany, arrivalAirport, departureDate);
         flight.releasePlaces(ticketsQuantity);
         this.flightRepository.save(flight);
     }
 
-    private Flight findFlight(String flightNumber, LocalDateTime departureDate) throws NoSuchFlightException {
-        return flightRepository.query().hasFlightNumber(flightNumber).isLeavingOn(departureDate).findOne().orElseThrow(() -> new NoSuchFlightException("Flight " + flightNumber + " does not exists."));
+    private Flight findFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate) throws NoSuchFlightException {
+        return flightRepository.query().hasAirlineCompany(airlineCompany).isGoingTo(arrivalAirport).isLeavingOn(departureDate).findOne().orElseThrow(() -> new NoSuchFlightException("Flight " + airlineCompany+ " " + arrivalAirport + " does not exists."));
     }
 }

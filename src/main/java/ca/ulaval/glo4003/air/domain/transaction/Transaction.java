@@ -1,15 +1,18 @@
 package ca.ulaval.glo4003.air.domain.transaction;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Transaction {
 
     private String emailAddress;
     private List<CartItem> cartItems;
+    private LocalDateTime timeOfTransaction;
 
     public Transaction(String emailAddress, List<CartItem> cartItems) {
         this.emailAddress = emailAddress;
         this.cartItems = cartItems;
+        this.timeOfTransaction = LocalDateTime.now();
     }
 
     public String getEmailAddress() {

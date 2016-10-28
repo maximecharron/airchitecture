@@ -15,7 +15,7 @@ public interface FlightQueryBuilder {
 
     FlightQueryBuilder acceptsWeight(double weight);
 
-    FlightQueryBuilder hasFlightNumber(String flightNumber);
+    FlightQueryBuilder hasAirlineCompany(String flightNumber);
 
     List<Flight> toList();
 

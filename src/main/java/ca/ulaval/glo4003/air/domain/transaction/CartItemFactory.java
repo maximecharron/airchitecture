@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class CartItemFactory {
 
     public CartItem create(CartItemDto cartItemDto) {
-        return new CartItem(cartItemDto.ticketsQuantity, cartItemDto.flightNumber, LocalDateTime.parse(cartItemDto.departureDate));
+        return new CartItem(cartItemDto.ticketsQuantity, cartItemDto.arrivalAirport, cartItemDto.airlineCompany, LocalDateTime.parse(cartItemDto.departureDate));
     }
 
     public List<CartItem> create(List<CartItemDto> cartItemDtos) {
