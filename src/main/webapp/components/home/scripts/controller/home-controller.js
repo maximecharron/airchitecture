@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cookies, $window, homeResource, weightDetectionResource, userResource, ModalService) {
+=======
+homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cookies, homeResource, weightDetectionResource, userResource, ModalService) {
+>>>>>>> master
 
     $scope.isLoading = false;
     $scope.doNotShow = false;
