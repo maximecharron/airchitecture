@@ -19,7 +19,7 @@ public class FlightRepositoryInMemory implements FlightRepository {
     }
 
     private String createFlightKey(Flight flight){
-        return flight.getAirlineCompany()+flight.getArrivalAirport()+flight.getDepartureDate().toString();
+        return flight.getAirlineCompany() + flight.getArrivalAirport() + flight.getDepartureDate().toString();
     }
 
     @Override

@@ -31,6 +31,4 @@ public class TransactionService {
         String transactionInfo = "User " + transactionDto.emailAddress + " has bought tickets.";
         logger.info(transactionInfo);
     }
-
-
 }
