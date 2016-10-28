@@ -33,7 +33,7 @@ public class Flight {
     }
 
     public boolean isLeavingOn(LocalDateTime date) {
-        return departureDate.isEqual(date);
+        return isOnSameDay(date, departureDate);
     }
 
     public boolean isFromCompany(String airlineCompany) {
@@ -84,6 +84,10 @@ public class Flight {
 
     public float getSeatPrice() {
         return seatPrice;
+    }
+
+    private boolean isOnSameDay(LocalDateTime date1, LocalDateTime date2){
+        return date1.getDayOfYear() == date2.getDayOfYear() && date1.getYear() == date2.getYear();
     }
 
 }
