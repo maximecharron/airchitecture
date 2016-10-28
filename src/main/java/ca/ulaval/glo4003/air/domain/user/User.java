@@ -4,14 +4,16 @@ public class User {
     private String emailAddress;
     private String password;
     private String token;
+    private boolean isAdmin;
     private HashingStrategy hashingStrategy;
     private TokenEncoder tokenEncoder;
     private boolean showWeightFilteredAlert = true;
 
-    public User(String emailAddress, String password, TokenEncoder tokenEncoder, HashingStrategy hashingStrategy) {
+    public User(String emailAddress, String password, TokenEncoder tokenEncoder, HashingStrategy hashingStrategy, boolean isAdmin) {
         this.emailAddress = emailAddress;
         this.tokenEncoder = tokenEncoder;
         this.hashingStrategy = hashingStrategy;
+        this.isAdmin = isAdmin;
         hashPassword(password);
     }
 
@@ -25,6 +27,10 @@ public class User {
 
     public String getPassword() {
         return this.password;
+    }
+
+    public boolean isAdmin(){
+        return this.isAdmin;
     }
 
     public boolean isPasswordValid(String password) {

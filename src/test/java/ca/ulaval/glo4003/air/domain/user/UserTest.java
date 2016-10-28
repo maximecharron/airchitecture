@@ -17,6 +17,7 @@ public class UserTest {
     private static final String PASSWORD = "DEF";
     private static final String A_TOKEN = "A_TOKEN";
     private static final String A_HASHED_PASSWORD = "asdn89023e4nads982";
+    private static final boolean IS_NOT_ADMIN = false;
     private User user;
 
     @Mock
@@ -28,13 +29,13 @@ public class UserTest {
     @Before
     public void setup() {
         given(hashingStrategy.hashPassword(anyString())).willReturn(A_HASHED_PASSWORD);
-        user = new User(EMAIL, PASSWORD, tokenEncoder, hashingStrategy);
+        user = new User(EMAIL, PASSWORD, tokenEncoder, hashingStrategy, IS_NOT_ADMIN);
     }
 
     @Test
     public void whenConstructingNewUser_thenPasswordIsHash() {
 
-        User newUser = new User(EMAIL, PASSWORD, tokenEncoder, hashingStrategy);
+        User newUser = new User(EMAIL, PASSWORD, tokenEncoder, hashingStrategy,IS_NOT_ADMIN);
 
         assertEquals(A_HASHED_PASSWORD, newUser.getPassword());
     }

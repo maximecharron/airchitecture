@@ -10,7 +10,8 @@ var homeApp = angular.module('airchitecture', [
     "validation.match",
     "ui.gravatar",
     "angularModalService",
-    "airchitecture.register"
+    "airchitecture.register",
+    "airchitecture.admin"
 ]).run(['$rootScope', '$cookies', '$location', function ($rootScope, $cookies, $location) {
 
     if ($cookies.getObject('user') != null) {
@@ -21,6 +22,10 @@ var homeApp = angular.module('airchitecture', [
 
         if ($cookies.getObject('user') != null && next.templateUrl == "components/login/views/login.html"){
             $location.path("/home");
+        }
+
+        if ($cookies.getObject('user') != null && !$cookies.getObject('user').isAdmin  && next.templateUrl == "components/admin/views/admin.html"){
+            $location.path("/unauthorized");
         }
     });
 }]);

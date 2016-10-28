@@ -16,6 +16,7 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -25,7 +26,7 @@ public class UserServiceTest {
     private final static String EMAIL = "test@test.com";
     private final static String ANOTHER_EMAIL = "test_patate@test.com";
     private final static String PASSWORD = "ABC";
-
+    private final static boolean IS_NOT_ADMIN = false;
     private final static String A_TOKEN = "rock.darius.mama.rucker";
 
     @Mock
@@ -83,19 +84,19 @@ public class UserServiceTest {
 
     @Test
     public void givenPersistedUser_whenCreatingUserWithAnotherEmail_thenUserIsCreated() throws UserAlreadyExistException {
-        given(userFactory.createUser(ANOTHER_EMAIL, PASSWORD)).willReturn(user);
+        given(userFactory.createUser(ANOTHER_EMAIL, PASSWORD, IS_NOT_ADMIN)).willReturn(user);
 
-        userService.createUser(ANOTHER_EMAIL, PASSWORD);
+        userService.createUser(ANOTHER_EMAIL, PASSWORD, IS_NOT_ADMIN);
 
         verify(userRepository).persist(user);
     }
 
     @Test(expected = UserAlreadyExistException.class)
     public void givenPersistedUser_whenCreatingUserWithSameEmail_thenThrow() throws UserAlreadyExistException {
-        given(userFactory.createUser(anyString(), anyString())).willReturn(user);
+        given(userFactory.createUser(anyString(), anyString(), anyBoolean())).willReturn(user);
         doThrow(UserAlreadyExistException.class).when(userRepository).persist(any(User.class));
 
-        userService.createUser(ANOTHER_EMAIL, PASSWORD);
+        userService.createUser(ANOTHER_EMAIL, PASSWORD, IS_NOT_ADMIN);
     }
 
     @Test

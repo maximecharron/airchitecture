@@ -1,4 +1,4 @@
-loginApp.controller("login-controller", function ($scope, loginService, $location, loginResource) {
+loginApp.controller("login-controller", function ($scope, $rootScope, loginService, $location, loginResource) {
 
     $scope.email = "";
     $scope.password = "";
@@ -15,7 +15,11 @@ loginApp.controller("login-controller", function ($scope, loginService, $locatio
         loginResource.post(credentials, function onSuccess(data) {
             
             loginService.SetUser(data);
-            $location.path("/home");
+            if ($rootScope.user.isAdmin === true){
+                $location.path("/admin");
+            } else {
+                $location.path("/home");
+            }
             $scope.isLoading = false;
 
         }, function onError(data) {
