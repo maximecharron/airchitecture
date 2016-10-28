@@ -29,7 +29,7 @@ Une petite web app pour acheter des billets d'avion.
 * L'application est alors disponible au `localhost:8081`
 * L'API est disponible au `localhost:8081/api`
 * `mvn test` pour faire rouler les tests
-* Les tests d'intégrations utilisent le port `8888`
+* Les tests d'intégrations utilisent le port `8080`
 
 ## API   
    

@@ -1,7 +1,9 @@
 package ca.ulaval.glo4003.air.api.flight;
 
-import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchDto;
+import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
+import ca.ulaval.glo4003.air.domain.flight.FlightSearchResult;
 import ca.ulaval.glo4003.air.domain.flight.FlightService;
+import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -13,18 +15,20 @@ import java.time.format.DateTimeParseException;
 @Path("/search/flights")
 public class FlightResource {
 
-    private FlightService flightService;
+    private final FlightService flightService;
+    private final FlightAssembler flightAssembler;
 
-    public FlightResource(FlightService flightService) {
+    public FlightResource(FlightService flightService, FlightAssembler flightAssembler) {
         this.flightService = flightService;
+        this.flightAssembler = flightAssembler;
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public FlightSearchDto findAllWithFilters(@QueryParam("from") String departureAirport,
-                                              @QueryParam("to") String arrivalAirport,
-                                              @QueryParam("datetime") String departureDate,
-                                              @QueryParam("weight") String weight) {
+    public FlightSearchResultDto findAllWithFilters(@QueryParam("from") String departureAirport,
+                                                    @QueryParam("to") String arrivalAirport,
+                                                    @QueryParam("datetime") String departureDate,
+                                                    @QueryParam("weight") String weight) {
         validateAirportsArePresent(departureAirport, arrivalAirport);
         validateWeightIsPresent(weight);
 
@@ -34,7 +38,8 @@ public class FlightResource {
             parsedDate = parseDate(departureDate);
         }
 
-        return flightService.findAllWithFilters(departureAirport, arrivalAirport, parsedDate, parseWeight(weight));
+        FlightSearchResult searchResult = flightService.findAllWithFilters(departureAirport, arrivalAirport, parsedDate, parseWeight(weight));
+        return flightAssembler.create(searchResult);
     }
 
     private void validateAirportsArePresent(String departureAirport, String arrivalAirport) {

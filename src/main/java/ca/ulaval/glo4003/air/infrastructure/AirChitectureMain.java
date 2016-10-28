@@ -12,6 +12,7 @@ import ca.ulaval.glo4003.air.domain.flight.Flight;
 import ca.ulaval.glo4003.air.domain.flight.FlightService;
 import ca.ulaval.glo4003.air.domain.flight.WeightFilterVerifier;
 import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifier;
+import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifierConfiguration;
 import ca.ulaval.glo4003.air.domain.notification.TransactionNotifier;
 import ca.ulaval.glo4003.air.domain.transaction.TransactionFactory;
 import ca.ulaval.glo4003.air.domain.transaction.TransactionRepository;
@@ -27,6 +28,8 @@ import ca.ulaval.glo4003.air.domain.weightdetection.WeightDetectionService;
 import ca.ulaval.glo4003.air.domain.weightdetection.WeightDetector;
 import ca.ulaval.glo4003.air.infrastructure.flight.FlightDevDataFactory;
 import ca.ulaval.glo4003.air.infrastructure.flight.FlightRepositoryInMemory;
+import ca.ulaval.glo4003.air.infrastructure.notification.ResourcesEmailTransactionNotifierConfiguration;
+import ca.ulaval.glo4003.air.infrastructure.notification.SmtpEmailSender;
 import ca.ulaval.glo4003.air.infrastructure.transaction.TransactionRepositoryInMemory;
 import ca.ulaval.glo4003.air.infrastructure.user.UserDevDataFactory;
 import ca.ulaval.glo4003.air.infrastructure.user.UserRepositoryInMemory;
@@ -53,21 +56,27 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class  AirChitectureMain {
+public class AirChitectureMain {
 
     private static boolean isDev = true; // Would be a JVM argument or in a .property file
 
     public static void main(String[] args) throws Exception {
-        // Setup resources (API)
+        // Setup API resources
         FlightService flightService = createFlightService();
         FlightResource flightResource = createFlightResource(flightService);
+
+        UserAssembler userAssembler = new UserAssembler();
         UserService userService = createUserService();
-        AuthenticationResource authenticationResource = createAuthenticationResource(userService);
-        UserResource userResource = createUserResource(userService);
+        UserResource userResource = createUserResource(userService, userAssembler);
+
         CartItemFactory cartItemFactory = createCartItemFactory();
         CartItemResource cartItemResource = createCartItemResource(flightService, cartItemFactory);
         TransactionResource transactionResource = createTransactionResource(cartItemFactory);
+
+        AuthenticationResource authenticationResource = createAuthenticationResource(userService, userAssembler);
+
         WeightDetectionResource weightDetectionResource = createWeightDetectionResource();
+
         // Setup API context (JERSEY + JETTY)
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/api");
@@ -144,14 +153,14 @@ public class  AirChitectureMain {
             flights.forEach(flightRepository::save);
         }
 
-        FlightAssembler flightAssembler = new FlightAssembler();
         WeightFilterVerifier weightFilterVerifier = new WeightFilterVerifier();
         DateTimeFactory dateTimeFactory = new DateTimeFactory();
-        return new FlightService(flightRepository, flightAssembler, weightFilterVerifier, dateTimeFactory);
+        return new FlightService(flightRepository, weightFilterVerifier, dateTimeFactory);
     }
 
     private static FlightResource createFlightResource(FlightService flightService) {
-        return new FlightResource(flightService);
+        FlightAssembler flightAssembler = new FlightAssembler();
+        return new FlightResource(flightService, flightAssembler);
     }
 
     private static WeightDetectionResource createWeightDetectionResource() {
@@ -174,15 +183,14 @@ public class  AirChitectureMain {
             users.forEach(userRepository::update);
         }
 
-        UserAssembler userAssembler = new UserAssembler();
-        return new UserService(userRepository, userAssembler, userFactory, tokenEncoder);
+        return new UserService(userRepository, userFactory, tokenEncoder);
     }
 
-    private static AuthenticationResource createAuthenticationResource(UserService userService) {
-        return new AuthenticationResource(userService);
+    private static AuthenticationResource createAuthenticationResource(UserService userService, UserAssembler userAssembler) {
+        return new AuthenticationResource(userService, userAssembler);
     }
 
-    private static UserResource createUserResource(UserService userService) {
-        return new UserResource(userService);
+    private static UserResource createUserResource(UserService userService, UserAssembler userAssembler) {
+        return new UserResource(userService, userAssembler);
     }
 }
