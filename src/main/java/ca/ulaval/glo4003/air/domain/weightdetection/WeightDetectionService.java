@@ -7,7 +7,7 @@ public class WeightDetectionService {
     private WeightDetector weightDetector;
     private WeightDetectionAssembler weightDetectionAssembler;
 
-    public WeightDetectionService(WeightDetector weightDetector, WeightDetectionAssembler weightDetectionAssembler){
+    public WeightDetectionService(WeightDetector weightDetector, WeightDetectionAssembler weightDetectionAssembler) {
         this.weightDetector = weightDetector;
         this.weightDetectionAssembler = weightDetectionAssembler;
     }

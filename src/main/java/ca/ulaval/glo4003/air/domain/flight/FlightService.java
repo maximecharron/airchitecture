@@ -26,11 +26,14 @@ public class FlightService {
     public FlightSearchDto findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight) {
         logRequest(departureAirport, arrivalAirport, departureDate, weight);
         FlightQueryBuilder query = flightRepository.query()
-                .isDepartingFrom(departureAirport)
-                .isGoingTo(arrivalAirport);
+                                                   .isDepartingFrom(departureAirport)
+                                                   .isGoingTo(arrivalAirport);
 
-        if (departureDate != null) { query.isLeavingOn(departureDate); }
-        else { query.isLeavingAfter(dateTimeFactory.now()); }
+        if (departureDate != null) {
+            query.isLeavingOn(departureDate);
+        } else {
+            query.isLeavingAfter(dateTimeFactory.now());
+        }
 
         List<Flight> allFlights = query.toList();
         query.acceptsWeight(weight);
@@ -49,7 +52,7 @@ public class FlightService {
         logger.info(query);
     }
 
-    public void reservePlacesInFlight(String airlineCompany, String arrivalAirport,  LocalDateTime departureDate, int ticketsQuantity) throws NoSuchFlightException {
+    public void reservePlacesInFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate, int ticketsQuantity) throws NoSuchFlightException {
         Flight flight = findFlight(airlineCompany, arrivalAirport, departureDate);
         flight.reservePlaces(ticketsQuantity);
         this.flightRepository.save(flight);
@@ -62,6 +65,11 @@ public class FlightService {
     }
 
     private Flight findFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate) throws NoSuchFlightException {
-        return flightRepository.query().hasAirlineCompany(airlineCompany).isGoingTo(arrivalAirport).isLeavingOn(departureDate).findOne().orElseThrow(() -> new NoSuchFlightException("Flight " + airlineCompany+ " " + arrivalAirport + " does not exists."));
+        return flightRepository.query()
+                               .hasAirlineCompany(airlineCompany)
+                               .isGoingTo(arrivalAirport)
+                               .isLeavingOn(departureDate)
+                               .findOne()
+                               .orElseThrow(() -> new NoSuchFlightException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
     }
 }

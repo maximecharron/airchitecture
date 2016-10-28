@@ -1,6 +1,6 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
-import ca.ulaval.glo4003.air.domain.airplane.Airplane;
+import ca.ulaval.glo4003.air.domain.flight.airplane.Airplane;
 
 import java.time.LocalDateTime;
 
@@ -40,7 +40,9 @@ public class Flight {
         return this.airlineCompany.equals(airlineCompany);
     }
 
-    public boolean isLeavingAfter(LocalDateTime date) { return departureDate.isAfter(date); }
+    public boolean isLeavingAfter(LocalDateTime date) {
+        return departureDate.isAfter(date);
+    }
 
     public boolean acceptsWeight(double weight) {
         return airplane.acceptsWeight(weight);

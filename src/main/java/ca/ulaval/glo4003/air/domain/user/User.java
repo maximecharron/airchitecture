@@ -1,5 +1,8 @@
 package ca.ulaval.glo4003.air.domain.user;
 
+import ca.ulaval.glo4003.air.domain.user.encoding.TokenEncoder;
+import ca.ulaval.glo4003.air.domain.user.hashing.HashingStrategy;
+
 public class User {
     private String emailAddress;
     private String password;
@@ -29,7 +32,7 @@ public class User {
         return this.password;
     }
 
-    public boolean isAdmin(){
+    public boolean isAdmin() {
         return this.isAdmin;
     }
 
