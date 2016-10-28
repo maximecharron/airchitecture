@@ -10,7 +10,6 @@ cartApp.controller("cart-controller", function ($scope, $location, $rootScope, n
     }
 
     $scope.$watch('customer["email"]', function(newCustomer, oldCustomer) {
-        console.log("change " + newCustomer);
         $rootScope.checkoutEmail = newCustomer;
     });
 
