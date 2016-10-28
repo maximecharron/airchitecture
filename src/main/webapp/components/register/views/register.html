@@ -11,14 +11,14 @@
             <div class="form-group" ng-class="{'has-error':!form.email.$valid && !form.email.$pristine}">
                 <label for="email">E-mail</label>
                 <input class="form-control" type="email" name="email" required placeholder="Enter a valid email address"
-                       ng-model="email"/>
+                       ng-model="emailAddress"/>
                 <span class="help-block"
-                      ng-if="form.email.$error.required && !form.email.$pristine">This is required.</span>
+                      ng-if="form.emailAddress.$error.required && !form.emailAddress.$pristine">This is required.</span>
             </div>
             <div class="form-group" ng-class="{'has-error':!form.confirmEmail.$valid && !form.confirmEmail.$pristine}">
                 <label for="confirmEmail">Confirm E-mail</label>
                 <input class="form-control" type="email" name="confirmEmail" required
-                       placeholder="Enter a valid email address" ng-model="confirmEmail" match="email"/>
+                       placeholder="Enter a valid email address" ng-model="confirmEmail" match="emailAddress"/>
                 <span class="help-block" ng-if="form.confirmEmail.$error.required && !form.confirmEmail.$pristine">This is required.</span>
                 <span class="help-block" ng-if="form.confirmEmail.$error.match && !form.confirmEmail.$pristine">E-mail do not match!</span>
             </div>

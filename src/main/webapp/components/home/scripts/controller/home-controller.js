@@ -1,4 +1,4 @@
-homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cookies, homeResource, weightDetectionResource, userResource, ModalService) {
+homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cookies, $window, homeResource, weightDetectionResource, userResource, ModalService) {
 
     $scope.isLoading = false;
     $scope.doNotShow = false;
@@ -33,7 +33,7 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
                 $rootScope.user = data;
             });
         } else if ($scope.doNotShow){
-            $cookies.putObject("showWeightFilteredAlert", false);
+            $window.localStorage.setItem("showWeightFilteredAlert", false);
         }
     };
 
@@ -56,7 +56,7 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
         }
         homeResource.get(searchCriteria, function onSuccess(data) {
             var flights = [];
-            for (index in data.flights) {
+            for (var index in data.flights) {
                 var flight = data.flights[index];
                 flight.id = flight.airlineCompany + flight.departureDate + flight.arrivalAirport;
                 flight.humanArrivalAirport = $scope.formData.to.name;
@@ -64,8 +64,8 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
                 flight.name = flight.airlineCompany + " from " + flight.humanDepartureAirport + " to "+ flight.humanArrivalAirport;
                 flights.push(flight);
             }
-            if ($rootScope.user) {$scope.showWeightFilteredAlert = $scope.user.showsWeightFilteredAlert}
-            else {$scope.showWeightFilteredAlert = $cookies.getObject("showWeightFilteredAlert") || $scope.showWeightFilteredAlert === undefined;}
+            if ($rootScope.user) {$scope.showWeightFilteredAlert = $rootScope.user.showsWeightFilteredAlert}
+            else {$scope.showWeightFilteredAlert = $window.localStorage.getItem("showWeightFilteredAlert") || $scope.showWeightFilteredAlert === undefined;}
 
             $scope.flightsResults = flights;
             $scope.flightsWereFilteredByWeight = data.flightsWereFilteredByWeight;
