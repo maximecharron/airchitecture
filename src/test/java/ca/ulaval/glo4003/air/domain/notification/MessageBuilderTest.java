@@ -20,5 +20,4 @@ public class MessageBuilderTest {
         Assert.assertEquals(expectedMessage.getSubject(), aktualMessage.getSubject());
         Assert.assertEquals(expectedMessage.getBody(), aktualMessage.getBody());
     }
-
 }

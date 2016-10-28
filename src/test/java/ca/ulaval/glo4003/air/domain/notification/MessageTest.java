@@ -19,5 +19,4 @@ public class MessageTest {
         Assert.assertEquals(message.getSubject(), SUBJECT_LINE);
         Assert.assertEquals(message.getBody(), BODY_TEXT);
     }
-
 }

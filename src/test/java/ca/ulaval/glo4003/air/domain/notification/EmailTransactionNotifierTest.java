@@ -43,5 +43,4 @@ public class EmailTransactionNotifierTest {
         transactionNotifier.notifyOnNewCompletedTransaction(transaction);
         verify(emailSender).sendEmail(any(Message.class));
     }
-
 }
