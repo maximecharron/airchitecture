@@ -1,6 +1,7 @@
 package ca.ulaval.glo4003.air.domain.transaction;
 
 import ca.ulaval.glo4003.air.api.transaction.dto.TransactionDto;
+import ca.ulaval.glo4003.air.domain.notification.TransactionNotifier;
 
 import java.util.logging.Logger;
 
@@ -9,12 +10,12 @@ public class TransactionService {
     private Logger logger = Logger.getLogger(TransactionService.class.getName());
 
     private final TransactionRepository transactionRepository;
-    private final EmailSender emailSender;
+    private final TransactionNotifier transactionNotifier;
     private final TransactionFactory transactionFactory;
 
-    public TransactionService(TransactionRepository transactionRepository, EmailSender emailSender, TransactionFactory transactionFactory) {
+    public TransactionService(TransactionRepository transactionRepository, TransactionNotifier transactionNotifier, TransactionFactory transactionFactory) {
         this.transactionRepository = transactionRepository;
-        this.emailSender = emailSender;
+        this.transactionNotifier = transactionNotifier;
         this.transactionFactory = transactionFactory;
     }
 
@@ -24,7 +25,7 @@ public class TransactionService {
         Transaction transaction = transactionFactory.create(transactionDto);
 
         transactionRepository.save(transaction);
-        emailSender.sendTransactionDetails(transaction);
+        transactionNotifier.notifyOnNewCompletedTransaction(transaction);
     }
 
     private void logTransaction(TransactionDto transactionDto) {

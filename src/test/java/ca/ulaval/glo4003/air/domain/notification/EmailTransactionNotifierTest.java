@@ -30,7 +30,7 @@ public class EmailTransactionNotifierTest {
     @Before
     public void setUp() {
         List<CartItem> cartItems = new ArrayList<>();
-        cartItems.add(new CartItem(1, "123", LocalDateTime.now()));
+        cartItems.add(new CartItem(1, "YQB", "AirFrenette", LocalDateTime.now()));
 
         Mockito.doReturn(TO_ADDRESS).when(transaction).getEmailAddress();
         Mockito.doReturn(cartItems).when(transaction).getCartItems();

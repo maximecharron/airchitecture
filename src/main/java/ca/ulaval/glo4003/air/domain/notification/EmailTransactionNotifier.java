@@ -17,9 +17,9 @@ public class EmailTransactionNotifier implements TransactionNotifier {
     public void notifyOnNewCompletedTransaction(Transaction transaction) throws NotificationFailedException {
         StringBuilder bodyBuilder = new StringBuilder();
 
-        bodyBuilder.append("FLIGHT NUMBER\tDEPARTURE DATE\tTICKET QUANTITY");
+        bodyBuilder.append("AIRLINE\tDEPARTURE DATE\tTICKET QUANTITY");
         for (final CartItem cartItem : transaction.getCartItems()) {
-            bodyBuilder.append(String.format("%s\t%s\t%s", cartItem.getFlightNumber(), cartItem.getDepartureDate(), cartItem.getTicketsQuantity()));
+            bodyBuilder.append(String.format("%s\t%s\t%s", cartItem.getAirlineCompany(), cartItem.getDepartureDate(), cartItem.getTicketsQuantity()));
         }
 
         Message message = new MessageBuilder().addFrom("adminfrenette@airchitecture.io")

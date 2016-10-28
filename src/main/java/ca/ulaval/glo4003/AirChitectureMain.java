@@ -8,8 +8,11 @@ import ca.ulaval.glo4003.air.api.user.UserResource;
 import ca.ulaval.glo4003.air.api.weightdetection.WeightDetectionResource;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.flight.*;
+import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifier;
+import ca.ulaval.glo4003.air.domain.notification.TransactionNotifier;
 import ca.ulaval.glo4003.air.domain.transaction.*;
 import ca.ulaval.glo4003.air.domain.user.*;
+import ca.ulaval.glo4003.air.infrastructure.SmtpEmailSender;
 import ca.ulaval.glo4003.air.persistence.transaction.TransactionRepositoryInMemory;
 import ca.ulaval.glo4003.air.transfer.weightdetection.WeightDetectionAssembler;
 import ca.ulaval.glo4003.air.domain.weightdetection.WeightDetectionService;
@@ -107,11 +110,12 @@ public class AirChitectureMain {
 
     private static TransactionResource createTransactionResource(CartItemFactory cartItemFactory) {
         TransactionRepository transactionRepository = new TransactionRepositoryInMemory();
-        EmailSender emailSender = transaction -> {};
+        SmtpEmailSender smtpEmailSender = new SmtpEmailSender();
+        TransactionNotifier transactionNotifier = new EmailTransactionNotifier(smtpEmailSender);
 
         TransactionFactory transactionFactory = new TransactionFactory(cartItemFactory);
 
-        TransactionService transactionService = new TransactionService(transactionRepository, emailSender, transactionFactory);
+        TransactionService transactionService = new TransactionService(transactionRepository, transactionNotifier, transactionFactory);
         return new TransactionResource(transactionService);
     }
 
