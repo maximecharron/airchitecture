@@ -1,5 +1,5 @@
 cartApp.controller("cart-controller", function ($scope, $location, $rootScope, ngCart) {
-    $scope.customer = { email : "a"};
+    $scope.customer = { email : ""};
 
     $scope.redirect = function(){
         $location.path('/checkout')
