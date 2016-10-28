@@ -1,7 +1,7 @@
 package ca.ulaval.glo4003.air.domain.transaction;
 
 import ca.ulaval.glo4003.air.api.transaction.dto.TransactionDto;
-import ca.ulaval.glo4003.air.domain.transaction.notification.EmailSender;
+import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifier;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

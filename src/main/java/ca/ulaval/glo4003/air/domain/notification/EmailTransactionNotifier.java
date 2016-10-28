@@ -1,7 +1,7 @@
 package ca.ulaval.glo4003.air.domain.notification;
 
-import ca.ulaval.glo4003.air.domain.transaction.CartItem;
 import ca.ulaval.glo4003.air.domain.transaction.Transaction;
+import ca.ulaval.glo4003.air.domain.transaction.cart.CartItem;
 import ca.ulaval.glo4003.air.infrastructure.EmailSender;
 import ca.ulaval.glo4003.air.infrastructure.EmailTransactionNotifierConfiguration;
 
