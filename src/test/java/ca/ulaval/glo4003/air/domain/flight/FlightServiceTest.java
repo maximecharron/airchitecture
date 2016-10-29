@@ -1,9 +1,6 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
-import ca.ulaval.glo4003.air.api.flight.dto.FlightDto;
-import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchDto;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
-import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,14 +12,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willReturn;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyDouble;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 
@@ -42,21 +35,15 @@ public class FlightServiceTest {
     @Mock
     private FlightQueryBuilder flightQueryBuilder;
     @Mock
-    private FlightAssembler flightAssembler;
-    @Mock
     private WeightFilterVerifier weightFilterVerifier;
     @Mock
     private DateTimeFactory dateTimeFactory;
     @Mock
     private Flight flight;
     @Mock
-    private FlightDto flightDto;
-    @Mock
     private List<Flight> flights;
     @Mock
     private List<Flight> flightsFilteredByWeight;
-    @Mock
-    private FlightSearchDto flightSearchDto;
 
     private FlightService flightService;
 
@@ -69,7 +56,7 @@ public class FlightServiceTest {
         given(flightQueryBuilder.isLeavingOn(any())).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.acceptsWeight(anyDouble())).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.hasAirlineCompany(anyString())).willReturn(flightQueryBuilder);
-        flightService = new FlightService(flightRepository, flightAssembler, weightFilterVerifier, dateTimeFactory);
+        flightService = new FlightService(flightRepository, weightFilterVerifier, dateTimeFactory);
     }
 
     @Test
@@ -95,12 +82,11 @@ public class FlightServiceTest {
     public void givenPersistedFlights_whenFindingAllFlightsWithFilters_thenVerifiesIfFlightsWereFilteredByWeight() {
         given(flightQueryBuilder.toList()).willReturn(flights).willReturn(flightsFilteredByWeight);
         given(weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, flights))
-                .willReturn(FLIGHT_WERE_FILTERED_BY_WEIGHT_RESULT);
+            .willReturn(FLIGHT_WERE_FILTERED_BY_WEIGHT_RESULT);
 
         flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT);
 
         verify(weightFilterVerifier).verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, flights);
-        verify(flightAssembler).create(flightsFilteredByWeight, WEIGHT, FLIGHT_WERE_FILTERED_BY_WEIGHT_RESULT);
     }
 
     @Test
@@ -114,16 +100,13 @@ public class FlightServiceTest {
     }
 
     @Test
-    public void givenPersistedFlights_whenFindingAllFlightsWithFilters_thenReturnFlightSearchDto() {
+    public void givenPersistedFlights_whenFindingAllFlightsWithFilters_thenReturnFlightSearchResult() {
         given(flightQueryBuilder.toList()).willReturn(flights).willReturn(flightsFilteredByWeight);
-        given(weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, flights))
-                .willReturn(FLIGHT_WERE_FILTERED_BY_WEIGHT_RESULT);
-        given(flightAssembler.create(flightsFilteredByWeight, WEIGHT, FLIGHT_WERE_FILTERED_BY_WEIGHT_RESULT))
-                .willReturn(flightSearchDto);
+        given(weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, flights)).willReturn(FLIGHT_WERE_FILTERED_BY_WEIGHT_RESULT);
 
-        FlightSearchDto result = flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT);
+        FlightSearchResult result = flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT);
 
-        assertEquals(result, flightSearchDto);
+        assertEquals(result, new FlightSearchResult(flightsFilteredByWeight, WEIGHT, FLIGHT_WERE_FILTERED_BY_WEIGHT_RESULT));
     }
 
     @Test

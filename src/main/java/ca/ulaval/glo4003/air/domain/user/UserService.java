@@ -1,35 +1,30 @@
 package ca.ulaval.glo4003.air.domain.user;
 
-import ca.ulaval.glo4003.air.api.user.dto.UserDto;
-import ca.ulaval.glo4003.air.api.user.dto.UserUpdateDto;
 import ca.ulaval.glo4003.air.domain.user.encoding.TokenDecoder;
-import ca.ulaval.glo4003.air.transfer.user.UserAssembler;
 
 import javax.naming.AuthenticationException;
 import java.util.logging.Logger;
 
 public class UserService {
 
-    private Logger logger = Logger.getLogger(UserService.class.getName());
-    private UserRepository userRepository;
-    private UserAssembler userAssembler;
-    private UserFactory userFactory;
-    private TokenDecoder tokenDecoder;
+    private final Logger logger = Logger.getLogger(UserService.class.getName());
+    private final UserRepository userRepository;
+    private final UserFactory userFactory;
+    private final TokenDecoder tokenDecoder;
 
-    public UserService(UserRepository userRepository, UserAssembler userAssembler, UserFactory userFactory, TokenDecoder tokenDecoder) {
+    public UserService(UserRepository userRepository, UserFactory userFactory, TokenDecoder tokenDecoder) {
         this.userRepository = userRepository;
-        this.userAssembler = userAssembler;
         this.userFactory = userFactory;
         this.tokenDecoder = tokenDecoder;
     }
 
-    public UserDto authenticateUser(String email, String password) throws AuthenticationException {
+    public User authenticateUser(String email, String password) throws AuthenticationException {
         try {
             User user = findUser(email);
             verifyPassword(user, password);
             generateToken(user);
             userRepository.update(user);
-            return userAssembler.create(user);
+            return user;
         } catch (NoSuchUserException e) {
             logger.info("Unable to authenticate user with email " + email + " because it doesn't exist");
             throw new AuthenticationException("Authentication failed");
@@ -49,20 +44,20 @@ public class UserService {
         }
     }
 
-    public UserDto updateAuthenticatedUser(String token, UserUpdateDto userUpdateDto) throws InvalidTokenException {
+    public User updateAuthenticatedUser(String token, UserPreferences userPreferences) throws InvalidTokenException {
         try {
             User user = findUserWithToken(token);
-            updateUser(user, userUpdateDto);
+            updateUser(user, userPreferences);
             userRepository.update(user);
-            return userAssembler.create(user);
+            return user;
         } catch (InvalidTokenException | NoSuchUserException e) {
             logger.info("Unable to find the authenticated user because the token is invalid.");
             throw new InvalidTokenException("Invalid token.", e);
         }
     }
 
-    private void updateUser(User user, UserUpdateDto userUpdateDto) {
-        if (!userUpdateDto.showWeightFilteredAlert) {
+    private void updateUser(User user, UserPreferences userPreferences) {
+        if (!userPreferences.userWantsToSeeWeightFilteredAlert()) {
             user.stopShowingFilteredAlert();
         }
     }

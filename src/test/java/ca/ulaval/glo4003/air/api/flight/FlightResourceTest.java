@@ -1,21 +1,18 @@
 package ca.ulaval.glo4003.air.api.flight;
 
-import ca.ulaval.glo4003.air.api.flight.dto.FlightDto;
-import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchDto;
+import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
+import ca.ulaval.glo4003.air.domain.flight.FlightSearchResult;
 import ca.ulaval.glo4003.air.domain.flight.FlightService;
-import jersey.repackaged.com.google.common.collect.Lists;
+import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.ws.rs.WebApplicationException;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -40,22 +37,29 @@ public class FlightResourceTest {
     private FlightService flightService;
 
     @Mock
-    private FlightSearchDto flightSearchDto;
+    private FlightSearchResultDto flightSearchResultDto;
+
+    @Mock
+    private FlightAssembler flightAssembler;
+
+    @Mock
+    private FlightSearchResult flightSearchResult;
 
     private FlightResource flightResource;
 
     @Before
     public void setup() {
-        flightResource = new FlightResource(flightService);
+        flightResource = new FlightResource(flightService, flightAssembler);
     }
 
     @Test
     public void givenAFlightResource_whenFindingAllFlightsWithFilters_thenItsDelegatedToTheService() {
-        given(flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT)).willReturn(flightSearchDto);
+        given(flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT)).willReturn(flightSearchResult);
+        given(flightAssembler.create(flightSearchResult)).willReturn(flightSearchResultDto);
 
-        FlightSearchDto flightSearchDto = flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING, WEIGHT_STRING);
+        FlightSearchResultDto searchResult = flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING, WEIGHT_STRING);
 
-        assertEquals(this.flightSearchDto, flightSearchDto);
+        assertEquals(flightSearchResultDto, searchResult);
     }
 
     @Test

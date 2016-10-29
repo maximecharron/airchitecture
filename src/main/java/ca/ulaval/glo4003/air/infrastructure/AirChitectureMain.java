@@ -12,6 +12,7 @@ import ca.ulaval.glo4003.air.domain.flight.Flight;
 import ca.ulaval.glo4003.air.domain.flight.FlightService;
 import ca.ulaval.glo4003.air.domain.flight.WeightFilterVerifier;
 import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifier;
+import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifierConfiguration;
 import ca.ulaval.glo4003.air.domain.notification.TransactionNotifier;
 import ca.ulaval.glo4003.air.domain.transaction.TransactionFactory;
 import ca.ulaval.glo4003.air.domain.transaction.TransactionRepository;
@@ -27,6 +28,8 @@ import ca.ulaval.glo4003.air.domain.weightdetection.WeightDetectionService;
 import ca.ulaval.glo4003.air.domain.weightdetection.WeightDetector;
 import ca.ulaval.glo4003.air.infrastructure.flight.FlightDevDataFactory;
 import ca.ulaval.glo4003.air.infrastructure.flight.FlightRepositoryInMemory;
+import ca.ulaval.glo4003.air.infrastructure.notification.ResourcesEmailTransactionNotifierConfiguration;
+import ca.ulaval.glo4003.air.infrastructure.notification.SmtpEmailSender;
 import ca.ulaval.glo4003.air.infrastructure.transaction.TransactionRepositoryInMemory;
 import ca.ulaval.glo4003.air.infrastructure.user.UserDevDataFactory;
 import ca.ulaval.glo4003.air.infrastructure.user.UserRepositoryInMemory;
@@ -34,6 +37,8 @@ import ca.ulaval.glo4003.air.infrastructure.user.encoding.JWTTokenEncoder;
 import ca.ulaval.glo4003.air.infrastructure.user.hashing.HashingStrategyBCrypt;
 import ca.ulaval.glo4003.air.infrastructure.weightdetection.DummyWeightDetector;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
+import ca.ulaval.glo4003.air.transfer.transaction.CartItemAssembler;
+import ca.ulaval.glo4003.air.transfer.transaction.TransactionAssembler;
 import ca.ulaval.glo4003.air.transfer.user.UserAssembler;
 import ca.ulaval.glo4003.air.transfer.weightdetection.WeightDetectionAssembler;
 import com.auth0.jwt.JWTSigner;
@@ -53,21 +58,27 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class  AirChitectureMain {
+public class AirChitectureMain {
 
     private static boolean isDev = true; // Would be a JVM argument or in a .property file
 
     public static void main(String[] args) throws Exception {
-        // Setup resources (API)
+        // Setup API resources
         FlightService flightService = createFlightService();
         FlightResource flightResource = createFlightResource(flightService);
+
+        UserAssembler userAssembler = new UserAssembler();
         UserService userService = createUserService();
-        AuthenticationResource authenticationResource = createAuthenticationResource(userService);
-        UserResource userResource = createUserResource(userService);
-        CartItemFactory cartItemFactory = createCartItemFactory();
-        CartItemResource cartItemResource = createCartItemResource(flightService, cartItemFactory);
-        TransactionResource transactionResource = createTransactionResource(cartItemFactory);
+        UserResource userResource = createUserResource(userService, userAssembler);
+
+        CartItemAssembler cartItemAssembler = createCartItemAssembler();
+        CartItemResource cartItemResource = createCartItemResource(flightService, cartItemAssembler);
+        TransactionResource transactionResource = createTransactionResource(cartItemAssembler);
+
+        AuthenticationResource authenticationResource = createAuthenticationResource(userService, userAssembler);
+
         WeightDetectionResource weightDetectionResource = createWeightDetectionResource();
+
         // Setup API context (JERSEY + JETTY)
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/api");
@@ -114,25 +125,24 @@ public class  AirChitectureMain {
         }
     }
 
-    private static CartItemFactory createCartItemFactory() {
-        return new CartItemFactory();
+    private static CartItemAssembler createCartItemAssembler() {
+        return new CartItemAssembler();
     }
 
-    private static TransactionResource createTransactionResource(CartItemFactory cartItemFactory) throws IOException {
+    private static TransactionResource createTransactionResource(CartItemAssembler cartItemAssembler) throws IOException {
         TransactionRepository transactionRepository = new TransactionRepositoryInMemory();
         SmtpEmailSender smtpEmailSender = new SmtpEmailSender();
         EmailTransactionNotifierConfiguration emailConfiguration = new ResourcesEmailTransactionNotifierConfiguration();
         TransactionNotifier transactionNotifier = new EmailTransactionNotifier(smtpEmailSender, emailConfiguration);
 
-        TransactionFactory transactionFactory = new TransactionFactory(cartItemFactory);
-
-        TransactionService transactionService = new TransactionService(transactionRepository, transactionNotifier, transactionFactory);
-        return new TransactionResource(transactionService);
+        TransactionAssembler transactionAssembler = new TransactionAssembler(cartItemAssembler);
+        TransactionService transactionService = new TransactionService(transactionRepository, transactionNotifier);
+        return new TransactionResource(transactionService, transactionAssembler);
     }
 
-    private static CartItemResource createCartItemResource(FlightService flightService, CartItemFactory cartItemFactory) {
-        CartItemService cartItemService = new CartItemService(flightService, cartItemFactory);
-        return new CartItemResource(cartItemService);
+    private static CartItemResource createCartItemResource(FlightService flightService, CartItemAssembler cartItemAssembler) {
+        CartItemService cartItemService = new CartItemService(flightService);
+        return new CartItemResource(cartItemService, cartItemAssembler);
     }
 
     private static FlightService createFlightService() {
@@ -144,14 +154,14 @@ public class  AirChitectureMain {
             flights.forEach(flightRepository::save);
         }
 
-        FlightAssembler flightAssembler = new FlightAssembler();
         WeightFilterVerifier weightFilterVerifier = new WeightFilterVerifier();
         DateTimeFactory dateTimeFactory = new DateTimeFactory();
-        return new FlightService(flightRepository, flightAssembler, weightFilterVerifier, dateTimeFactory);
+        return new FlightService(flightRepository, weightFilterVerifier, dateTimeFactory);
     }
 
     private static FlightResource createFlightResource(FlightService flightService) {
-        return new FlightResource(flightService);
+        FlightAssembler flightAssembler = new FlightAssembler();
+        return new FlightResource(flightService, flightAssembler);
     }
 
     private static WeightDetectionResource createWeightDetectionResource() {
@@ -174,15 +184,14 @@ public class  AirChitectureMain {
             users.forEach(userRepository::update);
         }
 
-        UserAssembler userAssembler = new UserAssembler();
-        return new UserService(userRepository, userAssembler, userFactory, tokenEncoder);
+        return new UserService(userRepository, userFactory, tokenEncoder);
     }
 
-    private static AuthenticationResource createAuthenticationResource(UserService userService) {
-        return new AuthenticationResource(userService);
+    private static AuthenticationResource createAuthenticationResource(UserService userService, UserAssembler userAssembler) {
+        return new AuthenticationResource(userService, userAssembler);
     }
 
-    private static UserResource createUserResource(UserService userService) {
-        return new UserResource(userService);
+    private static UserResource createUserResource(UserService userService, UserAssembler userAssembler) {
+        return new UserResource(userService, userAssembler);
     }
 }

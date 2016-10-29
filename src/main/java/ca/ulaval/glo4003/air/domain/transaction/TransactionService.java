@@ -11,25 +11,21 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final TransactionNotifier transactionNotifier;
-    private final TransactionFactory transactionFactory;
 
-    public TransactionService(TransactionRepository transactionRepository, TransactionNotifier transactionNotifier, TransactionFactory transactionFactory) {
+    public TransactionService(TransactionRepository transactionRepository, TransactionNotifier transactionNotifier) {
         this.transactionRepository = transactionRepository;
         this.transactionNotifier = transactionNotifier;
-        this.transactionFactory = transactionFactory;
     }
 
-    public void buyTickets(TransactionDto transactionDto) {
-        logTransaction(transactionDto);
-
-        Transaction transaction = transactionFactory.create(transactionDto);
+    public void buyTickets(Transaction transaction) {
+        logTransaction(transaction);
 
         transactionRepository.save(transaction);
         transactionNotifier.notifyOnNewCompletedTransaction(transaction);
     }
 
-    private void logTransaction(TransactionDto transactionDto) {
-        String transactionInfo = "User " + transactionDto.emailAddress + " has bought tickets.";
+    private void logTransaction(Transaction transaction) {
+        String transactionInfo = "User " + transaction.getEmailAddress() + " has bought tickets.";
         logger.info(transactionInfo);
     }
 }

@@ -1,6 +1,9 @@
-package ca.ulaval.glo4003.air.infrastructure;
+package ca.ulaval.glo4003.air.integration;
 
-import ca.ulaval.glo4003.air.domain.notification.MessageBuilder;
+import ca.ulaval.glo4003.air.domain.notification.Email;
+import ca.ulaval.glo4003.air.domain.notification.EmailSender;
+import ca.ulaval.glo4003.air.domain.notification.EmailBuilder;
+import ca.ulaval.glo4003.air.infrastructure.notification.SmtpEmailSender;
 import com.icegreen.greenmail.junit.GreenMailRule;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
@@ -15,7 +18,7 @@ import javax.mail.Session;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class SmtpEmailSenderTest {
+public class SmtpEmailSenderIT {
     private static final String FROM_ADDRESS = "from@somedomain.tld";
     private static final String TO_ADDRESS = "to@anotherdomain.tld";
     private static final String SUBJECT_LINE = "Subject line.";
@@ -28,20 +31,19 @@ public class SmtpEmailSenderTest {
     private Session smtpSession;
     public EmailSender emailSender;
     private GreenMail greenMailServer;
-    private ca.ulaval.glo4003.air.domain.notification.Message message;
+    private Email email;
 
     @Before
     public void setUp() {
         greenMailServer = new GreenMail(ServerSetupTest.SMTPS);
         greenMailServer.start();
         smtpSession = greenMail.getSmtp().createSession();
-        Session smtpSession = greenMail.getSmtp().createSession();
         greenMail.setUser(TO_ADDRESS, TO_ADDRESS, SECRET_PWD);
-        this.message = new MessageBuilder().addFrom(FROM_ADDRESS)
-                                           .addTo(TO_ADDRESS)
-                                           .addSubject(SUBJECT_LINE)
-                                           .addBody(MESSAGE_BODY)
-                                           .build();
+        this.email = new EmailBuilder().addFrom(FROM_ADDRESS)
+                                       .addTo(TO_ADDRESS)
+                                       .addSubject(SUBJECT_LINE)
+                                       .addBody(MESSAGE_BODY)
+                                       .build();
     }
 
     @After
@@ -52,21 +54,23 @@ public class SmtpEmailSenderTest {
     @Test
     public void givenNoSession_whenAnEmailIsSent_thenPropertiesAreReadAndCorrectlyApplied() throws Exception {
         this.emailSender = new SmtpEmailSender();
-        this.emailSender.sendEmail(this.message);
+
+        this.emailSender.sendEmail(this.email);
 
         assertTrue(greenMail.waitForIncomingEmail(5000, 1));
         assertEquals(NB_EXPECTED_EMAILS_RECEIVED, greenMail.getReceivedMessagesForDomain(TO_ADDRESS).length);
         Message msgReceived = greenMail.getReceivedMessagesForDomain(TO_ADDRESS)[0];
-        assertEquals(this.message.getSubject(), msgReceived.getSubject());
+        assertEquals(this.email.getSubject(), msgReceived.getSubject());
     }
 
     @Test
     public void givenASession_whenAnEmailIsSent_thenEmailIsCorrectlySent() throws Exception {
         this.emailSender = new SmtpEmailSender(smtpSession);
-        this.emailSender.sendEmail(this.message);
+
+        this.emailSender.sendEmail(this.email);
 
         assertEquals(NB_EXPECTED_EMAILS_RECEIVED, greenMail.getReceivedMessagesForDomain(TO_ADDRESS).length);
         Message msgReceived = greenMail.getReceivedMessagesForDomain(TO_ADDRESS)[0];
-        assertEquals(this.message.getSubject(), msgReceived.getSubject());
+        assertEquals(this.email.getSubject(), msgReceived.getSubject());
     }
 }
