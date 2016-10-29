@@ -26,14 +26,14 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
         })
     };
 
-    $scope.closeWeightFilteredAlert = function (doNotShow) {
+    $scope.closeWeightFilteredAlert = function () {
         $scope.showWeightFilteredAlert = false;
-        if ($rootScope.user && doNotShow){
+        if ($rootScope.user){
             userResource.put({showWeightFilteredAlert: false}, function onSuccess(data) {
                 $rootScope.user = data;
                 $cookies.putObject("user", $rootScope.user);
             });
-        } else if ($scope.doNotShow){
+        } else{
             $window.localStorage.setItem("showWeightFilteredAlert", false);
         }
     };
@@ -66,7 +66,7 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
                 flights.push(flight);
             }
             if ($rootScope.user) {$scope.showWeightFilteredAlert = $rootScope.user.showsWeightFilteredAlert}
-            else {$scope.showWeightFilteredAlert = $window.localStorage.getItem("showWeightFilteredAlert") || $scope.showWeightFilteredAlert === undefined;}
+            else {$scope.showWeightFilteredAlert = $window.localStorage.getItem("showWeightFilteredAlert") === null}
 
             $scope.flightsResults = flights;
             $scope.flightsWereFilteredByWeight = data.flightsWereFilteredByWeight;
