@@ -167,9 +167,9 @@ public class AirChitectureMain {
     private static WeightDetectionResource createWeightDetectionResource() {
         WeightDetector weightDetector = new DummyWeightDetector();
         WeightDetectionAssembler weightDetectionAssembler = new WeightDetectionAssembler();
-        WeightDetectionService weightDetectionService = new WeightDetectionService(weightDetector, weightDetectionAssembler);
+        WeightDetectionService weightDetectionService = new WeightDetectionService(weightDetector);
 
-        return new WeightDetectionResource(weightDetectionService);
+        return new WeightDetectionResource(weightDetectionService, weightDetectionAssembler);
     }
 
     private static UserService createUserService() {
