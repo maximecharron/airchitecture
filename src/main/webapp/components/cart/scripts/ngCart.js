@@ -217,7 +217,7 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
             });
 
             return {
-                email: email,
+                emailAddress: email,
                 cartItemDtos:items
             }
         };

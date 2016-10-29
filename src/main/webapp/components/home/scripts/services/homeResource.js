@@ -14,7 +14,7 @@ homeApp.factory('weightDetectionResource', ["$resource", function ($resource) {
     });
 }]);
 
-homeApp.factory('userResource', function ($resource, $rootScope) {
+homeApp.factory('userResource',  ["$resource", "$rootScope", function ($resource, $rootScope) {
     return $resource("http://localhost:8081/api/users/me", {}, {
         put: {
             method: 'PUT',
@@ -23,4 +23,4 @@ homeApp.factory('userResource', function ($resource, $rootScope) {
             }
         }
     });
-});
+}]);
