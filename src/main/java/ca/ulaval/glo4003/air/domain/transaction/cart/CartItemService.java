@@ -1,6 +1,5 @@
 package ca.ulaval.glo4003.air.domain.transaction.cart;
 
-import ca.ulaval.glo4003.air.api.transaction.dto.CartItemDto;
 import ca.ulaval.glo4003.air.domain.flight.FlightService;
 import ca.ulaval.glo4003.air.domain.flight.NoSuchFlightException;
 
@@ -8,7 +7,7 @@ import java.util.logging.Logger;
 
 public class CartItemService {
 
-    private Logger logger = Logger.getLogger(CartItemService.class.getName());
+    private final Logger logger = Logger.getLogger(CartItemService.class.getName());
     private final FlightService flightService;
 
     public CartItemService(FlightService flightService) {

@@ -7,9 +7,9 @@ import java.util.List;
 
 public class Transaction {
 
-    private String emailAddress;
-    private List<CartItem> cartItems;
-    private LocalDateTime timeOfTransaction;
+    private final String emailAddress;
+    private final List<CartItem> cartItems;
+    private final LocalDateTime timeOfTransaction;
 
     public Transaction(String emailAddress, List<CartItem> cartItems) {
         this.emailAddress = emailAddress;
