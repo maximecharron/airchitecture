@@ -1,13 +1,13 @@
 package ca.ulaval.glo4003.air.domain.notification;
 
-public class Message {
+public class Email {
 
     private final String from;
     private final String to;
     private final String body;
     private final String subject;
 
-    public Message(String from, String to, String subject, String body) {
+    public Email(String from, String to, String subject, String body) {
         this.from = from;
         this.to = to;
         this.body = body;
