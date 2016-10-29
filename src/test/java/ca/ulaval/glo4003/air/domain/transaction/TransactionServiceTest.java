@@ -23,33 +23,25 @@ public class TransactionServiceTest {
     private EmailTransactionNotifier emailSender;
 
     @Mock
-    private TransactionFactory transactionFactory;
-
-    @Mock
     private Transaction transaction;
-
-    private TransactionDto transactionDto;
 
     private TransactionService transactionService;
 
     @Before
     public void setup() {
-        transactionService = new TransactionService(transactionRepository, emailSender, transactionFactory);
-        transactionDto = new TransactionDto();
-
-        willReturn(transaction).given(transactionFactory).create(transactionDto);
+        transactionService = new TransactionService(transactionRepository, emailSender);
     }
 
     @Test
     public void givenATransaction_whenTheServiceProceedsWithTheTransaction_thenTheTransactionIsPersisted() {
-        transactionService.buyTickets(transactionDto);
+        transactionService.buyTickets(transaction);
 
         verify(transactionRepository).save(transaction);
     }
 
     @Test
     public void givenATransaction_whenTheServiceProceedsWithTheTransaction_thenAnEmailIsSentToTheCustomer() {
-        transactionService.buyTickets(transactionDto);
+        transactionService.buyTickets(transaction);
 
         verify(emailSender).notifyOnNewCompletedTransaction(transaction);
     }

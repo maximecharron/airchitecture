@@ -37,6 +37,8 @@ import ca.ulaval.glo4003.air.infrastructure.user.encoding.JWTTokenEncoder;
 import ca.ulaval.glo4003.air.infrastructure.user.hashing.HashingStrategyBCrypt;
 import ca.ulaval.glo4003.air.infrastructure.weightdetection.DummyWeightDetector;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
+import ca.ulaval.glo4003.air.transfer.transaction.CartItemAssembler;
+import ca.ulaval.glo4003.air.transfer.transaction.TransactionAssembler;
 import ca.ulaval.glo4003.air.transfer.user.UserAssembler;
 import ca.ulaval.glo4003.air.transfer.weightdetection.WeightDetectionAssembler;
 import com.auth0.jwt.JWTSigner;
@@ -69,9 +71,9 @@ public class AirChitectureMain {
         UserService userService = createUserService();
         UserResource userResource = createUserResource(userService, userAssembler);
 
-        CartItemFactory cartItemFactory = createCartItemFactory();
-        CartItemResource cartItemResource = createCartItemResource(flightService, cartItemFactory);
-        TransactionResource transactionResource = createTransactionResource(cartItemFactory);
+        CartItemAssembler cartItemAssembler = createCartItemAssembler();
+        CartItemResource cartItemResource = createCartItemResource(flightService, cartItemAssembler);
+        TransactionResource transactionResource = createTransactionResource(cartItemAssembler);
 
         AuthenticationResource authenticationResource = createAuthenticationResource(userService, userAssembler);
 
@@ -123,25 +125,24 @@ public class AirChitectureMain {
         }
     }
 
-    private static CartItemFactory createCartItemFactory() {
-        return new CartItemFactory();
+    private static CartItemAssembler createCartItemAssembler() {
+        return new CartItemAssembler();
     }
 
-    private static TransactionResource createTransactionResource(CartItemFactory cartItemFactory) throws IOException {
+    private static TransactionResource createTransactionResource(CartItemAssembler cartItemAssembler) throws IOException {
         TransactionRepository transactionRepository = new TransactionRepositoryInMemory();
         SmtpEmailSender smtpEmailSender = new SmtpEmailSender();
         EmailTransactionNotifierConfiguration emailConfiguration = new ResourcesEmailTransactionNotifierConfiguration();
         TransactionNotifier transactionNotifier = new EmailTransactionNotifier(smtpEmailSender, emailConfiguration);
 
-        TransactionFactory transactionFactory = new TransactionFactory(cartItemFactory);
-
-        TransactionService transactionService = new TransactionService(transactionRepository, transactionNotifier, transactionFactory);
-        return new TransactionResource(transactionService);
+        TransactionAssembler transactionAssembler = new TransactionAssembler(cartItemAssembler);
+        TransactionService transactionService = new TransactionService(transactionRepository, transactionNotifier);
+        return new TransactionResource(transactionService, transactionAssembler);
     }
 
-    private static CartItemResource createCartItemResource(FlightService flightService, CartItemFactory cartItemFactory) {
-        CartItemService cartItemService = new CartItemService(flightService, cartItemFactory);
-        return new CartItemResource(cartItemService);
+    private static CartItemResource createCartItemResource(FlightService flightService, CartItemAssembler cartItemAssembler) {
+        CartItemService cartItemService = new CartItemService(flightService);
+        return new CartItemResource(cartItemService, cartItemAssembler);
     }
 
     private static FlightService createFlightService() {
