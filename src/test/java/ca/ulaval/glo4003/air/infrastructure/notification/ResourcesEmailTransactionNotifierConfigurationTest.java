@@ -1,5 +1,7 @@
-package ca.ulaval.glo4003.air.infrastructure;
+package ca.ulaval.glo4003.air.infrastructure.notification;
 
+import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifierConfiguration;
+import ca.ulaval.glo4003.air.infrastructure.notification.ResourcesEmailTransactionNotifierConfiguration;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

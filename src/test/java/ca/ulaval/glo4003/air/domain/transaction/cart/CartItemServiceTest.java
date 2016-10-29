@@ -29,19 +29,12 @@ public class CartItemServiceTest {
     @Mock
     private FlightService flightService;
 
-    @Mock
-    private CartItemFactory cartItemFactory;
-
-    @Mock
-    private CartItemDto cartItemDto;
-
     private CartItemService cartItemService;
 
     @Before
     public void setup() {
-        cartItemService = new CartItemService(flightService, cartItemFactory);
+        cartItemService = new CartItemService(flightService);
 
-        willReturn(cartItem).given(cartItemFactory).create(cartItemDto);
         willReturn(A_DATE).given(cartItem).getDepartureDate();
         willReturn(A_FLIGHT_NUMBER).given(cartItem).getAirlineCompany();
         willReturn(ARRIVAL_AIRPORT).given(cartItem).getArrivalAirport();
@@ -50,7 +43,7 @@ public class CartItemServiceTest {
 
     @Test
     public void givenACartItem_whenReservingTickets_thenReservePlacesInFlight() throws NoSuchFlightException {
-        cartItemService.reserveTickets(cartItemDto);
+        cartItemService.reserveTickets(cartItem);
 
         verify(flightService).reservePlacesInFlight(A_FLIGHT_NUMBER, ARRIVAL_AIRPORT, A_DATE, A_TICKETS_QUANTITY);
     }
@@ -58,12 +51,12 @@ public class CartItemServiceTest {
     @Test(expected = NoSuchFlightException.class)
     public void givenACartItem_whenReservingTicketsForANonExistentFlight_thenThrowException() throws NoSuchFlightException {
         willThrow(new NoSuchFlightException("")).given(flightService).reservePlacesInFlight(A_FLIGHT_NUMBER, ARRIVAL_AIRPORT, A_DATE, A_TICKETS_QUANTITY);
-        cartItemService.reserveTickets(cartItemDto);
+        cartItemService.reserveTickets(cartItem);
     }
 
     @Test
     public void givenACartItem_whenReleasingTickets_thenReleasePlacesInFlight() throws NoSuchFlightException {
-        cartItemService.releaseTickets(cartItemDto);
+        cartItemService.releaseTickets(cartItem);
 
         verify(flightService).releasePlacesInFlight(A_FLIGHT_NUMBER, ARRIVAL_AIRPORT, A_DATE, A_TICKETS_QUANTITY);
     }
@@ -71,6 +64,6 @@ public class CartItemServiceTest {
     @Test(expected = NoSuchFlightException.class)
     public void givenACartItem_whenReleasingTicketsForANonExistentFlight_thenThrowException() throws NoSuchFlightException {
         willThrow(new NoSuchFlightException("")).given(flightService).releasePlacesInFlight(A_FLIGHT_NUMBER, ARRIVAL_AIRPORT, A_DATE, A_TICKETS_QUANTITY);
-        cartItemService.releaseTickets(cartItemDto);
+        cartItemService.releaseTickets(cartItem);
     }
 }

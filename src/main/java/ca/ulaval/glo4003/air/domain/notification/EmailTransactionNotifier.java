@@ -2,8 +2,6 @@ package ca.ulaval.glo4003.air.domain.notification;
 
 import ca.ulaval.glo4003.air.domain.transaction.Transaction;
 import ca.ulaval.glo4003.air.domain.transaction.cart.CartItem;
-import ca.ulaval.glo4003.air.infrastructure.EmailSender;
-import ca.ulaval.glo4003.air.infrastructure.EmailTransactionNotifierConfiguration;
 
 public class EmailTransactionNotifier implements TransactionNotifier {
 
@@ -25,12 +23,12 @@ public class EmailTransactionNotifier implements TransactionNotifier {
             bodyBuilder.append(String.format("%s\t%s\t%s", cartItem.getAirlineCompany(), cartItem.getDepartureDate(), cartItem.getTicketsQuantity()));
         }
 
-        Message message = new MessageBuilder().addFrom(this.emailConfiguration.getFromAddress())
-                                              .addTo(transaction.getEmailAddress())
-                                              .addSubject(NOTIFICATION_MESSAGE_SUBJECT)
-                                              .addBody(String.format(NOTIFICATION_MESSAGE_BODY, bodyBuilder.toString()))
-                                              .build();
+        Email email = new EmailBuilder().addFrom(this.emailConfiguration.getFromAddress())
+                                        .addTo(transaction.getEmailAddress())
+                                        .addSubject(NOTIFICATION_MESSAGE_SUBJECT)
+                                        .addBody(String.format(NOTIFICATION_MESSAGE_BODY, bodyBuilder.toString()))
+                                        .build();
 
-        this.emailSender.sendEmail(message);
+        this.emailSender.sendEmail(email);
     }
 }

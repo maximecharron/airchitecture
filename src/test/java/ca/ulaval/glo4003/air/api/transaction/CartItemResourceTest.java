@@ -2,7 +2,9 @@ package ca.ulaval.glo4003.air.api.transaction;
 
 import ca.ulaval.glo4003.air.api.transaction.dto.CartItemDto;
 import ca.ulaval.glo4003.air.domain.flight.NoSuchFlightException;
+import ca.ulaval.glo4003.air.domain.transaction.cart.CartItem;
 import ca.ulaval.glo4003.air.domain.transaction.cart.CartItemService;
+import ca.ulaval.glo4003.air.transfer.transaction.CartItemAssembler;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +18,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
@@ -26,25 +29,31 @@ public class CartItemResourceTest {
     private CartItemService cartItemService;
 
     @Mock
-    private CartItemDto cartItemDto;
+    private CartItemAssembler cartItemAssembler;
+
+    @Mock
+    private CartItem cartItem;
+
+    private CartItemDto cartItemDto = new CartItemDto();
 
     private CartItemResource cartItemResource;
 
     @Before
     public void setup() {
-        cartItemResource = new CartItemResource(cartItemService);
+        cartItemResource = new CartItemResource(cartItemService, cartItemAssembler);
+        given(cartItemAssembler.create(cartItemDto)).willReturn(cartItem);
     }
 
     @Test
     public void givenACartItemResource_whenReservingTickets_thenItsDelegatedToTheService() throws NoSuchFlightException {
         cartItemResource.reserveTickets(cartItemDto);
 
-        verify(cartItemService).reserveTickets(cartItemDto);
+        verify(cartItemService).reserveTickets(cartItem);
     }
 
     @Test
     public void givenACartItemResource_whenReservingTicketsForANonExistentFlight_then404IsThrown() throws NoSuchFlightException {
-        doThrow(NoSuchFlightException.class).when(cartItemService).reserveTickets(cartItemDto);
+        doThrow(NoSuchFlightException.class).when(cartItemService).reserveTickets(cartItem);
         try {
             cartItemResource.reserveTickets(cartItemDto);
             fail("Exception not thrown");
@@ -57,12 +66,12 @@ public class CartItemResourceTest {
     public void givenATransactionResource_whenreleasingTickets_thenItsDelegatedToTheService() throws NoSuchFlightException {
         cartItemResource.releaseTickets(cartItemDto);
 
-        verify(cartItemService).releaseTickets(cartItemDto);
+        verify(cartItemService).releaseTickets(cartItem);
     }
 
     @Test
     public void givenACartItemResource_whenReleasingTicketsForANonExistentFlight_then404IsThrown() throws NoSuchFlightException {
-        doThrow(NoSuchFlightException.class).when(cartItemService).releaseTickets(cartItemDto);
+        doThrow(NoSuchFlightException.class).when(cartItemService).releaseTickets(cartItem);
         try {
             cartItemResource.releaseTickets(cartItemDto);
             fail("Exception not thrown");

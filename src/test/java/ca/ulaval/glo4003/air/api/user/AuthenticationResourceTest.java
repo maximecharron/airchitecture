@@ -1,8 +1,9 @@
 package ca.ulaval.glo4003.air.api.user;
 
-import ca.ulaval.glo4003.air.api.user.dto.UserDto;
-import ca.ulaval.glo4003.air.domain.user.UserService;
+import ca.ulaval.glo4003.air.domain.user.User;
 import ca.ulaval.glo4003.air.domain.user.UserAlreadyExistException;
+import ca.ulaval.glo4003.air.domain.user.UserService;
+import ca.ulaval.glo4003.air.transfer.user.UserAssembler;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Rule;
@@ -17,18 +18,17 @@ import javax.ws.rs.WebApplicationException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AuthenticationResourceTest
-{
+public class AuthenticationResourceTest {
 
     private static final String EMAIL = "test@test.com";
     private static final String PASSWORD = "DUB";
@@ -41,38 +41,41 @@ public class AuthenticationResourceTest
     private UserService userService;
 
     @Mock
-    private UserDto userDtoMock;
+    private UserAssembler userAssembler;
+
+    @Mock
+    private User user;
 
     private AuthenticationResource authenticationResource;
 
     @Before
     public void setup() {
-        authenticationResource = new AuthenticationResource(userService);
+        authenticationResource = new AuthenticationResource(userService, userAssembler);
     }
 
     @Test
     public void givenAnAuthenticationResource_whenLogin_thenItsDelegatedToTheService() throws AuthenticationException {
-        given(userService.authenticateUser(EMAIL, PASSWORD)).willReturn(userDtoMock);
+        given(userService.authenticateUser(EMAIL, PASSWORD)).willReturn(user);
 
-        UserDto userDto = authenticationResource.login(EMAIL, PASSWORD);
+        authenticationResource.login(EMAIL, PASSWORD);
 
         verify(userService).authenticateUser(EMAIL, PASSWORD);
-        assertEquals(userDto, userDtoMock);
     }
 
     @Test
     public void givenABadPassword_whenLogin_then403IsThrown() throws AuthenticationException {
-        given(userService.authenticateUser(EMAIL, BAD_PASSWORD)).willThrow(AuthenticationException.class);
+        willThrow(AuthenticationException.class).given(userService).authenticateUser(EMAIL, BAD_PASSWORD);
+
         try {
             authenticationResource.login(EMAIL, BAD_PASSWORD);
             fail("Exception not thrown");
-        } catch(WebApplicationException e) {
+        } catch (WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.FORBIDDEN_403)));
         }
     }
 
     @Test
-    public void givenAnAuthenticationResource_whenSignup_thenItsDelegatedToTheService() throws AuthenticationException, UserAlreadyExistException {
+    public void givenAnAuthenticationResource_whenSigningUp_thenItsDelegatedToTheService() throws AuthenticationException, UserAlreadyExistException {
 
         authenticationResource.signup(EMAIL, PASSWORD);
 
@@ -80,12 +83,12 @@ public class AuthenticationResourceTest
     }
 
     @Test
-    public void givenAlreadyExsitingEmail_whenSignup_then409IsThrown() throws AuthenticationException, UserAlreadyExistException{
+    public void givenAlreadyExistingEmail_whenSigningUp_then409IsThrown() throws AuthenticationException, UserAlreadyExistException {
         doThrow(UserAlreadyExistException.class).when(userService).createUser(anyString(), anyString(), anyBoolean());
         try {
             authenticationResource.signup(EMAIL, PASSWORD);
             fail("Exception not thrown");
-        } catch(WebApplicationException e) {
+        } catch (WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.CONFLICT_409)));
         }
     }

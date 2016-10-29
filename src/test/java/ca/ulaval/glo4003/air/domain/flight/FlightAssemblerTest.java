@@ -1,7 +1,7 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightDto;
-import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchDto;
+import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.domain.flight.airplane.Airplane;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 import org.junit.Before;
@@ -58,20 +58,22 @@ public class FlightAssemblerTest {
     public void givenFlights_whenCreatingAFlightSearchDto_thenFlightsAreMappedToTheirEquivalentDto() {
         Flight flight = givenAFlight();
         List<Flight> flightStream = Stream.of(flight).collect(Collectors.toList());
+        FlightSearchResult flightSearchResult = new FlightSearchResult(flightStream, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT);
 
-        FlightSearchDto flightSearchDto = flightAssembler.create(flightStream, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT);
+        FlightSearchResultDto flightSearchResultDto = flightAssembler.create(flightSearchResult);
 
-        assertHasAllTheRelevantProperties(flight, flightSearchDto.flights.get(0));
+        assertHasAllTheRelevantProperties(flight, flightSearchResultDto.flights.get(0));
     }
 
     @Test
     public void givenFlightFilteredByWeightResult_whenCreatingAFlightSearchDtoWithThisResult_thenItHasTheSameFlightFilteredByWeightResult() {
         Flight flight = givenAFlight();
         List<Flight> flightStream = Stream.of(flight).collect(Collectors.toList());
+        FlightSearchResult flightSearchResult = new FlightSearchResult(flightStream, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT);
 
-        FlightSearchDto flightSearchDto = flightAssembler.create(flightStream, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT);
+        FlightSearchResultDto flightSearchResultDto = flightAssembler.create(flightSearchResult);
 
-        assertEquals(A_FILTERED_BY_WEIGHT_RESULT, flightSearchDto.flightsWereFilteredByWeight);
+        assertEquals(A_FILTERED_BY_WEIGHT_RESULT, flightSearchResultDto.flightsWereFilteredByWeight);
     }
 
     private Flight givenAFlight() {
