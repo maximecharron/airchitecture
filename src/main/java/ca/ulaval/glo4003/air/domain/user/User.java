@@ -28,7 +28,7 @@ public class User {
         return this.token;
     }
 
-    public String getPassword() {
+    protected String getPassword() {
         return this.password;
     }
 
