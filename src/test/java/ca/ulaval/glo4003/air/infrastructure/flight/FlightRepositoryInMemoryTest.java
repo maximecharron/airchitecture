@@ -120,7 +120,7 @@ public class FlightRepositoryInMemoryTest {
         given(notMatchingFlight.isGoingTo(ARRIVAL_AIRPORT)).willReturn(false);
         given(notMatchingFlight.isLeavingOn(DATE)).willReturn(false);
         given(notMatchingFlight.isLeavingAfter(DATE)).willReturn(false);
-        given(matchingFlight.isFromCompany(AIRLINE_COMPANY)).willReturn(false);
+        given(notMatchingFlight.isFromCompany(AIRLINE_COMPANY)).willReturn(false);
         given(notMatchingFlight.acceptsWeight(A_WEIGHT)).willReturn(false);
 
         flightRepository.save(matchingFlight);

@@ -62,28 +62,28 @@ public class FlightRepositoryInMemory implements FlightRepository {
 
         @Override
         public FlightQueryBuilder hasAirlineCompany(String airlineCompany) {
-            predicates.add(flight -> flight.getAirlineCompany().equals(airlineCompany));
+            predicates.add(flight -> flight.isFromCompany(airlineCompany));
             return this;
         }
 
         @Override
         public List<Flight> toList() {
-            Stream<Flight> flightStream = filterFlightStream();
-            return flightStream.collect(Collectors.toList());
+            Stream<Flight> filteredFlights = filterFlights();
+            return filteredFlights.collect(Collectors.toList());
         }
 
         @Override
         public Optional<Flight> findOne() {
-            Stream<Flight> flightStream = filterFlightStream();
-            return flightStream.findFirst();
+            Stream<Flight> filteredFlights = filterFlights();
+            return filteredFlights.findFirst();
         }
 
-        private Stream<Flight> filterFlightStream() {
-            Stream<Flight> flightStream = flights.values().stream();
+        private Stream<Flight> filterFlights() {
+            Stream<Flight> flightsToFilter = flights.values().stream();
             for (Predicate<Flight> predicate : predicates) {
-                flightStream = flightStream.filter(predicate);
+                flightsToFilter = flightsToFilter.filter(predicate);
             }
-            return flightStream;
+            return flightsToFilter;
         }
     }
 

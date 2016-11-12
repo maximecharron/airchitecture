@@ -1,7 +1,7 @@
 package ca.ulaval.glo4003.air.api.transaction;
 
 import ca.ulaval.glo4003.air.api.transaction.dto.CartItemDto;
-import ca.ulaval.glo4003.air.domain.flight.NoSuchFlightException;
+import ca.ulaval.glo4003.air.domain.flight.FlightNotFoundException;
 import ca.ulaval.glo4003.air.domain.transaction.cart.CartItem;
 import ca.ulaval.glo4003.air.domain.transaction.cart.CartItemService;
 import ca.ulaval.glo4003.air.transfer.transaction.CartItemAssembler;
@@ -29,7 +29,7 @@ public class CartItemResource {
         try {
             CartItem cartItem = this.cartItemAssembler.create(cartItemDto);
             this.cartItemService.reserveTickets(cartItem);
-        } catch (NoSuchFlightException e) {
+        } catch (FlightNotFoundException e) {
             logger.info("Reservation failed because: " + e.getMessage());
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
                                                       .entity("No such flight.")
@@ -43,7 +43,7 @@ public class CartItemResource {
         try {
             CartItem cartItem = this.cartItemAssembler.create(cartItemDto);
             this.cartItemService.releaseTickets(cartItem);
-        } catch (NoSuchFlightException e) {
+        } catch (FlightNotFoundException e) {
             logger.info("Reservation cancellation failed because: " + e.getMessage());
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
                                                       .entity("No such flight.")

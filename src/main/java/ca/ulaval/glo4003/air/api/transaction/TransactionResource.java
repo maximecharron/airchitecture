@@ -23,7 +23,7 @@ public class TransactionResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void buyTickets(TransactionDto transactionDto) {
+    public void checkout(TransactionDto transactionDto) {
         Transaction transaction = transactionAssembler.create(transactionDto);
         transactionService.buyTickets(transaction);
     }

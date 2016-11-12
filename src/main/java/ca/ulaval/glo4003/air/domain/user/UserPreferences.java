@@ -7,10 +7,6 @@ public class UserPreferences {
         return showWeightFilteredAlert;
     }
 
-    public boolean isShowWeightFilteredAlert() {
-        return showWeightFilteredAlert;
-    }
-
     public void setShowWeightFilteredAlert(boolean showWeightFilteredAlert) {
         this.showWeightFilteredAlert = showWeightFilteredAlert;
     }
