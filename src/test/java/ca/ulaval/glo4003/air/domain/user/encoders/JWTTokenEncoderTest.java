@@ -22,6 +22,7 @@ import static org.mockito.Matchers.any;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JWTTokenEncoderTest {
+
     private static final String AN_EMAIL = "bob.lamarche@gmail.com";
     private static final String A_TOKEN = "boblamarchetoken";
     private static final String AN_INVALID_TOKEN = "boblacoursetoken";

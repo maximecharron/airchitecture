@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 @Path("/auth")
 public class AuthenticationResource {
+
     private final Logger logger = Logger.getLogger(AuthenticationResource.class.getName());
 
     private UserService userService;

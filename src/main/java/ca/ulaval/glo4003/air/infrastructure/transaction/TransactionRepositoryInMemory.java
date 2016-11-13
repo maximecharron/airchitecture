@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class TransactionRepositoryInMemory implements TransactionRepository {
+
     private Set<Transaction> transactions = new HashSet<>();
 
     @Override

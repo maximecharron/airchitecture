@@ -8,19 +8,23 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
-import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WeightFilterVerifierTest {
+
     private final static int NOT_FILTERED_BY_WEIGHTS_SIZE = 12;
 
     @Mock
     private List<Flight> filteredByWeightsFlights;
+
     @Mock
     private List<Flight> notFilteredByWeightsFlights;
 
     private WeightFilterVerifier weightFilterVerifier;
+
     @Before
     public void setUp() throws Exception {
         given(notFilteredByWeightsFlights.size()).willReturn(NOT_FILTERED_BY_WEIGHTS_SIZE);

@@ -25,11 +25,12 @@ public class EmailTransactionNotifierTest {
 
     @Mock
     private EmailSender emailSender;
+
     @Mock
     private Transaction transaction;
+
     @Mock
     private EmailTransactionNotifierConfiguration emailConfiguration;
-    private TransactionNotifier transactionNotifier;
 
     @Before
     public void setUp() throws IOException {
@@ -42,8 +43,8 @@ public class EmailTransactionNotifierTest {
     }
 
     @Test
-    public void gienANewTransctionIsCompleted_whenNotificationIsCalled_thenAnEmailIsSent() throws Exception {
-        transactionNotifier = new EmailTransactionNotifier(emailSender, emailConfiguration);
+    public void givenANewTransactionCompleted_whenNotificationIsCalled_thenAnEmailIsSent() throws Exception {
+        TransactionNotifier transactionNotifier = new EmailTransactionNotifier(emailSender, emailConfiguration);
 
         transactionNotifier.notifyOnNewCompletedTransaction(transaction);
 

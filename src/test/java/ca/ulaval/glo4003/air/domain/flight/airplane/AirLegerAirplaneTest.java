@@ -5,10 +5,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AirLegerAirplaneTest {
+
     private static final int A_NUMBER_OF_AVAILABLE_SEATS = 50;
     private static final double A_WEIGHT = 30;
     private static final double A_LOWER_WEIGHT = AirLegerAirplane.MAXIMUM_WEIGHT - 1;

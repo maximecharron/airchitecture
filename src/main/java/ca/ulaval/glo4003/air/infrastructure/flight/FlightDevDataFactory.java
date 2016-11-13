@@ -17,7 +17,6 @@ public class FlightDevDataFactory {
     private static final String AIR_LOURD = "AirLourd";
     private static final String AIR_MOYEN = "AirMoyen";
 
-
     public List<Flight> createMockData() {
         List<Flight> flights = new ArrayList<>();
 
@@ -35,7 +34,7 @@ public class FlightDevDataFactory {
 
         Airplane airplane5 = new AirLourdAirplane(13, 0);
         Flight montrealToOslo = new Flight("YUL", "OSL", LocalDateTime.of(2018, 8, 16, 21, 2), AIR_LOURD, airplane5, 890.65f);
-        
+
         flights.addAll(Arrays.asList(quebecToDublin, torontoToLondon, montrealToOslo, montrealToOslo2, osloToMontreal));
         return flights;
     }

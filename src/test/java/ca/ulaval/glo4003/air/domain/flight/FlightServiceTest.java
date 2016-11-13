@@ -21,6 +21,7 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FlightServiceTest {
+
     private static final int TICKETS_QUANTITY = 54;
     private static final String AIRLINE_COMPANY = "AirFrenette";
     private static final String DEPARTURE_AIRPORT = "YQB";
@@ -32,16 +33,22 @@ public class FlightServiceTest {
 
     @Mock
     private FlightRepository flightRepository;
+
     @Mock
     private FlightQueryBuilder flightQueryBuilder;
+
     @Mock
     private WeightFilterVerifier weightFilterVerifier;
+
     @Mock
     private DateTimeFactory dateTimeFactory;
+
     @Mock
     private Flight flight;
+
     @Mock
     private List<Flight> flights;
+
     @Mock
     private List<Flight> flightsFilteredByWeight;
 

@@ -1,6 +1,7 @@
 package ca.ulaval.glo4003.air.domain.flight.airplane;
 
 public class AirLourdAirplane extends Airplane {
+
     public static final double MAXIMUM_WEIGHT = 65;
     private double maximumAdditionalWeight;
 

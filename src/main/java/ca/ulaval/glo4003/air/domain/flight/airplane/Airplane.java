@@ -1,6 +1,7 @@
 package ca.ulaval.glo4003.air.domain.flight.airplane;
 
 public abstract class Airplane {
+
     private final int availableSeats;
     private final double maximumWeight;
 

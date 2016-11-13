@@ -57,13 +57,13 @@ public class CartItemResourceTest {
         try {
             cartItemResource.reserveTickets(cartItemDto);
             fail("Exception not thrown");
-        } catch(WebApplicationException e) {
+        } catch (WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.NOT_FOUND_404)));
         }
     }
 
     @Test
-    public void givenATransactionResource_whenreleasingTickets_thenItsDelegatedToTheService() throws FlightNotFoundException {
+    public void givenATransactionResource_whenReleasingTickets_thenItsDelegatedToTheService() throws FlightNotFoundException {
         cartItemResource.releaseTickets(cartItemDto);
 
         verify(cartItemService).releaseTickets(cartItem);
@@ -75,7 +75,7 @@ public class CartItemResourceTest {
         try {
             cartItemResource.releaseTickets(cartItemDto);
             fail("Exception not thrown");
-        } catch(WebApplicationException e) {
+        } catch (WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.NOT_FOUND_404)));
         }
     }

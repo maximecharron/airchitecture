@@ -22,7 +22,6 @@ import static org.mockito.Matchers.anyDouble;
 @RunWith(MockitoJUnitRunner.class)
 public class FlightAssemblerTest {
 
-    private static final String FLIGHT_NUMBER = "AF215";
     private static final int SEATS = 42;
     private static final String ARRIVAL_AIRPORT = "ABC";
     private static final String DEPARTURE_AIRPORT = "DEF";
@@ -34,6 +33,7 @@ public class FlightAssemblerTest {
 
     @Mock
     private Airplane airplane;
+
     private FlightAssembler flightAssembler;
 
     @Before

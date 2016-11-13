@@ -1,7 +1,7 @@
 package ca.ulaval.glo4003.air.domain.transaction.cart;
 
-import ca.ulaval.glo4003.air.domain.flight.FlightService;
 import ca.ulaval.glo4003.air.domain.flight.FlightNotFoundException;
+import ca.ulaval.glo4003.air.domain.flight.FlightService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,11 +12,11 @@ import java.time.LocalDateTime;
 
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CartItemServiceTest {
+
     private final static LocalDateTime A_DATE = LocalDateTime.now();
     private final static String A_FLIGHT_NUMBER = "A345E";
     private final static String ARRIVAL_AIRPORT = "YQB";

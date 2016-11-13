@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class FlightService {
+
     private final Logger logger = Logger.getLogger(FlightService.class.getName());
 
     private final FlightRepository flightRepository;

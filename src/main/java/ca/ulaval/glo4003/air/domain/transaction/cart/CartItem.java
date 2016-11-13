@@ -20,10 +20,6 @@ public class CartItem {
         return ticketsQuantity;
     }
 
-    public void setTicketsQuantity(int ticketsQuantity) {
-        this.ticketsQuantity = ticketsQuantity;
-    }
-
     public LocalDateTime getDepartureDate() {
         return departureDate;
     }

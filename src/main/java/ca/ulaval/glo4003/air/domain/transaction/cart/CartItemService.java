@@ -1,7 +1,7 @@
 package ca.ulaval.glo4003.air.domain.transaction.cart;
 
-import ca.ulaval.glo4003.air.domain.flight.FlightService;
 import ca.ulaval.glo4003.air.domain.flight.FlightNotFoundException;
+import ca.ulaval.glo4003.air.domain.flight.FlightService;
 
 import java.util.logging.Logger;
 

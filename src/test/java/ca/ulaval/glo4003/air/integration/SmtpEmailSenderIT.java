@@ -1,8 +1,8 @@
 package ca.ulaval.glo4003.air.integration;
 
 import ca.ulaval.glo4003.air.domain.notification.Email;
-import ca.ulaval.glo4003.air.domain.notification.EmailSender;
 import ca.ulaval.glo4003.air.domain.notification.EmailBuilder;
+import ca.ulaval.glo4003.air.domain.notification.EmailSender;
 import ca.ulaval.glo4003.air.infrastructure.notification.SmtpEmailSender;
 import com.icegreen.greenmail.junit.GreenMailRule;
 import com.icegreen.greenmail.util.GreenMail;
@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class SmtpEmailSenderIT {
+
     private static final String FROM_ADDRESS = "from@somedomain.tld";
     private static final String TO_ADDRESS = "to@anotherdomain.tld";
     private static final String SUBJECT_LINE = "Subject line.";
@@ -28,8 +29,9 @@ public class SmtpEmailSenderIT {
 
     @Rule
     public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.SMTP_IMAP);
+
     private Session smtpSession;
-    public EmailSender emailSender;
+    private EmailSender emailSender;
     private GreenMail greenMailServer;
     private Email email;
 

@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 
 @Path("/users")
 public class UserResource {
+
     private final Logger logger = Logger.getLogger(UserResource.class.getName());
 
     private UserService userService;
