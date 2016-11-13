@@ -14,8 +14,9 @@ import java.security.SignatureException;
 import java.util.HashMap;
 
 public class JWTTokenEncoder implements TokenEncoder, TokenDecoder {
+
     public final static String SECRET = "My_Super_Secret";
-    public final static String ISSUER_KEY = "iss";
+    private final static String ISSUER_KEY = "iss";
     private final JWTVerifier jwtVerifier;
     private final JWTSigner jwtSigner;
 

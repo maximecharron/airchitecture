@@ -1,8 +1,8 @@
 package ca.ulaval.glo4003.air.infrastructure.user;
 
 import ca.ulaval.glo4003.air.domain.user.User;
-import ca.ulaval.glo4003.air.domain.user.UserRepository;
 import ca.ulaval.glo4003.air.domain.user.UserAlreadyExistException;
+import ca.ulaval.glo4003.air.domain.user.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +12,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
-
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -59,7 +58,7 @@ public class UserRepositoryInMemoryTest {
     }
 
     @Test
-    public void givenPersistedUsers_whenCreateNonExistingUser_thenUserIsCreated() throws UserAlreadyExistException{
+    public void givenPersistedUsers_whenCreateNonExistingUser_thenUserIsCreated() throws UserAlreadyExistException {
         givenPersistedUsers();
         given(aUser.getEmailAddress()).willReturn(NON_EXISTING_EMAIL);
 
@@ -70,7 +69,7 @@ public class UserRepositoryInMemoryTest {
     }
 
     @Test(expected = UserAlreadyExistException.class)
-    public void givenPersistedUsers_whenCreateUserWithExistingEmail_thenThrows() throws UserAlreadyExistException{
+    public void givenPersistedUsers_whenCreateUserWithExistingEmail_thenThrows() throws UserAlreadyExistException {
         givenPersistedUsers();
         given(aUser.getEmailAddress()).willReturn(EMAIL);
 

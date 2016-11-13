@@ -10,6 +10,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AirLourdAirplaneTest {
+
     private static final int A_NUMBER_OF_AVAILABLE_SEATS = 50;
     private static final double AN_ACCEPTED_ADDITIONAL_WEIGHT = 10;
     private static final double A_WEIGHT = 30;

@@ -9,6 +9,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertNotEquals;
 
 public class HashingStrategyBCryptTest {
+
     private HashingStrategyBCrypt hashingStrategy;
     private static final String A_PASSWORD = "123456";
     private static final String ANOTHER_PASSWORD = "abc123";

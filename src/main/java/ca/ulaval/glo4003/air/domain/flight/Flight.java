@@ -88,7 +88,7 @@ public class Flight {
         return seatPrice;
     }
 
-    private boolean isOnSameDay(LocalDateTime date1, LocalDateTime date2){
+    private boolean isOnSameDay(LocalDateTime date1, LocalDateTime date2) {
         return date1.getDayOfYear() == date2.getDayOfYear() && date1.getYear() == date2.getYear();
     }
 

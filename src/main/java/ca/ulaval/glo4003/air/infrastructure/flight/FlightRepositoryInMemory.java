@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FlightRepositoryInMemory implements FlightRepository {
+
     private Map<String, Flight> flights = new HashMap<>();
 
     @Override
@@ -28,6 +29,7 @@ public class FlightRepositoryInMemory implements FlightRepository {
     }
 
     private class MemoryFlightQueryBuilder implements FlightQueryBuilder {
+
         private Set<Predicate<Flight>> predicates = new HashSet<>();
 
         @Override

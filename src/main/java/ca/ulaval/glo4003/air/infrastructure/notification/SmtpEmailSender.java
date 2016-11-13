@@ -1,10 +1,13 @@
 package ca.ulaval.glo4003.air.infrastructure.notification;
 
-import ca.ulaval.glo4003.air.domain.notification.EmailSender;
 import ca.ulaval.glo4003.air.domain.notification.Email;
+import ca.ulaval.glo4003.air.domain.notification.EmailSender;
 import ca.ulaval.glo4003.air.domain.notification.NotificationFailedException;
 
-import javax.mail.*;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
@@ -34,7 +37,7 @@ public class SmtpEmailSender implements EmailSender {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(properties.getProperty(PROPERTY_SMTP_USER),
-                        properties.getProperty(PROPERTY_SMTP_PASSWORD));
+                    properties.getProperty(PROPERTY_SMTP_PASSWORD));
             }
         });
     }

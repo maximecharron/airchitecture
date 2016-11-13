@@ -15,6 +15,7 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserTest {
+
     private static final String EMAIL = "test@test.com";
     private static final String PASSWORD = "DEF";
     private static final String A_TOKEN = "A_TOKEN";
@@ -37,13 +38,13 @@ public class UserTest {
     @Test
     public void whenConstructingNewUser_thenPasswordIsHash() {
 
-        User newUser = new User(EMAIL, PASSWORD, tokenEncoder, hashingStrategy,IS_NOT_ADMIN);
+        User newUser = new User(EMAIL, PASSWORD, tokenEncoder, hashingStrategy, IS_NOT_ADMIN);
 
         assertEquals(A_HASHED_PASSWORD, newUser.getPassword());
     }
 
     @Test
-    public void givenAUser_whenValidatePasswordWithRightPassword_thenHashingStrategyIsCalled(){
+    public void givenAUser_whenValidatePasswordWithRightPassword_thenHashingStrategyIsCalled() {
         given(hashingStrategy.validatePassword(anyString(), anyString())).willReturn(true);
 
         boolean validPassword = user.isPasswordValid(PASSWORD);

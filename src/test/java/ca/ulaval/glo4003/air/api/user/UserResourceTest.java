@@ -18,13 +18,12 @@ import javax.ws.rs.WebApplicationException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserResourceTest {
+
     private static final UserPreferencesDto USER_PREFERENCES_DTO = new UserPreferencesDto();
     private static final UserDto USER_DTO = new UserDto();
     private static final String TOKEN = "foxpidesfoisfalco";
@@ -67,8 +66,7 @@ public class UserResourceTest {
         try {
             userResource.update(USER_PREFERENCES_DTO, TOKEN);
             fail("Exception not thrown");
-        }
-        catch (WebApplicationException e) {
+        } catch (WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.UNAUTHORIZED_401)));
         }
     }

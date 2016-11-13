@@ -18,6 +18,7 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
+
     private final static String EMAIL = "test@test.com";
     private final static String ANOTHER_EMAIL = "test_patate@test.com";
     private final static String PASSWORD = "ABC";
@@ -26,8 +27,10 @@ public class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
     @Mock
     private TokenDecoder tokenDecoder;
+
     @Mock
     private UserFactory userFactory;
 
@@ -42,7 +45,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void givenPersistedUser_whenAuthenticatingUser_thenReturnThisUser() throws AuthenticationException {
+    public void givenPersistedUser_whenAuthenticatingUser_thenATokenIsGenerated() throws AuthenticationException {
         given(user.isPasswordValid(anyString())).willReturn(true);
         given(userRepository.findUserByEmail(EMAIL)).willReturn(Optional.of(user));
 

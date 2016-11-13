@@ -1,6 +1,7 @@
 package ca.ulaval.glo4003.air.domain.user;
 
 public class UserPreferences {
+
     private boolean showWeightFilteredAlert;
 
     public boolean userWantsToSeeWeightFilteredAlert() {

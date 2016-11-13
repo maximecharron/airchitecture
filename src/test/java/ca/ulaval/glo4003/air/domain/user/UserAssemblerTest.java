@@ -13,11 +13,14 @@ import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserAssemblerTest {
+
     private static final String EMAIL = "test@test.com";
     private static final String PASSWORD = "DEF";
     private static final String A_TOKEN = "aToken";
+
     @Mock
     private User user;
+
     private UserAssembler userAssembler;
 
     @Before

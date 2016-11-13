@@ -1,11 +1,12 @@
 package ca.ulaval.glo4003.air.transfer.user;
 
-import ca.ulaval.glo4003.air.api.user.dto.UserPreferencesDto;
 import ca.ulaval.glo4003.air.api.user.dto.UserDto;
+import ca.ulaval.glo4003.air.api.user.dto.UserPreferencesDto;
 import ca.ulaval.glo4003.air.domain.user.User;
 import ca.ulaval.glo4003.air.domain.user.UserPreferences;
 
 public class UserAssembler {
+
     public UserDto create(User user) {
         UserDto userDto = new UserDto();
         userDto.token = user.getToken();

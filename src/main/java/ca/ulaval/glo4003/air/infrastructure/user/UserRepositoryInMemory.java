@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class UserRepositoryInMemory implements UserRepository {
+
     private Map<String, User> users = new HashMap<>();
 
     @Override

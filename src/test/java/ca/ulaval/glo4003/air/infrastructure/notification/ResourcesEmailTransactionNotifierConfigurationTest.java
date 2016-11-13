@@ -1,7 +1,6 @@
 package ca.ulaval.glo4003.air.infrastructure.notification;
 
 import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifierConfiguration;
-import ca.ulaval.glo4003.air.infrastructure.notification.ResourcesEmailTransactionNotifierConfiguration;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +17,7 @@ public class ResourcesEmailTransactionNotifierConfigurationTest {
     }
 
     @Test
-    public void givenAConfigurationPropertyIsRequested_whenReadFromResourcesFile_thenValueIsReadCorrectly() throws Exception {
+    public void givenAConfigurationPropertyRequested_whenReadingFromResourcesFile_thenValueIsReadCorrectly() throws Exception {
         String expectedValue = "airchitecture1@gmail.com";
 
         String actualValue = this.emailConfiguration.getFromAddress();

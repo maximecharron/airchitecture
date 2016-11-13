@@ -1,7 +1,6 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
 import ca.ulaval.glo4003.air.domain.flight.airplane.Airplane;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -31,11 +30,6 @@ public class FlightTest {
 
     @Mock
     private Airplane airplane;
-
-    @Before
-    public void setUp() throws Exception {
-
-    }
 
     @Test
     public void givenAFlight_whenCheckingIfItsLeavingAfterADateFollowingItsDepartureDate_thenItsNot() {
@@ -107,7 +101,7 @@ public class FlightTest {
     }
 
     @Test
-    public void givenAFlight_whenCheckingIfAcceptingWeight_thenItsDelegatedToTheAirplane() {
+    public void givenAFlightThatAcceptsACertainWeight_whenCheckingIfItAcceptsThisWeight_ThenItIs() {
         Flight flight = givenAFlight();
         given(airplane.acceptsWeight(A_WEIGHT)).willReturn(AN_ACCEPTING_WEIGHT_RESULT);
 
