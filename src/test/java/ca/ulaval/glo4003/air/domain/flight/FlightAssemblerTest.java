@@ -57,8 +57,8 @@ public class FlightAssemblerTest {
     @Test
     public void givenFlights_whenCreatingAFlightSearchDto_thenFlightsAreMappedToTheirEquivalentDto() {
         Flight flight = givenAFlight();
-        List<Flight> flightStream = Stream.of(flight).collect(Collectors.toList());
-        FlightSearchResult flightSearchResult = new FlightSearchResult(flightStream, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT);
+        List<Flight> flights = Stream.of(flight).collect(Collectors.toList());
+        FlightSearchResult flightSearchResult = new FlightSearchResult(flights, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT);
 
         FlightSearchResultDto flightSearchResultDto = flightAssembler.create(flightSearchResult);
 
@@ -68,8 +68,8 @@ public class FlightAssemblerTest {
     @Test
     public void givenFlightFilteredByWeightResult_whenCreatingAFlightSearchDtoWithThisResult_thenItHasTheSameFlightFilteredByWeightResult() {
         Flight flight = givenAFlight();
-        List<Flight> flightStream = Stream.of(flight).collect(Collectors.toList());
-        FlightSearchResult flightSearchResult = new FlightSearchResult(flightStream, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT);
+        List<Flight> flights = Stream.of(flight).collect(Collectors.toList());
+        FlightSearchResult flightSearchResult = new FlightSearchResult(flights, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT);
 
         FlightSearchResultDto flightSearchResultDto = flightAssembler.create(flightSearchResult);
 
@@ -77,8 +77,7 @@ public class FlightAssemblerTest {
     }
 
     private Flight givenAFlight() {
-        Flight flight = new Flight(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, AIRLINE_COMPANY, airplane, A_PRICE);
-        return flight;
+        return new Flight(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, AIRLINE_COMPANY, airplane, A_PRICE);
     }
 
     private void assertHasAllTheRelevantProperties(Flight flight, FlightDto flightDto) {

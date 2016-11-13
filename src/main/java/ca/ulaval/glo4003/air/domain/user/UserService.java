@@ -21,8 +21,13 @@ public class UserService {
     public User authenticateUser(String email, String password) throws AuthenticationException {
         try {
             User user = findUser(email);
-            verifyPassword(user, password);
-            generateToken(user);
+
+            if (!user.isPasswordValid(password)) {
+                logger.info("Unable to login with email " + user.getEmailAddress() + " because password is invalid");
+                throw new InvalidPasswordException("Password is invalid");
+            }
+
+            user.generateToken();
             userRepository.update(user);
             return user;
         } catch (NoSuchUserException e) {
@@ -46,7 +51,7 @@ public class UserService {
 
     public User updateAuthenticatedUser(String token, UserPreferences userPreferences) throws InvalidTokenException {
         try {
-            User user = findUserWithToken(token);
+            User user = findUser(tokenDecoder.decode(token));
             updateUser(user, userPreferences);
             userRepository.update(user);
             return user;
@@ -62,22 +67,7 @@ public class UserService {
         }
     }
 
-    private User findUserWithToken(String token) throws NoSuchUserException, InvalidTokenException {
-        return findUser(tokenDecoder.decode(token));
-    }
-
     private User findUser(String email) throws NoSuchUserException {
         return userRepository.findUserByEmail(email).orElseThrow(() -> new NoSuchUserException("User " + email + " does not exists."));
-    }
-
-    private void generateToken(User user) {
-        user.generateToken();
-    }
-
-    private void verifyPassword(User user, String password) throws InvalidPasswordException {
-        if (!user.isPasswordValid(password)) {
-            logger.info("Unable to login with email " + user.getEmailAddress() + " because password is invalid");
-            throw new InvalidPasswordException("Password is invalid");
-        }
     }
 }
