@@ -1,7 +1,6 @@
 package ca.ulaval.glo4003.air.integration;
 
 import ca.ulaval.glo4003.air.domain.notification.Email;
-import ca.ulaval.glo4003.air.domain.notification.EmailBuilder;
 import ca.ulaval.glo4003.air.domain.notification.EmailSender;
 import ca.ulaval.glo4003.air.infrastructure.notification.SmtpEmailSender;
 import com.icegreen.greenmail.junit.GreenMailRule;
@@ -41,11 +40,7 @@ public class SmtpEmailSenderIT {
         greenMailServer.start();
         smtpSession = greenMail.getSmtp().createSession();
         greenMail.setUser(TO_ADDRESS, TO_ADDRESS, SECRET_PWD);
-        this.email = new EmailBuilder().addFrom(FROM_ADDRESS)
-                                       .addTo(TO_ADDRESS)
-                                       .addSubject(SUBJECT_LINE)
-                                       .addBody(MESSAGE_BODY)
-                                       .build();
+        this.email = new Email(FROM_ADDRESS, TO_ADDRESS, SUBJECT_LINE, MESSAGE_BODY);
     }
 
     @After

@@ -23,11 +23,10 @@ public class EmailTransactionNotifier implements TransactionNotifier {
             bodyBuilder.append(String.format("%s\t%s\t%s", cartItem.getAirlineCompany(), cartItem.getDepartureDate(), cartItem.getTicketsQuantity()));
         }
 
-        Email email = new EmailBuilder().addFrom(this.emailConfiguration.getFromAddress())
-                                        .addTo(transaction.getEmailAddress())
-                                        .addSubject(NOTIFICATION_MESSAGE_SUBJECT)
-                                        .addBody(String.format(NOTIFICATION_MESSAGE_BODY, bodyBuilder.toString()))
-                                        .build();
+        Email email = new Email(this.emailConfiguration.getFromAddress(),
+            transaction.getEmailAddress(),
+            NOTIFICATION_MESSAGE_SUBJECT,
+            String.format(NOTIFICATION_MESSAGE_BODY, bodyBuilder.toString()));
 
         this.emailSender.sendEmail(email);
     }
