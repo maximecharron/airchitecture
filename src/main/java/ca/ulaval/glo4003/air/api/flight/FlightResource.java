@@ -2,7 +2,8 @@ package ca.ulaval.glo4003.air.api.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.domain.flight.FlightSearchResult;
-import ca.ulaval.glo4003.air.domain.flight.FlightService;
+import ca.ulaval.glo4003.air.service.flight.FlightService;
+import ca.ulaval.glo4003.air.service.flight.InvalidParameterException;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 
 import javax.ws.rs.*;
@@ -16,11 +17,9 @@ import java.time.format.DateTimeParseException;
 public class FlightResource {
 
     private final FlightService flightService;
-    private final FlightAssembler flightAssembler;
 
-    public FlightResource(FlightService flightService, FlightAssembler flightAssembler) {
+    public FlightResource(FlightService flightService) {
         this.flightService = flightService;
-        this.flightAssembler = flightAssembler;
     }
 
     @GET
@@ -29,31 +28,19 @@ public class FlightResource {
                                                     @QueryParam("to") String arrivalAirport,
                                                     @QueryParam("datetime") String departureDate,
                                                     @QueryParam("weight") String weight) {
-        validateAirportsArePresent(departureAirport, arrivalAirport);
-        validateWeightIsPresent(weight);
-
         LocalDateTime parsedDate = null;
-
         if (departureDate != null) {
             parsedDate = parseDate(departureDate);
         }
-
-        FlightSearchResult searchResult = flightService.findAllWithFilters(departureAirport, arrivalAirport, parsedDate, parseWeight(weight));
-        return flightAssembler.create(searchResult);
-    }
-
-    private void validateAirportsArePresent(String departureAirport, String arrivalAirport) {
-        if (departureAirport == null || arrivalAirport == null) {
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
-                                                      .entity("Missing departure or arrival airport.")
-                                                      .build());
+        double parsedWeight = 0;
+        if (weight != null){
+            parsedWeight = parseWeight(weight);
         }
-    }
-
-    private void validateWeightIsPresent(String weight) {
-        if (weight == null) {
+        try {
+            return flightService.findAllWithFilters(departureAirport, arrivalAirport, parsedDate, parsedWeight);
+        } catch (InvalidParameterException e){
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
-                                                      .entity("Missing luggage weight.")
+                                                      .entity(e.getMessage())
                                                       .build());
         }
     }

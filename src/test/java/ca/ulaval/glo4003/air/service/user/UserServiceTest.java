@@ -1,6 +1,10 @@
-package ca.ulaval.glo4003.air.domain.user;
+package ca.ulaval.glo4003.air.service.user;
 
+import ca.ulaval.glo4003.air.api.user.dto.UserDto;
+import ca.ulaval.glo4003.air.api.user.dto.UserPreferencesDto;
+import ca.ulaval.glo4003.air.domain.user.*;
 import ca.ulaval.glo4003.air.domain.user.encoding.TokenDecoder;
+import ca.ulaval.glo4003.air.transfer.user.UserAssembler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,11 +41,13 @@ public class UserServiceTest {
     @Mock
     private User user;
 
+    private UserAssembler userAssembler;
     private UserService userService;
 
     @Before
     public void setup() {
-        userService = new UserService(userRepository, userFactory, tokenDecoder);
+        userAssembler = new UserAssembler();
+        userService = new UserService(userRepository, userFactory, tokenDecoder, userAssembler);
     }
 
     @Test
@@ -49,7 +55,7 @@ public class UserServiceTest {
         given(user.isPasswordValid(anyString())).willReturn(true);
         given(userRepository.findUserByEmail(EMAIL)).willReturn(Optional.of(user));
 
-        User user = userService.authenticateUser(EMAIL, "");
+        UserDto user = userService.authenticateUser(EMAIL, "");
 
         assertNotNull(user);
         verify(this.user).generateToken();
@@ -95,7 +101,7 @@ public class UserServiceTest {
         given(tokenDecoder.decode(A_TOKEN)).willReturn(EMAIL);
         given(userRepository.findUserByEmail(EMAIL)).willReturn(Optional.of(user));
 
-        userService.updateAuthenticatedUser(A_TOKEN, new UserPreferences());
+        userService.updateAuthenticatedUser(A_TOKEN, new UserPreferencesDto());
 
         verify(userRepository).findUserByEmail(EMAIL);
     }
@@ -104,7 +110,7 @@ public class UserServiceTest {
     public void givenAnInvalidToken_whenUpdatingAuthenticatedUser_thenShouldThrowException() throws InvalidTokenException {
         given(tokenDecoder.decode(A_TOKEN)).willThrow(new InvalidTokenException());
 
-        userService.updateAuthenticatedUser(A_TOKEN, new UserPreferences());
+        userService.updateAuthenticatedUser(A_TOKEN, new UserPreferencesDto());
     }
 
     @Test(expected = InvalidTokenException.class)
@@ -112,15 +118,15 @@ public class UserServiceTest {
         given(tokenDecoder.decode(A_TOKEN)).willReturn(EMAIL);
         given(userRepository.findUserByEmail(EMAIL)).willReturn(Optional.empty());
 
-        userService.updateAuthenticatedUser(A_TOKEN, new UserPreferences());
+        userService.updateAuthenticatedUser(A_TOKEN, new UserPreferencesDto());
     }
 
     @Test
     public void givenAUser_whenUpdatingAuthenticatedUserWithFalseShowingFilteredAlert_thenShouldStopShowingFilteredAlert() throws InvalidTokenException {
         given(tokenDecoder.decode(A_TOKEN)).willReturn(EMAIL);
         given(userRepository.findUserByEmail(EMAIL)).willReturn(Optional.of(user));
-        UserPreferences userPreferences = new UserPreferences();
-        userPreferences.setShowWeightFilteredAlert(false);
+        UserPreferencesDto userPreferences = new UserPreferencesDto();
+        userPreferences.showWeightFilteredAlert = false;
 
         userService.updateAuthenticatedUser(A_TOKEN, userPreferences);
 
@@ -132,7 +138,7 @@ public class UserServiceTest {
         given(tokenDecoder.decode(A_TOKEN)).willReturn(EMAIL);
         given(userRepository.findUserByEmail(EMAIL)).willReturn(Optional.of(user));
 
-        userService.updateAuthenticatedUser(A_TOKEN, new UserPreferences());
+        userService.updateAuthenticatedUser(A_TOKEN, new UserPreferencesDto());
 
         verify(userRepository).update(user);
     }
