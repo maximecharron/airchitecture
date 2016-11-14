@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FlightAssembler {
+
     public FlightDto create(Flight flight, double weight) {
         FlightDto flightDto = new FlightDto();
         flightDto.airlineCompany = flight.getAirlineCompany();

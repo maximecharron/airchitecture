@@ -7,6 +7,7 @@ import ca.ulaval.glo4003.air.domain.transaction.cart.CartItem;
 import java.util.List;
 
 public class TransactionAssembler {
+
     private final CartItemAssembler cartItemAssembler;
 
     public TransactionAssembler(CartItemAssembler cartItemAssembler) {

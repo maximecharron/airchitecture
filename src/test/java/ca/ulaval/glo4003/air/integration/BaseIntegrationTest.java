@@ -8,12 +8,13 @@ import org.junit.runners.Suite;
 import static java.lang.Thread.sleep;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ FlightResourceIT.class, UserResourceIT.class })
+@Suite.SuiteClasses({FlightResourceIT.class, UserResourceIT.class})
 public class BaseIntegrationTest {
+
     private static boolean isStarted = false;
 
     @BeforeClass
-    public static void startWebServer() throws InterruptedException{
+    public static void startWebServer() throws InterruptedException {
         if (!isStarted) {
             Thread t = new Thread() {
                 public void run() {

@@ -24,4 +24,8 @@ public class Transaction {
     public List<CartItem> getCartItems() {
         return cartItems;
     }
+
+    public LocalDateTime getTimeOfTransaction() {
+        return timeOfTransaction;
+    }
 }

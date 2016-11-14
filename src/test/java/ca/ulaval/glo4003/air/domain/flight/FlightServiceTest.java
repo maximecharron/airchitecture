@@ -21,6 +21,7 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FlightServiceTest {
+
     private static final int TICKETS_QUANTITY = 54;
     private static final String AIRLINE_COMPANY = "AirFrenette";
     private static final String DEPARTURE_AIRPORT = "YQB";
@@ -32,16 +33,22 @@ public class FlightServiceTest {
 
     @Mock
     private FlightRepository flightRepository;
+
     @Mock
     private FlightQueryBuilder flightQueryBuilder;
+
     @Mock
     private WeightFilterVerifier weightFilterVerifier;
+
     @Mock
     private DateTimeFactory dateTimeFactory;
+
     @Mock
     private Flight flight;
+
     @Mock
     private List<Flight> flights;
+
     @Mock
     private List<Flight> flightsFilteredByWeight;
 
@@ -110,7 +117,7 @@ public class FlightServiceTest {
     }
 
     @Test
-    public void givenAValidFlightIdentifier_whenReservingPlacesForFlight_thenFindFlight() throws NoSuchFlightException {
+    public void givenAValidFlightIdentifier_whenReservingPlacesForFlight_thenFindFlight() throws FlightNotFoundException {
         willReturn(Optional.of(flight)).given(flightQueryBuilder).findOne();
 
         flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
@@ -121,7 +128,7 @@ public class FlightServiceTest {
     }
 
     @Test
-    public void givenAValidFlightIdentifier_whenReservingPlacesForFlight_thenReservesPlaces() throws NoSuchFlightException {
+    public void givenAValidFlightIdentifier_whenReservingPlacesForFlight_thenReservesPlaces() throws FlightNotFoundException {
         willReturn(Optional.of(flight)).given(flightQueryBuilder).findOne();
 
         flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
@@ -130,7 +137,7 @@ public class FlightServiceTest {
     }
 
     @Test
-    public void givenAValidFlightIdentifier_whenReservingPlacesForFlight_thenUpdateFlight() throws NoSuchFlightException {
+    public void givenAValidFlightIdentifier_whenReservingPlacesForFlight_thenUpdateFlight() throws FlightNotFoundException {
         willReturn(Optional.of(flight)).given(flightQueryBuilder).findOne();
 
         flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
@@ -138,15 +145,15 @@ public class FlightServiceTest {
         verify(flightRepository).save(flight);
     }
 
-    @Test(expected = NoSuchFlightException.class)
-    public void givenAnInValidFlightIdentifier_whenReservingPlacesForFlight_thenUpdateFlight() throws NoSuchFlightException {
+    @Test(expected = FlightNotFoundException.class)
+    public void givenAnInValidFlightIdentifier_whenReservingPlacesForFlight_thenUpdateFlight() throws FlightNotFoundException {
         willReturn(Optional.empty()).given(flightQueryBuilder).findOne();
 
         flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
     }
 
     @Test
-    public void givenAValidFlightIdentifier_whenReleasingPlacesForFlight_thenFindFlight() throws NoSuchFlightException {
+    public void givenAValidFlightIdentifier_whenReleasingPlacesForFlight_thenFindFlight() throws FlightNotFoundException {
         willReturn(Optional.of(flight)).given(flightQueryBuilder).findOne();
 
         flightService.releasePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
@@ -157,7 +164,7 @@ public class FlightServiceTest {
     }
 
     @Test
-    public void givenAValidFlightIdentifier_whenReleasingPlacesForFlight_thenReleasesPlaces() throws NoSuchFlightException {
+    public void givenAValidFlightIdentifier_whenReleasingPlacesForFlight_thenReleasesPlaces() throws FlightNotFoundException {
         willReturn(Optional.of(flight)).given(flightQueryBuilder).findOne();
 
         flightService.releasePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
@@ -166,7 +173,7 @@ public class FlightServiceTest {
     }
 
     @Test
-    public void givenAValidFlightIdentifier_whenReleasingPlacesForFlight_thenUpdateFlight() throws NoSuchFlightException {
+    public void givenAValidFlightIdentifier_whenReleasingPlacesForFlight_thenUpdateFlight() throws FlightNotFoundException {
         willReturn(Optional.of(flight)).given(flightQueryBuilder).findOne();
 
         flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
@@ -174,8 +181,8 @@ public class FlightServiceTest {
         verify(flightRepository).save(flight);
     }
 
-    @Test(expected = NoSuchFlightException.class)
-    public void givenAnInValidFlightIdentifier_whenReleasingPlacesForFlight_thenUpdateFlight() throws NoSuchFlightException {
+    @Test(expected = FlightNotFoundException.class)
+    public void givenAnInValidFlightIdentifier_whenReleasingPlacesForFlight_thenUpdateFlight() throws FlightNotFoundException {
         willReturn(Optional.empty()).given(flightQueryBuilder).findOne();
 
         flightService.releasePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);

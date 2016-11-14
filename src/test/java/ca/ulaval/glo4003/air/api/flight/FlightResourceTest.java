@@ -15,13 +15,11 @@ import javax.ws.rs.WebApplicationException;
 import java.time.LocalDateTime;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FlightResourceTest {
@@ -69,7 +67,7 @@ public class FlightResourceTest {
         try {
             flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, badlyFormattedDatetime, WEIGHT_STRING);
             fail("Exception not thrown");
-        } catch(WebApplicationException e) {
+        } catch (WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.BAD_REQUEST_400)));
         }
     }
@@ -81,7 +79,7 @@ public class FlightResourceTest {
         try {
             flightResource.findAllWithFilters(departureAirport, ARRIVAL_AIRPORT, DATE_STRING, WEIGHT_STRING);
             fail("Exception not thrown");
-        } catch(WebApplicationException e) {
+        } catch (WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.BAD_REQUEST_400)));
         }
     }
@@ -93,7 +91,7 @@ public class FlightResourceTest {
         try {
             flightResource.findAllWithFilters(DEPARTURE_AIRPORT, arrivalAirport, DATE_STRING, WEIGHT_STRING);
             fail("Exception not thrown");
-        } catch(WebApplicationException e) {
+        } catch (WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.BAD_REQUEST_400)));
         }
     }
@@ -105,7 +103,7 @@ public class FlightResourceTest {
         try {
             flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING, weight);
             fail("Exception not thrown");
-        } catch(WebApplicationException e) {
+        } catch (WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.BAD_REQUEST_400)));
         }
     }
@@ -117,7 +115,7 @@ public class FlightResourceTest {
         try {
             flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING, badlyFormattedWeight);
             fail("Exception not thrown");
-        } catch(WebApplicationException e) {
+        } catch (WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.BAD_REQUEST_400)));
         }
     }

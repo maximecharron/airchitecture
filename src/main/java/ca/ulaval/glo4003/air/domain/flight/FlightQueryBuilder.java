@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FlightQueryBuilder {
+
     FlightQueryBuilder isGoingTo(String airport);
 
     FlightQueryBuilder isDepartingFrom(String airport);

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class FlightService {
+
     private final Logger logger = Logger.getLogger(FlightService.class.getName());
 
     private final FlightRepository flightRepository;
@@ -48,24 +49,24 @@ public class FlightService {
         logger.info(query);
     }
 
-    public void reservePlacesInFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate, int ticketsQuantity) throws NoSuchFlightException {
+    public void reservePlacesInFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate, int ticketsQuantity) throws FlightNotFoundException {
         Flight flight = findFlight(airlineCompany, arrivalAirport, departureDate);
         flight.reservePlaces(ticketsQuantity);
         this.flightRepository.save(flight);
     }
 
-    public void releasePlacesInFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate, int ticketsQuantity) throws NoSuchFlightException {
+    public void releasePlacesInFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate, int ticketsQuantity) throws FlightNotFoundException {
         Flight flight = findFlight(airlineCompany, arrivalAirport, departureDate);
         flight.releasePlaces(ticketsQuantity);
         this.flightRepository.save(flight);
     }
 
-    private Flight findFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate) throws NoSuchFlightException {
+    private Flight findFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate) throws FlightNotFoundException {
         return flightRepository.query()
                                .hasAirlineCompany(airlineCompany)
                                .isGoingTo(arrivalAirport)
                                .isLeavingOn(departureDate)
                                .findOne()
-                               .orElseThrow(() -> new NoSuchFlightException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
+                               .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
     }
 }

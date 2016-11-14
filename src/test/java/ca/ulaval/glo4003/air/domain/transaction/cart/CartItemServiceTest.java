@@ -1,8 +1,7 @@
 package ca.ulaval.glo4003.air.domain.transaction.cart;
 
-import ca.ulaval.glo4003.air.api.transaction.dto.CartItemDto;
+import ca.ulaval.glo4003.air.domain.flight.FlightNotFoundException;
 import ca.ulaval.glo4003.air.domain.flight.FlightService;
-import ca.ulaval.glo4003.air.domain.flight.NoSuchFlightException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,11 +12,11 @@ import java.time.LocalDateTime;
 
 import static org.mockito.BDDMockito.willReturn;
 import static org.mockito.BDDMockito.willThrow;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CartItemServiceTest {
+
     private final static LocalDateTime A_DATE = LocalDateTime.now();
     private final static String A_FLIGHT_NUMBER = "A345E";
     private final static String ARRIVAL_AIRPORT = "YQB";
@@ -42,28 +41,28 @@ public class CartItemServiceTest {
     }
 
     @Test
-    public void givenACartItem_whenReservingTickets_thenReservePlacesInFlight() throws NoSuchFlightException {
+    public void givenACartItem_whenReservingTickets_thenReservePlacesInFlight() throws FlightNotFoundException {
         cartItemService.reserveTickets(cartItem);
 
         verify(flightService).reservePlacesInFlight(A_FLIGHT_NUMBER, ARRIVAL_AIRPORT, A_DATE, A_TICKETS_QUANTITY);
     }
 
-    @Test(expected = NoSuchFlightException.class)
-    public void givenACartItem_whenReservingTicketsForANonExistentFlight_thenThrowException() throws NoSuchFlightException {
-        willThrow(new NoSuchFlightException("")).given(flightService).reservePlacesInFlight(A_FLIGHT_NUMBER, ARRIVAL_AIRPORT, A_DATE, A_TICKETS_QUANTITY);
+    @Test(expected = FlightNotFoundException.class)
+    public void givenACartItem_whenReservingTicketsForANonExistentFlight_thenThrowException() throws FlightNotFoundException {
+        willThrow(new FlightNotFoundException("")).given(flightService).reservePlacesInFlight(A_FLIGHT_NUMBER, ARRIVAL_AIRPORT, A_DATE, A_TICKETS_QUANTITY);
         cartItemService.reserveTickets(cartItem);
     }
 
     @Test
-    public void givenACartItem_whenReleasingTickets_thenReleasePlacesInFlight() throws NoSuchFlightException {
+    public void givenACartItem_whenReleasingTickets_thenReleasePlacesInFlight() throws FlightNotFoundException {
         cartItemService.releaseTickets(cartItem);
 
         verify(flightService).releasePlacesInFlight(A_FLIGHT_NUMBER, ARRIVAL_AIRPORT, A_DATE, A_TICKETS_QUANTITY);
     }
 
-    @Test(expected = NoSuchFlightException.class)
-    public void givenACartItem_whenReleasingTicketsForANonExistentFlight_thenThrowException() throws NoSuchFlightException {
-        willThrow(new NoSuchFlightException("")).given(flightService).releasePlacesInFlight(A_FLIGHT_NUMBER, ARRIVAL_AIRPORT, A_DATE, A_TICKETS_QUANTITY);
+    @Test(expected = FlightNotFoundException.class)
+    public void givenACartItem_whenReleasingTicketsForANonExistentFlight_thenThrowException() throws FlightNotFoundException {
+        willThrow(new FlightNotFoundException("")).given(flightService).releasePlacesInFlight(A_FLIGHT_NUMBER, ARRIVAL_AIRPORT, A_DATE, A_TICKETS_QUANTITY);
         cartItemService.releaseTickets(cartItem);
     }
 }

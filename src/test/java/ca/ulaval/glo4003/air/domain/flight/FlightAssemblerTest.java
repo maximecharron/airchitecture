@@ -22,7 +22,6 @@ import static org.mockito.Matchers.anyDouble;
 @RunWith(MockitoJUnitRunner.class)
 public class FlightAssemblerTest {
 
-    private static final String FLIGHT_NUMBER = "AF215";
     private static final int SEATS = 42;
     private static final String ARRIVAL_AIRPORT = "ABC";
     private static final String DEPARTURE_AIRPORT = "DEF";
@@ -34,6 +33,7 @@ public class FlightAssemblerTest {
 
     @Mock
     private Airplane airplane;
+
     private FlightAssembler flightAssembler;
 
     @Before
@@ -57,8 +57,8 @@ public class FlightAssemblerTest {
     @Test
     public void givenFlights_whenCreatingAFlightSearchDto_thenFlightsAreMappedToTheirEquivalentDto() {
         Flight flight = givenAFlight();
-        List<Flight> flightStream = Stream.of(flight).collect(Collectors.toList());
-        FlightSearchResult flightSearchResult = new FlightSearchResult(flightStream, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT);
+        List<Flight> flights = Stream.of(flight).collect(Collectors.toList());
+        FlightSearchResult flightSearchResult = new FlightSearchResult(flights, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT);
 
         FlightSearchResultDto flightSearchResultDto = flightAssembler.create(flightSearchResult);
 
@@ -68,8 +68,8 @@ public class FlightAssemblerTest {
     @Test
     public void givenFlightFilteredByWeightResult_whenCreatingAFlightSearchDtoWithThisResult_thenItHasTheSameFlightFilteredByWeightResult() {
         Flight flight = givenAFlight();
-        List<Flight> flightStream = Stream.of(flight).collect(Collectors.toList());
-        FlightSearchResult flightSearchResult = new FlightSearchResult(flightStream, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT);
+        List<Flight> flights = Stream.of(flight).collect(Collectors.toList());
+        FlightSearchResult flightSearchResult = new FlightSearchResult(flights, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT);
 
         FlightSearchResultDto flightSearchResultDto = flightAssembler.create(flightSearchResult);
 
@@ -77,8 +77,7 @@ public class FlightAssemblerTest {
     }
 
     private Flight givenAFlight() {
-        Flight flight = new Flight(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, AIRLINE_COMPANY, airplane, A_PRICE);
-        return flight;
+        return new Flight(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, AIRLINE_COMPANY, airplane, A_PRICE);
     }
 
     private void assertHasAllTheRelevantProperties(Flight flight, FlightDto flightDto) {

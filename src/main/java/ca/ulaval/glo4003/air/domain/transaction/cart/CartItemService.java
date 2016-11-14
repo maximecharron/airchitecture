@@ -1,7 +1,7 @@
 package ca.ulaval.glo4003.air.domain.transaction.cart;
 
+import ca.ulaval.glo4003.air.domain.flight.FlightNotFoundException;
 import ca.ulaval.glo4003.air.domain.flight.FlightService;
-import ca.ulaval.glo4003.air.domain.flight.NoSuchFlightException;
 
 import java.util.logging.Logger;
 
@@ -14,19 +14,19 @@ public class CartItemService {
         this.flightService = flightService;
     }
 
-    public void reserveTickets(CartItem cartItem) throws NoSuchFlightException {
+    public void reserveTickets(CartItem cartItem) throws FlightNotFoundException {
         try {
             this.flightService.reservePlacesInFlight(cartItem.getAirlineCompany(), cartItem.getArrivalAirport(), cartItem.getDepartureDate(), cartItem.getTicketsQuantity());
-        } catch (NoSuchFlightException e) {
+        } catch (FlightNotFoundException e) {
             logger.info("Unable to reserve tickets for flight " + cartItem.getAirlineCompany() + " " + cartItem.getArrivalAirport() + " because it doesn't exist");
             throw e;
         }
     }
 
-    public void releaseTickets(CartItem cartItem) throws NoSuchFlightException {
+    public void releaseTickets(CartItem cartItem) throws FlightNotFoundException {
         try {
             this.flightService.releasePlacesInFlight(cartItem.getAirlineCompany(), cartItem.getArrivalAirport(), cartItem.getDepartureDate(), cartItem.getTicketsQuantity());
-        } catch (NoSuchFlightException e) {
+        } catch (FlightNotFoundException e) {
             logger.info("Unable to release tickets for flight " + cartItem.getAirlineCompany() + " " + cartItem.getArrivalAirport() + " because it doesn't exist");
             throw e;
         }

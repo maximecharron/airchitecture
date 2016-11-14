@@ -37,7 +37,7 @@ public class TransactionResourceTest {
 
     @Test
     public void givenATransactionResource_whenBuyingTickets_thenItsDelegatedToTheService() {
-        transactionResource.buyTickets(transactionDto);
+        transactionResource.checkout(transactionDto);
 
         verify(transactionService).buyTickets(transaction);
     }

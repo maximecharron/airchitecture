@@ -1,7 +1,7 @@
 package ca.ulaval.glo4003.air.api.transaction;
 
 import ca.ulaval.glo4003.air.api.transaction.dto.CartItemDto;
-import ca.ulaval.glo4003.air.domain.flight.NoSuchFlightException;
+import ca.ulaval.glo4003.air.domain.flight.FlightNotFoundException;
 import ca.ulaval.glo4003.air.domain.transaction.cart.CartItem;
 import ca.ulaval.glo4003.air.domain.transaction.cart.CartItemService;
 import ca.ulaval.glo4003.air.transfer.transaction.CartItemAssembler;
@@ -45,37 +45,37 @@ public class CartItemResourceTest {
     }
 
     @Test
-    public void givenACartItemResource_whenReservingTickets_thenItsDelegatedToTheService() throws NoSuchFlightException {
+    public void givenACartItemResource_whenReservingTickets_thenItsDelegatedToTheService() throws FlightNotFoundException {
         cartItemResource.reserveTickets(cartItemDto);
 
         verify(cartItemService).reserveTickets(cartItem);
     }
 
     @Test
-    public void givenACartItemResource_whenReservingTicketsForANonExistentFlight_then404IsThrown() throws NoSuchFlightException {
-        doThrow(NoSuchFlightException.class).when(cartItemService).reserveTickets(cartItem);
+    public void givenACartItemResource_whenReservingTicketsForANonExistentFlight_then404IsThrown() throws FlightNotFoundException {
+        doThrow(FlightNotFoundException.class).when(cartItemService).reserveTickets(cartItem);
         try {
             cartItemResource.reserveTickets(cartItemDto);
             fail("Exception not thrown");
-        } catch(WebApplicationException e) {
+        } catch (WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.NOT_FOUND_404)));
         }
     }
 
     @Test
-    public void givenATransactionResource_whenreleasingTickets_thenItsDelegatedToTheService() throws NoSuchFlightException {
+    public void givenATransactionResource_whenReleasingTickets_thenItsDelegatedToTheService() throws FlightNotFoundException {
         cartItemResource.releaseTickets(cartItemDto);
 
         verify(cartItemService).releaseTickets(cartItem);
     }
 
     @Test
-    public void givenACartItemResource_whenReleasingTicketsForANonExistentFlight_then404IsThrown() throws NoSuchFlightException {
-        doThrow(NoSuchFlightException.class).when(cartItemService).releaseTickets(cartItem);
+    public void givenACartItemResource_whenReleasingTicketsForANonExistentFlight_then404IsThrown() throws FlightNotFoundException {
+        doThrow(FlightNotFoundException.class).when(cartItemService).releaseTickets(cartItem);
         try {
             cartItemResource.releaseTickets(cartItemDto);
             fail("Exception not thrown");
-        } catch(WebApplicationException e) {
+        } catch (WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.NOT_FOUND_404)));
         }
     }

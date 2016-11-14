@@ -2,7 +2,6 @@ package ca.ulaval.glo4003.air.integration;
 
 import ca.ulaval.glo4003.air.domain.notification.Email;
 import ca.ulaval.glo4003.air.domain.notification.EmailSender;
-import ca.ulaval.glo4003.air.domain.notification.EmailBuilder;
 import ca.ulaval.glo4003.air.infrastructure.notification.SmtpEmailSender;
 import com.icegreen.greenmail.junit.GreenMailRule;
 import com.icegreen.greenmail.util.GreenMail;
@@ -19,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class SmtpEmailSenderIT {
+
     private static final String FROM_ADDRESS = "from@somedomain.tld";
     private static final String TO_ADDRESS = "to@anotherdomain.tld";
     private static final String SUBJECT_LINE = "Subject line.";
@@ -28,8 +28,9 @@ public class SmtpEmailSenderIT {
 
     @Rule
     public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.SMTP_IMAP);
+
     private Session smtpSession;
-    public EmailSender emailSender;
+    private EmailSender emailSender;
     private GreenMail greenMailServer;
     private Email email;
 
@@ -39,11 +40,7 @@ public class SmtpEmailSenderIT {
         greenMailServer.start();
         smtpSession = greenMail.getSmtp().createSession();
         greenMail.setUser(TO_ADDRESS, TO_ADDRESS, SECRET_PWD);
-        this.email = new EmailBuilder().addFrom(FROM_ADDRESS)
-                                       .addTo(TO_ADDRESS)
-                                       .addSubject(SUBJECT_LINE)
-                                       .addBody(MESSAGE_BODY)
-                                       .build();
+        this.email = new Email(FROM_ADDRESS, TO_ADDRESS, SUBJECT_LINE, MESSAGE_BODY);
     }
 
     @After
