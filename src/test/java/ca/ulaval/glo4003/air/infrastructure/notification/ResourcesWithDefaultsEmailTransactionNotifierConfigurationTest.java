@@ -7,13 +7,13 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class ResourcesEmailTransactionNotifierConfigurationTest {
+public class ResourcesWithDefaultsEmailTransactionNotifierConfigurationTest {
 
     private EmailTransactionNotifierConfiguration emailConfiguration;
 
     @Before
     public void setUp() throws IOException {
-        this.emailConfiguration = new ResourcesEmailTransactionNotifierConfiguration();
+        this.emailConfiguration = new ResourcesWithDefaultsEmailTransactionNotifierConfiguration();
     }
 
     @Test
