@@ -9,20 +9,20 @@ import ca.ulaval.glo4003.air.api.user.UserResource;
 import ca.ulaval.glo4003.air.api.weightdetection.WeightDetectionResource;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.flight.Flight;
-import ca.ulaval.glo4003.air.domain.flight.FlightService;
+import ca.ulaval.glo4003.air.service.flight.FlightService;
 import ca.ulaval.glo4003.air.domain.flight.WeightFilterVerifier;
 import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifier;
 import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifierConfiguration;
 import ca.ulaval.glo4003.air.domain.notification.TransactionNotifier;
 import ca.ulaval.glo4003.air.domain.transaction.TransactionRepository;
-import ca.ulaval.glo4003.air.domain.transaction.TransactionService;
-import ca.ulaval.glo4003.air.domain.transaction.cart.CartItemService;
+import ca.ulaval.glo4003.air.service.transaction.TransactionService;
+import ca.ulaval.glo4003.air.service.transaction.cart.CartItemService;
 import ca.ulaval.glo4003.air.domain.user.User;
 import ca.ulaval.glo4003.air.domain.user.UserFactory;
 import ca.ulaval.glo4003.air.domain.user.UserRepository;
-import ca.ulaval.glo4003.air.domain.user.UserService;
+import ca.ulaval.glo4003.air.service.user.UserService;
 import ca.ulaval.glo4003.air.domain.user.hashing.HashingStrategy;
-import ca.ulaval.glo4003.air.domain.weightdetection.WeightDetectionService;
+import ca.ulaval.glo4003.air.service.weightdetection.WeightDetectionService;
 import ca.ulaval.glo4003.air.domain.weightdetection.WeightDetector;
 import ca.ulaval.glo4003.air.infrastructure.flight.FlightDevDataFactory;
 import ca.ulaval.glo4003.air.infrastructure.flight.FlightRepositoryInMemory;
@@ -66,8 +66,8 @@ public class AirChitectureMain {
         FlightResource flightResource = createFlightResource(flightService);
 
         UserAssembler userAssembler = new UserAssembler();
-        UserService userService = createUserService();
-        UserResource userResource = createUserResource(userService, userAssembler);
+        UserService userService = createUserService(userAssembler);
+        UserResource userResource = createUserResource(userService);
 
         CartItemAssembler cartItemAssembler = createCartItemAssembler();
         CartItemResource cartItemResource = createCartItemResource(flightService, cartItemAssembler);
@@ -134,17 +134,18 @@ public class AirChitectureMain {
         TransactionNotifier transactionNotifier = new EmailTransactionNotifier(smtpEmailSender, emailConfiguration);
 
         TransactionAssembler transactionAssembler = new TransactionAssembler(cartItemAssembler);
-        TransactionService transactionService = new TransactionService(transactionRepository, transactionNotifier);
-        return new TransactionResource(transactionService, transactionAssembler);
+        TransactionService transactionService = new TransactionService(transactionRepository, transactionNotifier, transactionAssembler);
+        return new TransactionResource(transactionService);
     }
 
     private static CartItemResource createCartItemResource(FlightService flightService, CartItemAssembler cartItemAssembler) {
-        CartItemService cartItemService = new CartItemService(flightService);
-        return new CartItemResource(cartItemService, cartItemAssembler);
+        CartItemService cartItemService = new CartItemService(flightService, cartItemAssembler);
+        return new CartItemResource(cartItemService);
     }
 
     private static FlightService createFlightService() {
         FlightRepositoryInMemory flightRepository = new FlightRepositoryInMemory();
+        FlightAssembler flightAssembler = new FlightAssembler();
 
         if (isDev) {
             FlightDevDataFactory flightDevDataFactory = new FlightDevDataFactory();
@@ -154,23 +155,22 @@ public class AirChitectureMain {
 
         WeightFilterVerifier weightFilterVerifier = new WeightFilterVerifier();
         DateTimeFactory dateTimeFactory = new DateTimeFactory();
-        return new FlightService(flightRepository, weightFilterVerifier, dateTimeFactory);
+        return new FlightService(flightRepository, weightFilterVerifier, dateTimeFactory, flightAssembler);
     }
 
     private static FlightResource createFlightResource(FlightService flightService) {
-        FlightAssembler flightAssembler = new FlightAssembler();
-        return new FlightResource(flightService, flightAssembler);
+        return new FlightResource(flightService);
     }
 
     private static WeightDetectionResource createWeightDetectionResource() {
         WeightDetector weightDetector = new DummyWeightDetector();
         WeightDetectionAssembler weightDetectionAssembler = new WeightDetectionAssembler();
-        WeightDetectionService weightDetectionService = new WeightDetectionService(weightDetector);
+        WeightDetectionService weightDetectionService = new WeightDetectionService(weightDetector, weightDetectionAssembler);
 
-        return new WeightDetectionResource(weightDetectionService, weightDetectionAssembler);
+        return new WeightDetectionResource(weightDetectionService);
     }
 
-    private static UserService createUserService() {
+    private static UserService createUserService(UserAssembler userAssembler) {
         UserRepository userRepository = new UserRepositoryInMemory();
         JWTTokenEncoder tokenEncoder = new JWTTokenEncoder(new JWTSigner(JWTTokenEncoder.SECRET), new JWTVerifier(JWTTokenEncoder.SECRET));
         HashingStrategy hashingStrategy = new HashingStrategyBCrypt();
@@ -182,14 +182,14 @@ public class AirChitectureMain {
             users.forEach(userRepository::update);
         }
 
-        return new UserService(userRepository, userFactory, tokenEncoder);
+        return new UserService(userRepository, userFactory, tokenEncoder, userAssembler);
     }
 
     private static AuthenticationResource createAuthenticationResource(UserService userService, UserAssembler userAssembler) {
-        return new AuthenticationResource(userService, userAssembler);
+        return new AuthenticationResource(userService);
     }
 
-    private static UserResource createUserResource(UserService userService, UserAssembler userAssembler) {
-        return new UserResource(userService, userAssembler);
+    private static UserResource createUserResource(UserService userService) {
+        return new UserResource(userService);
     }
 }
