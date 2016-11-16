@@ -62,6 +62,7 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
                 flight.id = flight.airlineCompany + flight.departureDate + flight.arrivalAirport;
                 flight.humanArrivalAirport = $scope.formData.to.name;
                 flight.humanDepartureAirport = $scope.formData.from.name;
+                flight.luggageWeight = $scope.formData.luggageWeight;
                 flight.name = flight.airlineCompany + " from " + flight.humanDepartureAirport + " to "+ flight.humanArrivalAirport;
                 flights.push(flight);
             }

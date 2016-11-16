@@ -15,11 +15,13 @@ public class CartItemAssembler {
         cartItemDto.arrivalAirport = cartItem.getArrivalAirport();
         cartItemDto.departureDate = cartItem.getDepartureDate().toString();
         cartItemDto.ticketsQuantity = cartItem.getTicketsQuantity();
+        cartItemDto.luggageWeight = cartItem.getLuggageWeight();
+        cartItemDto.ticketsPrice = cartItem.getTicketsPrice();
         return cartItemDto;
     }
 
     public CartItem create(CartItemDto cartItemDto) {
-        return new CartItem(cartItemDto.ticketsQuantity, cartItemDto.arrivalAirport, cartItemDto.airlineCompany, LocalDateTime.parse(cartItemDto.departureDate));
+        return new CartItem(cartItemDto.ticketsQuantity, cartItemDto.arrivalAirport, cartItemDto.airlineCompany, LocalDateTime.parse(cartItemDto.departureDate), cartItemDto.luggageWeight, cartItemDto.ticketsPrice);
     }
 
     public List<CartItem> create(List<CartItemDto> cartItemDtos) {

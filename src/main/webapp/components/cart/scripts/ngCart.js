@@ -345,6 +345,8 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
             return {arrivalAirport: this.getData().arrivalAirport,
                 airlineCompany: this.getData().airlineCompany,
                 departureDate: this.getData().departureDate,
+                ticketsPrice: this.getData().seatPrice,
+                weight: this.getData().luggageWeight,
                 ticketsQuantity: this.getQuantity()}
         };
 
