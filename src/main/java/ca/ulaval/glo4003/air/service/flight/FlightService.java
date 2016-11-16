@@ -1,6 +1,9 @@
-package ca.ulaval.glo4003.air.domain.flight;
+package ca.ulaval.glo4003.air.service.flight;
 
+import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
+import ca.ulaval.glo4003.air.domain.flight.*;
+import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,14 +16,20 @@ public class FlightService {
     private final FlightRepository flightRepository;
     private final WeightFilterVerifier weightFilterVerifier;
     private final DateTimeFactory dateTimeFactory;
+    private final FlightAssembler flightAssembler;
 
-    public FlightService(FlightRepository flightRepository, WeightFilterVerifier weightFilterVerifier, DateTimeFactory dateTimeFactory) {
+    public FlightService(FlightRepository flightRepository, WeightFilterVerifier weightFilterVerifier, DateTimeFactory dateTimeFactory, FlightAssembler flightAssembler) {
         this.flightRepository = flightRepository;
         this.weightFilterVerifier = weightFilterVerifier;
         this.dateTimeFactory = dateTimeFactory;
+        this.flightAssembler = flightAssembler;
     }
 
-    public FlightSearchResult findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight) {
+    public FlightSearchResultDto findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight) {
+
+        validateAirportsArePresent(departureAirport, arrivalAirport);
+        validateWeightIsPresent(weight);
+
         logRequest(departureAirport, arrivalAirport, departureDate, weight);
         FlightQueryBuilder query = flightRepository.query()
                                                    .isDepartingFrom(departureAirport)
@@ -37,8 +46,8 @@ public class FlightService {
         List<Flight> flightsFilteredByWeight = query.toList();
 
         boolean flightsWereFilteredByWeight = weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, allFlights);
-
-        return new FlightSearchResult(flightsFilteredByWeight, weight, flightsWereFilteredByWeight);
+        FlightSearchResult searchResult = new FlightSearchResult(flightsFilteredByWeight, weight, flightsWereFilteredByWeight);
+        return flightAssembler.create(searchResult);
     }
 
     private void logRequest(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight) {
@@ -68,5 +77,17 @@ public class FlightService {
                                .isLeavingOn(departureDate)
                                .findOne()
                                .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
+    }
+
+    private void validateAirportsArePresent(String departureAirport, String arrivalAirport) {
+        if (departureAirport == null || arrivalAirport == null) {
+            throw new InvalidParameterException("Missing departure or arrival airport.");
+        }
+    }
+
+    private void validateWeightIsPresent(double weight) {
+        if (weight == 0) {
+            throw new InvalidParameterException("Missing luggage weight.");
+        }
     }
 }

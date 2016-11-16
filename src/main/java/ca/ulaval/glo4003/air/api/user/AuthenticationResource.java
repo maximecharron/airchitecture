@@ -1,10 +1,8 @@
 package ca.ulaval.glo4003.air.api.user;
 
 import ca.ulaval.glo4003.air.api.user.dto.UserDto;
-import ca.ulaval.glo4003.air.domain.user.User;
 import ca.ulaval.glo4003.air.domain.user.UserAlreadyExistException;
-import ca.ulaval.glo4003.air.domain.user.UserService;
-import ca.ulaval.glo4003.air.transfer.user.UserAssembler;
+import ca.ulaval.glo4003.air.service.user.UserService;
 
 import javax.naming.AuthenticationException;
 import javax.ws.rs.*;
@@ -18,11 +16,9 @@ public class AuthenticationResource {
     private final Logger logger = Logger.getLogger(AuthenticationResource.class.getName());
 
     private UserService userService;
-    private UserAssembler userAssembler;
 
-    public AuthenticationResource(UserService userService, UserAssembler userAssembler) {
+    public AuthenticationResource(UserService userService) {
         this.userService = userService;
-        this.userAssembler = userAssembler;
     }
 
     @POST
@@ -31,8 +27,7 @@ public class AuthenticationResource {
     @Produces(MediaType.APPLICATION_JSON)
     public UserDto login(@FormParam("email") String email, @FormParam("password") String password) {
         try {
-            User user = userService.authenticateUser(email, password);
-            return userAssembler.create(user);
+            return userService.authenticateUser(email, password);
         } catch (AuthenticationException e) {
             logger.info("Login failed for user with email " + email);
             throw new WebApplicationException(Response.status(Response.Status.FORBIDDEN)

@@ -1,6 +1,10 @@
-package ca.ulaval.glo4003.air.domain.flight;
+package ca.ulaval.glo4003.air.service.flight;
 
+import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
+import ca.ulaval.glo4003.air.domain.flight.*;
+import ca.ulaval.glo4003.air.domain.user.InvalidPasswordException;
+import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +19,7 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willReturn;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
@@ -30,6 +35,8 @@ public class FlightServiceTest {
     private static final LocalDateTime NOW_DATE = LocalDateTime.now();
     private static double WEIGHT = 40.5;
     private static boolean FLIGHT_WERE_FILTERED_BY_WEIGHT_RESULT = true;
+    private static final String DATE_STRING = DATE.toString();
+    private static final String WEIGHT_STRING = "30.0";
 
     @Mock
     private FlightRepository flightRepository;
@@ -52,6 +59,12 @@ public class FlightServiceTest {
     @Mock
     private List<Flight> flightsFilteredByWeight;
 
+    @Mock
+    private FlightAssembler flightAssembler;
+
+    @Mock
+    private FlightSearchResultDto flightSearchResultDto;
+
     private FlightService flightService;
 
     @Before
@@ -63,7 +76,7 @@ public class FlightServiceTest {
         given(flightQueryBuilder.isLeavingOn(any())).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.acceptsWeight(anyDouble())).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.hasAirlineCompany(anyString())).willReturn(flightQueryBuilder);
-        flightService = new FlightService(flightRepository, weightFilterVerifier, dateTimeFactory);
+        flightService = new FlightService(flightRepository, weightFilterVerifier, dateTimeFactory, flightAssembler);
     }
 
     @Test
@@ -110,16 +123,16 @@ public class FlightServiceTest {
     public void givenPersistedFlights_whenFindingAllFlightsWithFilters_thenReturnFlightSearchResult() {
         given(flightQueryBuilder.toList()).willReturn(flights).willReturn(flightsFilteredByWeight);
         given(weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, flights)).willReturn(FLIGHT_WERE_FILTERED_BY_WEIGHT_RESULT);
+        willReturn(flightSearchResultDto).given(flightAssembler).create(any(FlightSearchResult.class));
 
-        FlightSearchResult result = flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT);
+        FlightSearchResultDto result = flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT);
 
-        assertEquals(result, new FlightSearchResult(flightsFilteredByWeight, WEIGHT, FLIGHT_WERE_FILTERED_BY_WEIGHT_RESULT));
+        assertEquals(result, flightSearchResultDto);
     }
 
     @Test
     public void givenAValidFlightIdentifier_whenReservingPlacesForFlight_thenFindFlight() throws FlightNotFoundException {
         willReturn(Optional.of(flight)).given(flightQueryBuilder).findOne();
-
         flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
 
         verify(flightQueryBuilder).hasAirlineCompany(AIRLINE_COMPANY);
@@ -186,5 +199,26 @@ public class FlightServiceTest {
         willReturn(Optional.empty()).given(flightQueryBuilder).findOne();
 
         flightService.releasePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
+    }
+
+    @Test(expected = InvalidParameterException.class)
+    public void givenAMissingDepartureAirport_whenFindingAllFlightsWithFilters_then400IsThrown() {
+        String departureAirport = null;
+
+        flightService.findAllWithFilters(departureAirport, ARRIVAL_AIRPORT, DATE, WEIGHT);
+    }
+
+    @Test(expected = InvalidParameterException.class)
+    public void givenAMissingArrivalAirport_whenFindingAllFlightsWithFilters_then400IsThrown() {
+        String arrivalAirport = null;
+
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, arrivalAirport, DATE, WEIGHT);
+    }
+
+    @Test(expected = InvalidParameterException.class)
+    public void givenAMissingWeight_whenFindingAllFlightsWithFilters_then400IsThrown() {
+        double weight = 0;
+
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, weight);
     }
 }

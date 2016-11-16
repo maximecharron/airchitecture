@@ -3,7 +3,7 @@ package ca.ulaval.glo4003.air.api.transaction;
 import ca.ulaval.glo4003.air.api.transaction.dto.CartItemDto;
 import ca.ulaval.glo4003.air.domain.flight.FlightNotFoundException;
 import ca.ulaval.glo4003.air.domain.transaction.cart.CartItem;
-import ca.ulaval.glo4003.air.domain.transaction.cart.CartItemService;
+import ca.ulaval.glo4003.air.service.transaction.cart.CartItemService;
 import ca.ulaval.glo4003.air.transfer.transaction.CartItemAssembler;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
@@ -28,32 +28,26 @@ public class CartItemResourceTest {
     @Mock
     private CartItemService cartItemService;
 
-    @Mock
-    private CartItemAssembler cartItemAssembler;
-
-    @Mock
-    private CartItem cartItem;
-
-    private CartItemDto cartItemDto = new CartItemDto();
+    private CartItemDto cartItemDto;
 
     private CartItemResource cartItemResource;
 
     @Before
     public void setup() {
-        cartItemResource = new CartItemResource(cartItemService, cartItemAssembler);
-        given(cartItemAssembler.create(cartItemDto)).willReturn(cartItem);
+        cartItemDto = new CartItemDto();
+        cartItemResource = new CartItemResource(cartItemService);
     }
 
     @Test
     public void givenACartItemResource_whenReservingTickets_thenItsDelegatedToTheService() throws FlightNotFoundException {
         cartItemResource.reserveTickets(cartItemDto);
 
-        verify(cartItemService).reserveTickets(cartItem);
+        verify(cartItemService).reserveTickets(cartItemDto);
     }
 
     @Test
     public void givenACartItemResource_whenReservingTicketsForANonExistentFlight_then404IsThrown() throws FlightNotFoundException {
-        doThrow(FlightNotFoundException.class).when(cartItemService).reserveTickets(cartItem);
+        doThrow(FlightNotFoundException.class).when(cartItemService).reserveTickets(cartItemDto);
         try {
             cartItemResource.reserveTickets(cartItemDto);
             fail("Exception not thrown");
@@ -66,12 +60,12 @@ public class CartItemResourceTest {
     public void givenATransactionResource_whenReleasingTickets_thenItsDelegatedToTheService() throws FlightNotFoundException {
         cartItemResource.releaseTickets(cartItemDto);
 
-        verify(cartItemService).releaseTickets(cartItem);
+        verify(cartItemService).releaseTickets(cartItemDto);
     }
 
     @Test
     public void givenACartItemResource_whenReleasingTicketsForANonExistentFlight_then404IsThrown() throws FlightNotFoundException {
-        doThrow(FlightNotFoundException.class).when(cartItemService).releaseTickets(cartItem);
+        doThrow(FlightNotFoundException.class).when(cartItemService).releaseTickets(cartItemDto);
         try {
             cartItemResource.releaseTickets(cartItemDto);
             fail("Exception not thrown");

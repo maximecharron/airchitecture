@@ -1,8 +1,9 @@
 package ca.ulaval.glo4003.air.api.user;
 
+import ca.ulaval.glo4003.air.api.user.dto.UserDto;
 import ca.ulaval.glo4003.air.domain.user.User;
 import ca.ulaval.glo4003.air.domain.user.UserAlreadyExistException;
-import ca.ulaval.glo4003.air.domain.user.UserService;
+import ca.ulaval.glo4003.air.service.user.UserService;
 import ca.ulaval.glo4003.air.transfer.user.UserAssembler;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
@@ -41,16 +42,13 @@ public class AuthenticationResourceTest {
     private UserService userService;
 
     @Mock
-    private UserAssembler userAssembler;
-
-    @Mock
-    private User user;
+    private UserDto user;
 
     private AuthenticationResource authenticationResource;
 
     @Before
     public void setup() {
-        authenticationResource = new AuthenticationResource(userService, userAssembler);
+        authenticationResource = new AuthenticationResource(userService);
     }
 
     @Test
