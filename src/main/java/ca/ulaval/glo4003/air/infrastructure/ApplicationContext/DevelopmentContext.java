@@ -8,20 +8,15 @@ import ca.ulaval.glo4003.air.api.user.UserResource;
 import ca.ulaval.glo4003.air.api.weightdetection.WeightDetectionResource;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.flight.Flight;
-import ca.ulaval.glo4003.air.domain.flight.FlightService;
 import ca.ulaval.glo4003.air.domain.flight.WeightFilterVerifier;
 import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifier;
 import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifierConfiguration;
 import ca.ulaval.glo4003.air.domain.notification.TransactionNotifier;
 import ca.ulaval.glo4003.air.domain.transaction.TransactionRepository;
-import ca.ulaval.glo4003.air.domain.transaction.TransactionService;
-import ca.ulaval.glo4003.air.domain.transaction.cart.CartItemService;
 import ca.ulaval.glo4003.air.domain.user.User;
 import ca.ulaval.glo4003.air.domain.user.UserFactory;
 import ca.ulaval.glo4003.air.domain.user.UserRepository;
-import ca.ulaval.glo4003.air.domain.user.UserService;
 import ca.ulaval.glo4003.air.domain.user.hashing.HashingStrategy;
-import ca.ulaval.glo4003.air.domain.weightdetection.WeightDetectionService;
 import ca.ulaval.glo4003.air.domain.weightdetection.WeightDetector;
 import ca.ulaval.glo4003.air.infrastructure.flight.FlightDevDataFactory;
 import ca.ulaval.glo4003.air.infrastructure.flight.FlightRepositoryInMemory;
@@ -33,6 +28,11 @@ import ca.ulaval.glo4003.air.infrastructure.user.UserRepositoryInMemory;
 import ca.ulaval.glo4003.air.infrastructure.user.encoding.JWTTokenEncoder;
 import ca.ulaval.glo4003.air.infrastructure.user.hashing.HashingStrategyBCrypt;
 import ca.ulaval.glo4003.air.infrastructure.weightdetection.DummyWeightDetector;
+import ca.ulaval.glo4003.air.service.flight.FlightService;
+import ca.ulaval.glo4003.air.service.transaction.TransactionService;
+import ca.ulaval.glo4003.air.service.transaction.cart.CartItemService;
+import ca.ulaval.glo4003.air.service.user.UserService;
+import ca.ulaval.glo4003.air.service.weightdetection.WeightDetectionService;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 import ca.ulaval.glo4003.air.transfer.transaction.CartItemAssembler;
 import ca.ulaval.glo4003.air.transfer.transaction.TransactionAssembler;
@@ -48,17 +48,20 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
 
     public HashSet<Object> getApplicationContextResources() {
         HashSet<Object> resources = new HashSet<>();
-        UserAssembler userAssembler = new UserAssembler();
-        CartItemAssembler cartItemAssembler = new CartItemAssembler();
 
         FlightService flightService = createFlightService();
-        UserService userService = createUserService();
+        FlightResource flightResource = new FlightResource(flightService);
 
-        FlightResource flightResource = createFlightResource(flightService);
-        AuthenticationResource authenticationResource = new AuthenticationResource(userService, userAssembler);
-        UserResource userResource = new UserResource(userService, userAssembler);
+        UserAssembler userAssembler = new UserAssembler();
+        UserService userService = createUserService(userAssembler);
+        UserResource userResource = new UserResource(userService);
+
+        CartItemAssembler cartItemAssembler = new CartItemAssembler();
         CartItemResource cartItemResource = createCartItemResource(flightService, cartItemAssembler);
         TransactionResource transactionResource = createTransactionResource(cartItemAssembler);
+
+        AuthenticationResource authenticationResource = new AuthenticationResource(userService);
+
         WeightDetectionResource weightDetectionResource = createWeightDetectionResource();
 
         resources.add(flightResource);
@@ -71,6 +74,13 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
         return resources;
     }
 
+    private static CartItemResource createCartItemResource(FlightService flightService, CartItemAssembler cartItemAssembler) {
+        CartItemService cartItemService = new CartItemService(flightService, cartItemAssembler);
+        CartItemResource cartItemResource = new CartItemResource(cartItemService);
+
+        return cartItemResource;
+    }
+
     private static TransactionResource createTransactionResource(CartItemAssembler cartItemAssembler) {
         TransactionRepository transactionRepository = new TransactionRepositoryInMemory();
         SmtpEmailSender smtpEmailSender = new SmtpEmailSender();
@@ -78,17 +88,14 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
         TransactionNotifier transactionNotifier = new EmailTransactionNotifier(smtpEmailSender, emailConfiguration);
 
         TransactionAssembler transactionAssembler = new TransactionAssembler(cartItemAssembler);
-        TransactionService transactionService = new TransactionService(transactionRepository, transactionNotifier);
-        return new TransactionResource(transactionService, transactionAssembler);
+        TransactionService transactionService = new TransactionService(transactionRepository, transactionNotifier, transactionAssembler);
+        return new TransactionResource(transactionService);
     }
 
-    private static CartItemResource createCartItemResource(FlightService flightService, CartItemAssembler cartItemAssembler) {
-        CartItemService cartItemService = new CartItemService(flightService);
-        return new CartItemResource(cartItemService, cartItemAssembler);
-    }
 
     private static FlightService createFlightService() {
         FlightRepositoryInMemory flightRepository = new FlightRepositoryInMemory();
+        FlightAssembler flightAssembler = new FlightAssembler();
 
         FlightDevDataFactory flightDevDataFactory = new FlightDevDataFactory();
         List<Flight> flights = flightDevDataFactory.createMockData();
@@ -96,23 +103,19 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
 
         WeightFilterVerifier weightFilterVerifier = new WeightFilterVerifier();
         DateTimeFactory dateTimeFactory = new DateTimeFactory();
-        return new FlightService(flightRepository, weightFilterVerifier, dateTimeFactory);
+        return new FlightService(flightRepository, weightFilterVerifier, dateTimeFactory, flightAssembler);
     }
 
-    private static FlightResource createFlightResource(FlightService flightService) {
-        FlightAssembler flightAssembler = new FlightAssembler();
-        return new FlightResource(flightService, flightAssembler);
-    }
 
     private static WeightDetectionResource createWeightDetectionResource() {
         WeightDetector weightDetector = new DummyWeightDetector();
         WeightDetectionAssembler weightDetectionAssembler = new WeightDetectionAssembler();
-        WeightDetectionService weightDetectionService = new WeightDetectionService(weightDetector);
+        WeightDetectionService weightDetectionService = new WeightDetectionService(weightDetector, weightDetectionAssembler);
 
-        return new WeightDetectionResource(weightDetectionService, weightDetectionAssembler);
+        return new WeightDetectionResource(weightDetectionService);
     }
 
-    private static UserService createUserService() {
+    private static UserService createUserService(UserAssembler userAssembler) {
         UserRepository userRepository = new UserRepositoryInMemory();
         JWTTokenEncoder tokenEncoder = new JWTTokenEncoder(new JWTSigner(JWTTokenEncoder.SECRET), new JWTVerifier(JWTTokenEncoder.SECRET));
         HashingStrategy hashingStrategy = new HashingStrategyBCrypt();
@@ -122,7 +125,7 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
         List<User> users = userDevDataFactory.createMockData();
         users.forEach(userRepository::update);
 
-        return new UserService(userRepository, userFactory, tokenEncoder);
+        return new UserService(userRepository, userFactory, tokenEncoder, userAssembler);
     }
 
 }
