@@ -12,6 +12,7 @@ import static org.junit.Assert.assertTrue;
 public class AirLegerAirplaneTest {
 
     private static final int A_NUMBER_OF_AVAILABLE_SEATS = 50;
+    private static final boolean A_IS_AIRVIVANT_VALUE = true;
     private static final double A_WEIGHT = 30;
     private static final double A_LOWER_WEIGHT = AirLegerAirplane.MAXIMUM_WEIGHT - 1;
     private static final double AN_HIGHER_WEIGHT = AirLegerAirplane.MAXIMUM_WEIGHT + 1;
@@ -20,7 +21,7 @@ public class AirLegerAirplaneTest {
 
     @Before
     public void setUp() throws Exception {
-        airplane = new AirLegerAirplane(A_NUMBER_OF_AVAILABLE_SEATS);
+        airplane = new AirLegerAirplane(A_NUMBER_OF_AVAILABLE_SEATS, A_IS_AIRVIVANT_VALUE);
     }
 
     @Test

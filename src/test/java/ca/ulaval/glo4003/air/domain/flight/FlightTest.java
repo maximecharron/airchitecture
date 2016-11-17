@@ -21,6 +21,7 @@ public class FlightTest {
     private static final boolean AN_ACCEPTING_WEIGHT_RESULT = true;
     private static final boolean AN_ACCEPTING_ADDITIONAL_WEIGHT_RESULT = true;
     private static final boolean A_CAN_ACCEPT_ADDITIONAL_WEIGHT_RESULT = true;
+    private static final boolean A_IS_AIRVIVANT_RESULT = true;
     private static final float A_PRICE = 124f;
     private static final String AIRPORT_A = "YQB";
     private static final String AIRPORT_B = "DUB";
@@ -128,6 +129,16 @@ public class FlightTest {
         boolean result = flight.hasAdditionalWeightOption();
 
         assertEquals(result, A_CAN_ACCEPT_ADDITIONAL_WEIGHT_RESULT);
+    }
+
+    @Test
+    public void givenAFlight_whenCheckingIfItIsAirVivant_thenItsDelegatedToTheAirplane() {
+        Flight flight = givenAFlight();
+        given(airplane.isAirVivant()).willReturn(A_IS_AIRVIVANT_RESULT);
+
+        boolean result = flight.isAirVivant();
+
+        assertEquals(result, A_IS_AIRVIVANT_RESULT);
     }
 
     @Test

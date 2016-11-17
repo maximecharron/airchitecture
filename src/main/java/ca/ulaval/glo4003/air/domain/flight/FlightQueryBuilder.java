@@ -16,6 +16,8 @@ public interface FlightQueryBuilder {
 
     FlightQueryBuilder acceptsWeight(double weight);
 
+    FlightQueryBuilder isAirVivant();
+
     FlightQueryBuilder hasAirlineCompany(String flightNumber);
 
     List<Flight> toList();

@@ -19,6 +19,7 @@ import static org.mockito.BDDMockito.given;
 public class FlightRepositoryInMemoryTest {
 
     private static final double A_WEIGHT = 40.5;
+    private static final boolean A_IS_AIRVIVANT_VALUE = true;
     private static final String AIRLINE_COMPANY = "AirFrenette";
     private static final String ANOTHER_AIRLINE_COMPANY = "AirCharron";
     private static final String INVALID_AIRLINE_COMPANY = "AirFalardeau";
@@ -83,6 +84,13 @@ public class FlightRepositoryInMemoryTest {
     }
 
     @Test
+    public void givenPersistedFlights_whenFindingAllFlightsWithOnlyAirVivantFilter_thenOnlyMatchingFlightsAreReturned() {
+        List<Flight> matchingFlights = flightRepository.query().isAirVivant().toList();
+
+        assertTrue(matchingFlights.stream().allMatch(flight -> flight.isAirVivant()));
+    }
+
+    @Test
     public void givenPersistedFlights_whenFindingAllFlightsAirlineCompany_thenOnlyMatchingFlightsAreReturned() {
         List<Flight> matchingFlights = flightRepository.query().hasAirlineCompany(AIRLINE_COMPANY).toList();
 
@@ -114,6 +122,7 @@ public class FlightRepositoryInMemoryTest {
         given(matchingFlight.isLeavingAfter(DATE)).willReturn(true);
         given(matchingFlight.isFromCompany(AIRLINE_COMPANY)).willReturn(true);
         given(matchingFlight.acceptsWeight(A_WEIGHT)).willReturn(true);
+        given(matchingFlight.isAirVivant()).willReturn(true);
 
         given(notMatchingFlight.isDepartingFrom(DEPARTURE_AIRPORT)).willReturn(false);
         given(notMatchingFlight.isGoingTo(ARRIVAL_AIRPORT)).willReturn(false);
@@ -121,6 +130,7 @@ public class FlightRepositoryInMemoryTest {
         given(notMatchingFlight.isLeavingAfter(DATE)).willReturn(false);
         given(notMatchingFlight.isFromCompany(AIRLINE_COMPANY)).willReturn(false);
         given(notMatchingFlight.acceptsWeight(A_WEIGHT)).willReturn(false);
+        given(matchingFlight.isAirVivant()).willReturn(false);
 
         flightRepository.save(matchingFlight);
         flightRepository.save(notMatchingFlight);

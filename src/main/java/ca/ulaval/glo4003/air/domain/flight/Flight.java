@@ -56,6 +56,10 @@ public class Flight {
         return airplane.acceptsAdditionalWeight(weight);
     }
 
+    public boolean isAirVivant() {
+        return airplane.isAirVivant();
+    }
+
     public String getDepartureAirport() {
         return departureAirport;
     }

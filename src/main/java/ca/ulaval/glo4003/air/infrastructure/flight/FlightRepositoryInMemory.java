@@ -63,6 +63,12 @@ public class FlightRepositoryInMemory implements FlightRepository {
         }
 
         @Override
+        public FlightQueryBuilder isAirVivant() {
+            predicates.add(flight -> flight.isAirVivant());
+            return this;
+        }
+
+        @Override
         public FlightQueryBuilder hasAirlineCompany(String airlineCompany) {
             predicates.add(flight -> flight.isFromCompany(airlineCompany));
             return this;
