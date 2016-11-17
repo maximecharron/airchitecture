@@ -35,7 +35,7 @@ public class EmailTransactionNotifierTest {
     @Before
     public void setUp() throws IOException {
         List<CartItem> cartItems = new ArrayList<>();
-        cartItems.add(new CartItem(1, "YQB", "AirFrenette", LocalDateTime.now()));
+        cartItems.add(new CartItem(1, "YQB", "AirFrenette", LocalDateTime.now(), 10, 10));
 
         given(transaction.getEmailAddress()).willReturn(TO_ADDRESS);
         given(transaction.getCartItems()).willReturn(cartItems);

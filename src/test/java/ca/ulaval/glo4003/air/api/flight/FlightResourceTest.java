@@ -2,7 +2,8 @@ package ca.ulaval.glo4003.air.api.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.domain.flight.FlightSearchResult;
-import ca.ulaval.glo4003.air.domain.flight.FlightService;
+import ca.ulaval.glo4003.air.service.flight.FlightService;
+import ca.ulaval.glo4003.air.service.flight.InvalidParameterException;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
@@ -20,6 +21,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FlightResourceTest {
@@ -38,22 +40,18 @@ public class FlightResourceTest {
     private FlightSearchResultDto flightSearchResultDto;
 
     @Mock
-    private FlightAssembler flightAssembler;
-
-    @Mock
-    private FlightSearchResult flightSearchResult;
+    private FlightSearchResultDto flightSearchResult;
 
     private FlightResource flightResource;
 
     @Before
     public void setup() {
-        flightResource = new FlightResource(flightService, flightAssembler);
+        flightResource = new FlightResource(flightService);
     }
 
     @Test
     public void givenAFlightResource_whenFindingAllFlightsWithFilters_thenItsDelegatedToTheService() {
-        given(flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT)).willReturn(flightSearchResult);
-        given(flightAssembler.create(flightSearchResult)).willReturn(flightSearchResultDto);
+        given(flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT)).willReturn(flightSearchResultDto);
 
         FlightSearchResultDto searchResult = flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING, WEIGHT_STRING);
 
@@ -66,42 +64,6 @@ public class FlightResourceTest {
 
         try {
             flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, badlyFormattedDatetime, WEIGHT_STRING);
-            fail("Exception not thrown");
-        } catch (WebApplicationException e) {
-            assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.BAD_REQUEST_400)));
-        }
-    }
-
-    @Test
-    public void givenAMissingDepartureAirport_whenFindingAllFlightsWithFilters_then400IsThrown() {
-        String departureAirport = null;
-
-        try {
-            flightResource.findAllWithFilters(departureAirport, ARRIVAL_AIRPORT, DATE_STRING, WEIGHT_STRING);
-            fail("Exception not thrown");
-        } catch (WebApplicationException e) {
-            assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.BAD_REQUEST_400)));
-        }
-    }
-
-    @Test
-    public void givenAMissingArrivalAirport_whenFindingAllFlightsWithFilters_then400IsThrown() {
-        String arrivalAirport = null;
-
-        try {
-            flightResource.findAllWithFilters(DEPARTURE_AIRPORT, arrivalAirport, DATE_STRING, WEIGHT_STRING);
-            fail("Exception not thrown");
-        } catch (WebApplicationException e) {
-            assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.BAD_REQUEST_400)));
-        }
-    }
-
-    @Test
-    public void givenAMissingWeight_whenFindingAllFlightsWithFilters_then400IsThrown() {
-        String weight = null;
-
-        try {
-            flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING, weight);
             fail("Exception not thrown");
         } catch (WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.BAD_REQUEST_400)));

@@ -103,5 +103,5 @@ Une petite web app pour acheter des billets d'avion.
  **Exemple** : `http://localhost:8081/api/weightDetection`   
  ```
  {
-     "weight": 45.5
+     "luggageWeight": 45.5
  }
