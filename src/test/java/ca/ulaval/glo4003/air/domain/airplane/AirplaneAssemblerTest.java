@@ -27,7 +27,6 @@ public class AirplaneAssemblerTest {
 
     private static final String SERIAL_NUMBER = "ZacBrownBand#1";
     private static final int SEATS = 42;
-    private static final double WEIGHT = 50;
     private static final double ACCEPTED_ADDITIONNAL_WEIGHT = 100;
 
     private AirplaneAssembler airplaneAssembler;
@@ -64,6 +63,7 @@ public class AirplaneAssemblerTest {
     private void assertHasAllTheRelevantProperties(AirLourdAirplane airplane, AirplaneDto airplaneDto) {
         assertEquals(airplane.getAvailableSeats(), airplaneDto.availableSeats);
         assertEquals(airplane.getMaximumWeight(), airplaneDto.maximumWeight, 0.01);
+        assertEquals(airplane.getSerialNumber(), airplaneDto.serialNumber);
         assertEquals(airplane.getAcceptedAdditionalWeight(), airplaneDto.acceptedAdditionalWeight, 0.01);
         assertEquals(airplane.isAirLourd(), airplaneDto.isAirLourd);
     }

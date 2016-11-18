@@ -25,6 +25,7 @@ public class AirplaneAssembler {
         AirplaneDto airplaneDto = new AirplaneDto();
         airplaneDto.availableSeats = airplane.getAvailableSeats();
         airplaneDto.maximumWeight = airplane.getMaximumWeight();
+        airplaneDto.serialNumber = airplane.getSerialNumber();
 
         if (airplane.isAirLourd()) {
             airplaneDto.isAirLourd = true;
