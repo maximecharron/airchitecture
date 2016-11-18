@@ -1,4 +1,4 @@
-package ca.ulaval.glo4003.air.domain.flight.airplane;
+package ca.ulaval.glo4003.air.domain.airplane;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
-public class FlightRepositoryInMemoryTest {
+public class AirplaneRepositoryInMemoryTest {
 
     private static final double A_WEIGHT = 40.5;
     private static final String AIRLINE_COMPANY = "AirFrenette";

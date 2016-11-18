@@ -1,5 +1,6 @@
 package ca.ulaval.glo4003.air.infrastructure.ApplicationContext;
 
+import ca.ulaval.glo4003.air.api.airplane.AirplaneResource;
 import ca.ulaval.glo4003.air.api.flight.FlightResource;
 import ca.ulaval.glo4003.air.api.transaction.CartItemResource;
 import ca.ulaval.glo4003.air.api.transaction.TransactionResource;
@@ -7,6 +8,7 @@ import ca.ulaval.glo4003.air.api.user.AuthenticationResource;
 import ca.ulaval.glo4003.air.api.user.UserResource;
 import ca.ulaval.glo4003.air.api.weightdetection.WeightDetectionResource;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
+import ca.ulaval.glo4003.air.domain.airplane.Airplane;
 import ca.ulaval.glo4003.air.domain.flight.Flight;
 import ca.ulaval.glo4003.air.domain.flight.WeightFilterVerifier;
 import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifier;
@@ -18,6 +20,8 @@ import ca.ulaval.glo4003.air.domain.user.UserFactory;
 import ca.ulaval.glo4003.air.domain.user.UserRepository;
 import ca.ulaval.glo4003.air.domain.user.hashing.HashingStrategy;
 import ca.ulaval.glo4003.air.domain.weightdetection.WeightDetector;
+import ca.ulaval.glo4003.air.infrastructure.airplane.AirplaneDevDataFactory;
+import ca.ulaval.glo4003.air.infrastructure.airplane.AirplaneRepositoryInMemory;
 import ca.ulaval.glo4003.air.infrastructure.flight.FlightDevDataFactory;
 import ca.ulaval.glo4003.air.infrastructure.flight.FlightRepositoryInMemory;
 import ca.ulaval.glo4003.air.infrastructure.notification.ResourcesWithDefaultsEmailTransactionNotifierConfiguration;
@@ -28,11 +32,13 @@ import ca.ulaval.glo4003.air.infrastructure.user.UserRepositoryInMemory;
 import ca.ulaval.glo4003.air.infrastructure.user.encoding.JWTTokenEncoder;
 import ca.ulaval.glo4003.air.infrastructure.user.hashing.HashingStrategyBCrypt;
 import ca.ulaval.glo4003.air.infrastructure.weightdetection.DummyWeightDetector;
+import ca.ulaval.glo4003.air.service.airplane.AirplaneService;
 import ca.ulaval.glo4003.air.service.flight.FlightService;
 import ca.ulaval.glo4003.air.service.transaction.TransactionService;
 import ca.ulaval.glo4003.air.service.transaction.cart.CartItemService;
 import ca.ulaval.glo4003.air.service.user.UserService;
 import ca.ulaval.glo4003.air.service.weightdetection.WeightDetectionService;
+import ca.ulaval.glo4003.air.transfer.airplane.AirplaneAssembler;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 import ca.ulaval.glo4003.air.transfer.transaction.CartItemAssembler;
 import ca.ulaval.glo4003.air.transfer.transaction.TransactionAssembler;
@@ -49,7 +55,10 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
     public HashSet<Object> getApplicationContextResources() {
         HashSet<Object> resources = new HashSet<>();
 
-        FlightService flightService = createFlightService();
+        List<Airplane> airplanes = createAirplaneMockData();
+        AirplaneService airplaneService = createAirplaneService(airplanes);
+        AirplaneResource airplaneResource = new AirplaneResource(airplaneService);
+        FlightService flightService = createFlightService(airplanes);
         FlightResource flightResource = new FlightResource(flightService);
 
         UserAssembler userAssembler = new UserAssembler();
@@ -64,6 +73,7 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
 
         WeightDetectionResource weightDetectionResource = createWeightDetectionResource();
 
+        resources.add(airplaneResource);
         resources.add(flightResource);
         resources.add(authenticationResource);
         resources.add(userResource);
@@ -92,13 +102,25 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
         return new TransactionResource(transactionService);
     }
 
+    private static List<Airplane> createAirplaneMockData() {
+        AirplaneDevDataFactory airplaneDevDataFactory = new AirplaneDevDataFactory();
+        return airplaneDevDataFactory.createMockData();
+    }
 
-    private static FlightService createFlightService() {
+    private static AirplaneService createAirplaneService(List<Airplane> airplanes) {
+        AirplaneRepositoryInMemory flightRepository = new AirplaneRepositoryInMemory();
+        AirplaneAssembler flightAssembler = new AirplaneAssembler();
+
+        airplanes.forEach(flightRepository::save);
+        return new AirplaneService(flightRepository, flightAssembler);
+    }
+
+    private static FlightService createFlightService(List<Airplane> airplanes) {
         FlightRepositoryInMemory flightRepository = new FlightRepositoryInMemory();
         FlightAssembler flightAssembler = new FlightAssembler();
 
         FlightDevDataFactory flightDevDataFactory = new FlightDevDataFactory();
-        List<Flight> flights = flightDevDataFactory.createMockData();
+        List<Flight> flights = flightDevDataFactory.createMockData(airplanes);
         flights.forEach(flightRepository::save);
 
         WeightFilterVerifier weightFilterVerifier = new WeightFilterVerifier();
