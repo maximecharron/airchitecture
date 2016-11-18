@@ -56,14 +56,15 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
         HashSet<Object> resources = new HashSet<>();
 
         List<Airplane> airplanes = createAirplaneMockData();
-        AirplaneService airplaneService = createAirplaneService(airplanes);
-        AirplaneResource airplaneResource = new AirplaneResource(airplaneService);
-        FlightService flightService = createFlightService(airplanes);
-        FlightResource flightResource = new FlightResource(flightService);
 
         UserAssembler userAssembler = new UserAssembler();
         UserService userService = createUserService(userAssembler);
         UserResource userResource = new UserResource(userService);
+
+        AirplaneService airplaneService = createAirplaneService(airplanes, userService);
+        AirplaneResource airplaneResource = new AirplaneResource(airplaneService);
+        FlightService flightService = createFlightService(airplanes);
+        FlightResource flightResource = new FlightResource(flightService);
 
         CartItemAssembler cartItemAssembler = new CartItemAssembler();
         CartItemResource cartItemResource = createCartItemResource(flightService, cartItemAssembler);
@@ -107,12 +108,12 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
         return airplaneDevDataFactory.createMockData();
     }
 
-    private static AirplaneService createAirplaneService(List<Airplane> airplanes) {
+    private static AirplaneService createAirplaneService(List<Airplane> airplanes, UserService userService) {
         AirplaneRepositoryInMemory flightRepository = new AirplaneRepositoryInMemory();
         AirplaneAssembler flightAssembler = new AirplaneAssembler();
 
         airplanes.forEach(flightRepository::save);
-        return new AirplaneService(flightRepository, flightAssembler);
+        return new AirplaneService(flightRepository, flightAssembler, userService);
     }
 
     private static FlightService createFlightService(List<Airplane> airplanes) {

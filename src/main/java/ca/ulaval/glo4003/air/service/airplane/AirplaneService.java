@@ -1,6 +1,6 @@
 package ca.ulaval.glo4003.air.service.airplane;
 
-import ca.ulaval.glo4003.air.api.airplane.AirplaneUpdateDto;
+import ca.ulaval.glo4003.air.api.airplane.dto.AirplaneUpdateDto;
 import ca.ulaval.glo4003.air.api.airplane.dto.AirplaneDto;
 import ca.ulaval.glo4003.air.api.airplane.dto.AirplaneSearchResultDto;
 import ca.ulaval.glo4003.air.domain.airplane.*;
@@ -33,9 +33,9 @@ public class AirplaneService {
 
         List<Airplane> airplanes;
         if (needsToBeAirLourd) {
-            airplanes = airplaneRepository.findAll();
-        } else {
             airplanes = airplaneRepository.findAirLourdAirplanes();
+        } else {
+            airplanes = airplaneRepository.findAll();
         }
 
         AirplaneSearchResult searchResult = new AirplaneSearchResult(airplanes);

@@ -16,12 +16,13 @@ public class AirLourdAirplaneTest {
     private static final double A_WEIGHT = 30;
     private static final double A_LOWER_WEIGHT = AirLourdAirplane.MAXIMUM_WEIGHT + AN_ACCEPTED_ADDITIONAL_WEIGHT - 1;
     private static final double AN_HIGHER_WEIGHT = AirLourdAirplane.MAXIMUM_WEIGHT + AN_ACCEPTED_ADDITIONAL_WEIGHT + 1;
+    private static final String A_SERIAL_NUMBER = "silent night";
 
     private AirLourdAirplane airplane;
 
     @Before
     public void setUp() throws Exception {
-        airplane = new AirLourdAirplane(A_NUMBER_OF_AVAILABLE_SEATS, AN_ACCEPTED_ADDITIONAL_WEIGHT);
+        airplane = new AirLourdAirplane(A_NUMBER_OF_AVAILABLE_SEATS, AN_ACCEPTED_ADDITIONAL_WEIGHT, A_SERIAL_NUMBER);
     }
 
     @Test

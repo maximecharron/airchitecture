@@ -2,14 +2,12 @@ package ca.ulaval.glo4003.air.api.airplane;
 
 import ca.ulaval.glo4003.air.api.airplane.dto.AirplaneDto;
 import ca.ulaval.glo4003.air.api.airplane.dto.AirplaneSearchResultDto;
+import ca.ulaval.glo4003.air.api.airplane.dto.AirplaneUpdateDto;
 import ca.ulaval.glo4003.air.api.user.UserResource;
-import ca.ulaval.glo4003.air.api.user.dto.UserDto;
-import ca.ulaval.glo4003.air.api.user.dto.UserPreferencesDto;
 import ca.ulaval.glo4003.air.domain.airplane.AirplaneNotFoundException;
 import ca.ulaval.glo4003.air.domain.user.InvalidTokenException;
 import ca.ulaval.glo4003.air.domain.user.UnauthorizedException;
 import ca.ulaval.glo4003.air.service.airplane.AirplaneService;
-import ca.ulaval.glo4003.air.service.flight.InvalidParameterException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -30,17 +28,11 @@ public class AirplaneResource {
     @Path("/search/airplanes")
     @Produces(MediaType.APPLICATION_JSON)
     public AirplaneSearchResultDto findAllWithFilters(@QueryParam("needsToBeAirLourd") String needsToBeAirLourd) {
-        try {
-            boolean parsedNeedsToBeAirLourd = false;
-            if (needsToBeAirLourd != null) {
-                parsedNeedsToBeAirLourd = Boolean.parseBoolean(needsToBeAirLourd);
-            }
-            return airplaneService.findAllWithFilters(parsedNeedsToBeAirLourd);
-        } catch (InvalidParameterException e) {
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
-                    .entity(e.getMessage())
-                    .build());
+        boolean parsedNeedsToBeAirLourd = false;
+        if (needsToBeAirLourd != null) {
+            parsedNeedsToBeAirLourd = Boolean.parseBoolean(needsToBeAirLourd);
         }
+        return airplaneService.findAllWithFilters(parsedNeedsToBeAirLourd);
     }
 
     @PUT
