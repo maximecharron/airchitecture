@@ -8,8 +8,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
 
+import static org.mockito.Mockito.verify;
 import static org.junit.Assert.*;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willReturn;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -18,10 +18,6 @@ public class FlightTest {
     private static final int A_TICKETS_QUANTITY = 2;
     private static final int A_NUMBER_OF_AVAILABLE_SEATS = 42;
     private static final double A_WEIGHT = 40.5;
-    private static final boolean AN_ACCEPTING_WEIGHT_RESULT = true;
-    private static final boolean AN_ACCEPTING_ADDITIONAL_WEIGHT_RESULT = true;
-    private static final boolean A_CAN_ACCEPT_ADDITIONAL_WEIGHT_RESULT = true;
-    private static final boolean A_IS_AIRVIVANT_RESULT = true;
     private static final float A_PRICE = 124f;
     private static final String AIRPORT_A = "YQB";
     private static final String AIRPORT_B = "DUB";
@@ -102,43 +98,39 @@ public class FlightTest {
     }
 
     @Test
-    public void givenAFlightThatAcceptsACertainWeight_whenCheckingIfItAcceptsThisWeight_ThenItIs() {
+    public void givenAFlight_whenCheckingIfItAcceptsAWeight_thenItsDelegatedToTheAirplane() {
         Flight flight = givenAFlight();
-        given(airplane.acceptsWeight(A_WEIGHT)).willReturn(AN_ACCEPTING_WEIGHT_RESULT);
 
-        boolean result = flight.acceptsWeight(A_WEIGHT);
+        flight.acceptsWeight(A_WEIGHT);
 
-        assertEquals(result, AN_ACCEPTING_WEIGHT_RESULT);
+        verify(airplane).acceptsWeight(A_WEIGHT);
     }
 
     @Test
     public void givenAFlight_whenCheckingIfAcceptingAdditionalWeight_thenItsDelegatedToTheAirplane() {
         Flight flight = givenAFlight();
-        given(airplane.acceptsAdditionalWeight(A_WEIGHT)).willReturn(AN_ACCEPTING_ADDITIONAL_WEIGHT_RESULT);
 
-        boolean result = flight.acceptsAdditionalWeight(A_WEIGHT);
+        flight.acceptsAdditionalWeight(A_WEIGHT);
 
-        assertEquals(result, AN_ACCEPTING_ADDITIONAL_WEIGHT_RESULT);
+        verify(airplane).acceptsAdditionalWeight(A_WEIGHT);
     }
 
     @Test
     public void givenAFlight_whenCheckingIfItHasAdditionalWeightOption_thenItsDelegatedToTheAirplane() {
         Flight flight = givenAFlight();
-        given(airplane.hasAdditionalWeightOption()).willReturn(A_CAN_ACCEPT_ADDITIONAL_WEIGHT_RESULT);
 
-        boolean result = flight.hasAdditionalWeightOption();
+        flight.hasAdditionalWeightOption();
 
-        assertEquals(result, A_CAN_ACCEPT_ADDITIONAL_WEIGHT_RESULT);
+        verify(airplane).hasAdditionalWeightOption();
     }
 
     @Test
     public void givenAFlight_whenCheckingIfItIsAirVivant_thenItsDelegatedToTheAirplane() {
         Flight flight = givenAFlight();
-        given(airplane.isAirVivant()).willReturn(A_IS_AIRVIVANT_RESULT);
 
-        boolean result = flight.isAirVivant();
+        flight.isAirVivant();
 
-        assertEquals(result, A_IS_AIRVIVANT_RESULT);
+        verify(airplane).isAirVivant();
     }
 
     @Test
