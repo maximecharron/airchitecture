@@ -51,4 +51,11 @@ public class AirLegerAirplaneTest {
 
         assertFalse(result);
     }
+
+    @Test
+    public void whenCheckingIfIsAirLourd_thenItIsNot() {
+        boolean result = airplane.isAirLourd();
+
+        assertFalse(result);
+    }
 }
