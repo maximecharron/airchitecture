@@ -1,8 +1,8 @@
 package ca.ulaval.glo4003.air.service.airplane;
 
-import ca.ulaval.glo4003.air.api.airplane.dto.AirplaneUpdateDto;
 import ca.ulaval.glo4003.air.api.airplane.dto.AirplaneDto;
 import ca.ulaval.glo4003.air.api.airplane.dto.AirplaneSearchResultDto;
+import ca.ulaval.glo4003.air.api.airplane.dto.AirplaneUpdateDto;
 import ca.ulaval.glo4003.air.domain.airplane.*;
 import ca.ulaval.glo4003.air.domain.user.InvalidTokenException;
 import ca.ulaval.glo4003.air.domain.user.UnauthorizedException;
@@ -38,8 +38,10 @@ public class AirplaneServiceTest {
 
     @Mock
     private Airplane airplane;
+
     @Mock
     private AirLourdAirplane airLourdAirplane;
+
     @Mock
     private List<Airplane> airplanes;
 
@@ -66,7 +68,7 @@ public class AirplaneServiceTest {
     private AirplaneService airplaneService;
 
     @Before
-    public void setup() throws InvalidTokenException {
+    public void setup() throws Exception {
         given(user.isAdmin()).willReturn(true);
         given(userService.authenticateUser(A_TOKEN)).willReturn(user);
         given(airplaneRepository.find(A_SERIAL_NUMBER)).willReturn(Optional.of(airplane));
@@ -102,14 +104,14 @@ public class AirplaneServiceTest {
     }
 
     @Test(expected = InvalidTokenException.class)
-    public void givenAnInvalidToken_whenUpdatingAnAirplane_thenThrowsInvalidTokenException() throws InvalidTokenException, UnauthorizedException, AirplaneNotFoundException {
+    public void givenAnInvalidToken_whenUpdatingAnAirplane_thenThrowsInvalidTokenException() throws Exception {
         given(userService.authenticateUser(AN_INVALID_TOKEN)).willThrow(InvalidTokenException.class);
 
         airplaneService.updateAirplane(AN_INVALID_TOKEN, A_SERIAL_NUMBER, airplaneUpdateDTO);
     }
 
     @Test(expected = UnauthorizedException.class)
-    public void givenANonAdminUser_whenUpdatingAnAirplane_thenThrowsUnauthorizedException() throws InvalidTokenException, UnauthorizedException, AirplaneNotFoundException {
+    public void givenANonAdminUser_whenUpdatingAnAirplane_thenThrowsUnauthorizedException() throws Exception {
         given(user.isAdmin()).willReturn(false);
         given(userService.authenticateUser(A_TOKEN)).willReturn(user);
 
@@ -117,14 +119,14 @@ public class AirplaneServiceTest {
     }
 
     @Test(expected = AirplaneNotFoundException.class)
-    public void givenANonExistentAirplane_whenUpdatingAnAirplane_thenThrowsAirplaneNotFoundException() throws AirplaneNotFoundException, InvalidTokenException, UnauthorizedException {
+    public void givenANonExistentAirplane_whenUpdatingAnAirplane_thenThrowsAirplaneNotFoundException() throws Exception {
         given(airplaneRepository.find(AN_INVALID_SERIAL_NUMBER)).willReturn(Optional.empty());
 
         airplaneService.updateAirplane(A_TOKEN, AN_INVALID_SERIAL_NUMBER, airplaneUpdateDTO);
     }
 
     @Test
-    public void givenAnAirLourdAirplane_whenUpdatingAnAirplane_thenUpdateTheAcceptedAdditionalWeight() throws AirplaneNotFoundException, UnauthorizedException, InvalidTokenException {
+    public void givenAnAirLourdAirplane_whenUpdatingAnAirplane_thenUpdateTheAcceptedAdditionalWeight() throws Exception {
         given(airplaneRepository.find(A_SERIAL_NUMBER)).willReturn(Optional.of(airLourdAirplane));
 
         airplaneService.updateAirplane(A_TOKEN, A_SERIAL_NUMBER, airplaneUpdateDTO);
@@ -132,7 +134,7 @@ public class AirplaneServiceTest {
         verify(airLourdAirplane).setAcceptedAdditionalWeight(airplaneUpdateDTO.acceptedMaximumWeight);
     }
 
-    public void whenUpdatingAnAirplane_thenReturnTheAirplaneDto() throws AirplaneNotFoundException, UnauthorizedException, InvalidTokenException {
+    public void whenUpdatingAnAirplane_thenReturnTheAirplaneDto() throws Exception {
         given(airplaneAssembler.createAirplane(airplane)).willReturn(airplaneDto);
 
         final AirplaneDto updateResult = airplaneService.updateAirplane(A_TOKEN, A_SERIAL_NUMBER, airplaneUpdateDTO);

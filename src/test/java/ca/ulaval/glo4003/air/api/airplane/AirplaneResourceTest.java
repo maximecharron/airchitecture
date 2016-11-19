@@ -34,12 +34,16 @@ public class AirplaneResourceTest {
 
     @Mock
     private AirplaneSearchResultDto airplaneSearchResultDto;
+
     @Mock
     private AirplaneUpdateDto airplaneUpdateDto;
+
     @Mock
     private AirplaneDto airplaneDto;
+
     @Mock
     private AirplaneService airplaneService;
+
     private AirplaneResource airplaneResource;
 
     @Before
@@ -48,7 +52,7 @@ public class AirplaneResourceTest {
     }
 
     @Test
-    public void whenFindingAllAirplanesWithFilters_thenItsDelegatedToTheService() {
+    public void whenFindingAllAirplanesWithFilters_thenCorrespondingAirplanesAreReturned() {
         given(airplaneService.findAllWithFilters(NEEDS_TO_BE_AIR_LOURD)).willReturn(airplaneSearchResultDto);
 
         AirplaneSearchResultDto searchResult = airplaneResource.findAllWithFilters(NEEDS_TO_BE_AIR_LOURD_STRING);
@@ -57,7 +61,7 @@ public class AirplaneResourceTest {
     }
 
     @Test
-    public void whenUpdatingAnAirplane_thenItsDelegatedToTheService() throws AirplaneNotFoundException, InvalidTokenException, UnauthorizedException {
+    public void whenUpdatingAnAirplane_thenUpdatedAirplaneIsReturned() throws Exception {
         given(airplaneService.updateAirplane(A_TOKEN, A_SERIAL_NUMBER, airplaneUpdateDto)).willReturn(airplaneDto);
 
         AirplaneDto updateResult = airplaneResource.update(A_SERIAL_NUMBER, airplaneUpdateDto, A_TOKEN);
@@ -66,7 +70,7 @@ public class AirplaneResourceTest {
     }
 
     @Test
-    public void givenAnInvalidToken_whenUpdatingAnAirplane_then401IsThrown() throws AirplaneNotFoundException, InvalidTokenException, UnauthorizedException {
+    public void givenAnInvalidToken_whenUpdatingAnAirplane_then401IsThrown() throws Exception {
         given(airplaneService.updateAirplane(AN_INVALID_TOKEN, A_SERIAL_NUMBER, airplaneUpdateDto)).willThrow(InvalidTokenException.class);
 
         try {
@@ -78,7 +82,7 @@ public class AirplaneResourceTest {
     }
 
     @Test
-    public void givenAnUnauthorizedUser_whenUpdatingAnAirplane_then401IsThrown() throws AirplaneNotFoundException, InvalidTokenException, UnauthorizedException {
+    public void givenAnUnauthorizedUser_whenUpdatingAnAirplane_then401IsThrown() throws Exception {
         given(airplaneService.updateAirplane(A_TOKEN, A_SERIAL_NUMBER, airplaneUpdateDto)).willThrow(UnauthorizedException.class);
 
         try {
@@ -90,7 +94,7 @@ public class AirplaneResourceTest {
     }
 
     @Test
-    public void givenANonExistentAirplane_whenUpdatingAnAirplane_then404IsThrown() throws AirplaneNotFoundException, InvalidTokenException, UnauthorizedException {
+    public void givenANonExistentAirplane_whenUpdatingAnAirplane_then404IsThrown() throws Exception {
         given(airplaneService.updateAirplane(A_TOKEN, AN_INVALID_SERIAL_NUMBER, airplaneUpdateDto)).willThrow(AirplaneNotFoundException.class);
 
         try {

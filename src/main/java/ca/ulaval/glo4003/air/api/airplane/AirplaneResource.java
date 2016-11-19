@@ -26,19 +26,15 @@ public class AirplaneResource {
     @GET
     @Path("/search/airplanes")
     @Produces(MediaType.APPLICATION_JSON)
-    public AirplaneSearchResultDto findAllWithFilters(@QueryParam("needsToBeAirLourd") String needsToBeAirLourd) {
-        boolean parsedNeedsToBeAirLourd = false;
-        if (needsToBeAirLourd != null) {
-            parsedNeedsToBeAirLourd = Boolean.parseBoolean(needsToBeAirLourd);
-        }
-        return airplaneService.findAllWithFilters(parsedNeedsToBeAirLourd);
+    public AirplaneSearchResultDto findAllWithFilters(@QueryParam("needsToBeAirLourd") Boolean needsToBeAirLourd) {
+        return airplaneService.findAllWithFilters(needsToBeAirLourd);
     }
 
     @PUT
     @Path("/airplanes/{serialNumber}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public AirplaneDto update(@PathParam("serialNumber") String serialNumber, AirplaneUpdateDto airplaneUpdateDto, @HeaderParam("X-Access-Token") String token) {
+    public AirplaneDto update(AirplaneUpdateDto airplaneUpdateDto, @PathParam("serialNumber") String serialNumber, @HeaderParam("X-Access-Token") String token) {
         try {
             return this.airplaneService.updateAirplane(token, serialNumber, airplaneUpdateDto);
         } catch (InvalidTokenException | UnauthorizedException e) {
