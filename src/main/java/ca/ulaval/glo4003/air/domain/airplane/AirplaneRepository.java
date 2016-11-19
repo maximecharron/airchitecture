@@ -8,7 +8,7 @@ public interface AirplaneRepository {
     void save(Airplane airplane);
 
     List<Airplane> findAll();
-    List<Airplane> findAirLourdAirplanes();
+    List<Airplane> findAllAirLourd();
 
     Optional<Airplane> find(String serialNumber);
 }

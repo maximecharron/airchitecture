@@ -21,7 +21,7 @@ public class AirplaneRepositoryInMemory implements AirplaneRepository {
     }
 
     @Override
-    public List<Airplane> findAirLourdAirplanes() {
+    public List<Airplane> findAllAirLourd() {
         return airplanes.values().stream().filter(Airplane::isAirLourd).collect(Collectors.toList());
     }
 

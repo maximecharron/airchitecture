@@ -3,7 +3,6 @@ package ca.ulaval.glo4003.air.api.airplane;
 import ca.ulaval.glo4003.air.api.airplane.dto.AirplaneDto;
 import ca.ulaval.glo4003.air.api.airplane.dto.AirplaneSearchResultDto;
 import ca.ulaval.glo4003.air.api.airplane.dto.AirplaneUpdateDto;
-import ca.ulaval.glo4003.air.api.user.UserResource;
 import ca.ulaval.glo4003.air.domain.airplane.AirplaneNotFoundException;
 import ca.ulaval.glo4003.air.domain.user.InvalidTokenException;
 import ca.ulaval.glo4003.air.domain.user.UnauthorizedException;
@@ -16,7 +15,7 @@ import java.util.logging.Logger;
 
 public class AirplaneResource {
 
-    private final Logger logger = Logger.getLogger(UserResource.class.getName());
+    private final Logger logger = Logger.getLogger(AirplaneResource.class.getName());
 
     private final AirplaneService airplaneService;
 

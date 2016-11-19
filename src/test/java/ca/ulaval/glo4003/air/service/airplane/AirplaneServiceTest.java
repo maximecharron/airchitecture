@@ -82,7 +82,7 @@ public class AirplaneServiceTest {
     public void givenSearchFiltersWithNeedsToBeAirLourd_whenFindingAllMatchingAirplanes_thenTheRepositoryFindsCorrespondingAirplanes() {
         airplaneService.findAllWithFilters(NEEDS_TO_BE_AIR_LOURD);
 
-        verify(airplaneRepository).findAirLourdAirplanes();
+        verify(airplaneRepository).findAllAirLourd();
     }
 
     @Test

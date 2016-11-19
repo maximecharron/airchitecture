@@ -33,7 +33,7 @@ public class AirplaneService {
 
         List<Airplane> airplanes;
         if (needsToBeAirLourd) {
-            airplanes = airplaneRepository.findAirLourdAirplanes();
+            airplanes = airplaneRepository.findAllAirLourd();
         } else {
             airplanes = airplaneRepository.findAll();
         }

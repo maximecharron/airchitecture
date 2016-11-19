@@ -58,7 +58,7 @@ public class AirplaneRepositoryInMemoryTest {
 
     @Test
     public void givenPersistedAirplanes_whenFindingAllAirLourdAirplanes_thenTheMatchingAirplanesAreReturned() {
-        List<Airplane> airLourdAirplanes = airplaneRepository.findAirLourdAirplanes();
+        List<Airplane> airLourdAirplanes = airplaneRepository.findAllAirLourd();
 
         assertTrue(airLourdAirplanes.stream().allMatch(Airplane::isAirLourd));
     }
