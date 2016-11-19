@@ -4,8 +4,8 @@ public class AirLegerAirplane extends Airplane {
 
     public static final double MAXIMUM_WEIGHT = 23.5;
 
-    public AirLegerAirplane(int availableSeats) {
-        super(availableSeats, MAXIMUM_WEIGHT);
+    public AirLegerAirplane(int availableSeats, boolean isAirVivant) {
+        super(availableSeats, MAXIMUM_WEIGHT, isAirVivant);
     }
 
     @Override

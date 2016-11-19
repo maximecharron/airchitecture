@@ -7,7 +7,8 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
         from: "",
         to: "",
         date: "",
-        luggageWeight: ""
+        luggageWeight: "",
+        onlyAirVivant: ""
     };
     $scope.haveResults = false;
     $scope.flightsResults = [];
@@ -54,6 +55,9 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
         if ($scope.formData.luggageWeight) {
             $scope.formData.luggageWeight = Number((Math.ceil($scope.formData.luggageWeight * 2) / 2).toFixed(1));
             searchCriteria.weight = $scope.formData.luggageWeight;
+        }
+        if ($scope.formData.onlyAirVivant) {
+            searchCriteria.onlyAirVivant = $scope.formData.onlyAirVivant;
         }
         homeResource.get(searchCriteria, function onSuccess(data) {
             var flights = [];

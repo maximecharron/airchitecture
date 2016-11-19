@@ -27,7 +27,8 @@ public class FlightResource {
     public FlightSearchResultDto findAllWithFilters(@QueryParam("from") String departureAirport,
                                                     @QueryParam("to") String arrivalAirport,
                                                     @QueryParam("datetime") String departureDate,
-                                                    @QueryParam("weight") String weight) {
+                                                    @QueryParam("weight") String weight,
+                                                    @QueryParam("onlyAirVivant") String onlyAirVivant) {
         LocalDateTime parsedDate = null;
         if (departureDate != null) {
             parsedDate = parseDate(departureDate);
@@ -36,8 +37,12 @@ public class FlightResource {
         if (weight != null){
             parsedWeight = parseWeight(weight);
         }
+        boolean parsedOnlyAirVivant = false;
+        if (onlyAirVivant != null) {
+            parsedOnlyAirVivant = Boolean.parseBoolean(onlyAirVivant);
+        }
         try {
-            return flightService.findAllWithFilters(departureAirport, arrivalAirport, parsedDate, parsedWeight);
+            return flightService.findAllWithFilters(departureAirport, arrivalAirport, parsedDate, parsedWeight, parsedOnlyAirVivant);
         } catch (InvalidParameterException e){
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
                                                       .entity(e.getMessage())

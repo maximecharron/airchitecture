@@ -25,12 +25,12 @@ public class FlightService {
         this.flightAssembler = flightAssembler;
     }
 
-    public FlightSearchResultDto findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight) {
+    public FlightSearchResultDto findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant) {
 
         validateAirportsArePresent(departureAirport, arrivalAirport);
         validateWeightIsPresent(weight);
+        logRequest(departureAirport, arrivalAirport, departureDate, weight, isOnlyAirVivant);
 
-        logRequest(departureAirport, arrivalAirport, departureDate, weight);
         FlightQueryBuilder query = flightRepository.query()
                                                    .isDepartingFrom(departureAirport)
                                                    .isGoingTo(arrivalAirport);
@@ -39,6 +39,10 @@ public class FlightService {
             query.isLeavingOn(departureDate);
         } else {
             query.isLeavingAfter(dateTimeFactory.now());
+        }
+
+        if (isOnlyAirVivant) {
+            query.isAirVivant();
         }
 
         List<Flight> allFlights = query.toList();
@@ -50,8 +54,8 @@ public class FlightService {
         return flightAssembler.create(searchResult);
     }
 
-    private void logRequest(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight) {
-        String query = "Finding all flights from " + departureAirport + " to " + arrivalAirport + "with a luggage weight of " + weight + "lbs";
+    private void logRequest(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant) {
+        String query = "Finding all flights from " + departureAirport + " to " + arrivalAirport + "with a luggage weight of " + weight + "lbs" + "with a boolean value for being airvivant is" + isOnlyAirVivant;
         if (departureDate != null) {
             query = query.concat(" on " + departureDate.toString());
         }

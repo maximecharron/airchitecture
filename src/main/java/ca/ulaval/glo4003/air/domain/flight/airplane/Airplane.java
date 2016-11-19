@@ -4,10 +4,12 @@ public abstract class Airplane {
 
     private final int availableSeats;
     private final double maximumWeight;
+    private final boolean isAirVivant;
 
-    public Airplane(int availableSeats, double maximumWeight) {
+    public Airplane(int availableSeats, double maximumWeight, boolean isAirVivant) {
         this.availableSeats = availableSeats;
         this.maximumWeight = maximumWeight;
+        this.isAirVivant = isAirVivant;
     }
 
     public int getAvailableSeats() {
@@ -18,7 +20,12 @@ public abstract class Airplane {
         return weight <= maximumWeight;
     }
 
+    public boolean isAirVivant() {
+        return isAirVivant;
+    }
+
     public abstract boolean hasAdditionalWeightOption();
 
     public abstract boolean acceptsAdditionalWeight(double weight);
+
 }

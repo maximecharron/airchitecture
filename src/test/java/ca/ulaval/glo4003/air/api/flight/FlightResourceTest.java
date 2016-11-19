@@ -32,6 +32,8 @@ public class FlightResourceTest {
     private static final String DATE_STRING = DATE.toString();
     private static final double WEIGHT = 30.0;
     private static final String WEIGHT_STRING = "30.0";
+    private static final boolean IS_ONLY_AIRVIVANT = true;
+    private static final String IS_ONLY_AIRVIVANT_STRING = "true";
 
     @Mock
     private FlightService flightService;
@@ -51,9 +53,9 @@ public class FlightResourceTest {
 
     @Test
     public void givenAFlightResource_whenFindingAllFlightsWithFilters_thenItsDelegatedToTheService() {
-        given(flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT)).willReturn(flightSearchResultDto);
+        given(flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, IS_ONLY_AIRVIVANT)).willReturn(flightSearchResultDto);
 
-        FlightSearchResultDto searchResult = flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING, WEIGHT_STRING);
+        FlightSearchResultDto searchResult = flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING, WEIGHT_STRING, IS_ONLY_AIRVIVANT_STRING);
 
         assertEquals(flightSearchResultDto, searchResult);
     }
@@ -63,7 +65,7 @@ public class FlightResourceTest {
         String badlyFormattedDatetime = "2016-06-bacon";
 
         try {
-            flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, badlyFormattedDatetime, WEIGHT_STRING);
+            flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, badlyFormattedDatetime, WEIGHT_STRING, IS_ONLY_AIRVIVANT_STRING);
             fail("Exception not thrown");
         } catch (WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.BAD_REQUEST_400)));
@@ -75,7 +77,7 @@ public class FlightResourceTest {
         String badlyFormattedWeight = "30.dariusruckerwagonwheel";
 
         try {
-            flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING, badlyFormattedWeight);
+            flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING, badlyFormattedWeight, IS_ONLY_AIRVIVANT_STRING);
             fail("Exception not thrown");
         } catch (WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.BAD_REQUEST_400)));
