@@ -25,7 +25,6 @@ import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AirplaneResourceTest {
-    private static final String NEEDS_TO_BE_AIR_LOURD_STRING = "true";
     private static final boolean NEEDS_TO_BE_AIR_LOURD = true;
     private static final String A_SERIAL_NUMBER = "keep me in mind - zac brown band";
     private static final String AN_INVALID_TOKEN = "rock me mamma - darius rucker";
@@ -55,7 +54,7 @@ public class AirplaneResourceTest {
     public void whenFindingAllAirplanesWithFilters_thenCorrespondingAirplanesAreReturned() {
         given(airplaneService.findAllWithFilters(NEEDS_TO_BE_AIR_LOURD)).willReturn(airplaneSearchResultDto);
 
-        AirplaneSearchResultDto searchResult = airplaneResource.findAllWithFilters(NEEDS_TO_BE_AIR_LOURD_STRING);
+        AirplaneSearchResultDto searchResult = airplaneResource.findAllWithFilters(NEEDS_TO_BE_AIR_LOURD);
 
         assertEquals(airplaneSearchResultDto, searchResult);
     }
@@ -64,7 +63,7 @@ public class AirplaneResourceTest {
     public void whenUpdatingAnAirplane_thenUpdatedAirplaneIsReturned() throws Exception {
         given(airplaneService.updateAirplane(A_TOKEN, A_SERIAL_NUMBER, airplaneUpdateDto)).willReturn(airplaneDto);
 
-        AirplaneDto updateResult = airplaneResource.update(A_SERIAL_NUMBER, airplaneUpdateDto, A_TOKEN);
+        AirplaneDto updateResult = airplaneResource.update(airplaneUpdateDto, A_SERIAL_NUMBER, A_TOKEN);
 
         assertEquals(airplaneDto, updateResult);
     }
@@ -74,7 +73,7 @@ public class AirplaneResourceTest {
         given(airplaneService.updateAirplane(AN_INVALID_TOKEN, A_SERIAL_NUMBER, airplaneUpdateDto)).willThrow(InvalidTokenException.class);
 
         try {
-            airplaneResource.update(A_SERIAL_NUMBER, airplaneUpdateDto, AN_INVALID_TOKEN);
+            airplaneResource.update(airplaneUpdateDto, A_SERIAL_NUMBER, AN_INVALID_TOKEN);
             fail("Exception not thrown");
         } catch (WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.UNAUTHORIZED_401)));
@@ -86,7 +85,7 @@ public class AirplaneResourceTest {
         given(airplaneService.updateAirplane(A_TOKEN, A_SERIAL_NUMBER, airplaneUpdateDto)).willThrow(UnauthorizedException.class);
 
         try {
-            airplaneResource.update(A_SERIAL_NUMBER, airplaneUpdateDto, A_TOKEN);
+            airplaneResource.update(airplaneUpdateDto, A_SERIAL_NUMBER, A_TOKEN);
             fail("Exception not thrown");
         } catch (WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.UNAUTHORIZED_401)));
@@ -98,7 +97,7 @@ public class AirplaneResourceTest {
         given(airplaneService.updateAirplane(A_TOKEN, AN_INVALID_SERIAL_NUMBER, airplaneUpdateDto)).willThrow(AirplaneNotFoundException.class);
 
         try {
-            airplaneResource.update(AN_INVALID_SERIAL_NUMBER, airplaneUpdateDto, A_TOKEN);
+            airplaneResource.update(airplaneUpdateDto, AN_INVALID_SERIAL_NUMBER, A_TOKEN);
             fail("Exception not thrown");
         } catch (WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.NOT_FOUND_404)));
