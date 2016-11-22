@@ -28,6 +28,7 @@ public class AirplaneAssemblerTest {
     private static final String SERIAL_NUMBER = "ZacBrownBand#1";
     private static final int SEATS = 42;
     private static final double ACCEPTED_ADDITIONNAL_WEIGHT = 100;
+    private static final boolean IS_AIR_VIVANT = true;
 
     private AirplaneAssembler airplaneAssembler;
 
@@ -57,7 +58,7 @@ public class AirplaneAssemblerTest {
     }
 
     private AirLourdAirplane givenAnAirplane() {
-        return new AirLourdAirplane(SEATS, ACCEPTED_ADDITIONNAL_WEIGHT, SERIAL_NUMBER);
+        return new AirLourdAirplane(SEATS, ACCEPTED_ADDITIONNAL_WEIGHT, IS_AIR_VIVANT, SERIAL_NUMBER);
     }
 
     private void assertHasAllTheRelevantProperties(AirLourdAirplane airplane, AirplaneDto airplaneDto) {

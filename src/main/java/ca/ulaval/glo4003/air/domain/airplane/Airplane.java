@@ -3,13 +3,19 @@ package ca.ulaval.glo4003.air.domain.airplane;
 public abstract class Airplane {
 
     private final String serialNumber;
+    private final boolean isAirVivant;
     private final int availableSeats;
     private final double maximumWeight;
 
-    public Airplane(int availableSeats, double maximumWeight, String serialNumber) {
+    public Airplane(int availableSeats, double maximumWeight, boolean isAirVivant, String serialNumber) {
         this.availableSeats = availableSeats;
         this.maximumWeight = maximumWeight;
         this.serialNumber = serialNumber;
+        this.isAirVivant = isAirVivant;
+    }
+
+    public boolean isAirVivant() {
+        return isAirVivant;
     }
 
     public int getAvailableSeats() {
