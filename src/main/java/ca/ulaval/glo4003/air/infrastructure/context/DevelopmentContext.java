@@ -1,4 +1,4 @@
-package ca.ulaval.glo4003.air.infrastructure.ApplicationContext;
+package ca.ulaval.glo4003.air.infrastructure.context;
 
 import ca.ulaval.glo4003.air.api.airplane.AirplaneResource;
 import ca.ulaval.glo4003.air.api.flight.FlightResource;
@@ -87,9 +87,7 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
 
     private static CartItemResource createCartItemResource(FlightService flightService, CartItemAssembler cartItemAssembler) {
         CartItemService cartItemService = new CartItemService(flightService, cartItemAssembler);
-        CartItemResource cartItemResource = new CartItemResource(cartItemService);
-
-        return cartItemResource;
+        return new CartItemResource(cartItemService);
     }
 
     private static TransactionResource createTransactionResource(CartItemAssembler cartItemAssembler) {

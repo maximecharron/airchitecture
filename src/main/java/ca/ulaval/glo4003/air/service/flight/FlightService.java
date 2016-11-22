@@ -64,13 +64,13 @@ public class FlightService {
 
     public void reservePlacesInFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate, int ticketsQuantity) throws FlightNotFoundException {
         Flight flight = findFlight(airlineCompany, arrivalAirport, departureDate);
-        flight.reservePlaces(ticketsQuantity);
+        flight.reserveSeats(ticketsQuantity);
         this.flightRepository.save(flight);
     }
 
     public void releasePlacesInFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate, int ticketsQuantity) throws FlightNotFoundException {
         Flight flight = findFlight(airlineCompany, arrivalAirport, departureDate);
-        flight.releasePlaces(ticketsQuantity);
+        flight.releaseSeats(ticketsQuantity);
         this.flightRepository.save(flight);
     }
 

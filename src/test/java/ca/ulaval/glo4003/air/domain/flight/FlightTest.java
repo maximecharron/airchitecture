@@ -138,10 +138,10 @@ public class FlightTest {
         willReturn(A_NUMBER_OF_AVAILABLE_SEATS).given(airplane).getAvailableSeats();
         Flight flight = givenAFlight();
 
-        flight.reservePlaces(A_TICKETS_QUANTITY);
+        flight.reserveSeats(A_TICKETS_QUANTITY);
 
         int availableSeatsLeft = A_NUMBER_OF_AVAILABLE_SEATS - A_TICKETS_QUANTITY;
-        assertEquals(flight.getAvailableSeats(), availableSeatsLeft);
+        assertEquals(flight.getSeats(), availableSeatsLeft);
     }
 
     @Test
@@ -149,10 +149,10 @@ public class FlightTest {
         willReturn(A_NUMBER_OF_AVAILABLE_SEATS).given(airplane).getAvailableSeats();
         Flight flight = givenAFlight();
 
-        flight.releasePlaces(A_TICKETS_QUANTITY);
+        flight.releaseSeats(A_TICKETS_QUANTITY);
 
         int availableSeatsLeft = A_NUMBER_OF_AVAILABLE_SEATS + A_TICKETS_QUANTITY;
-        assertEquals(flight.getAvailableSeats(), availableSeatsLeft);
+        assertEquals(flight.getSeats(), availableSeatsLeft);
     }
 
     private Flight givenAFlight() {

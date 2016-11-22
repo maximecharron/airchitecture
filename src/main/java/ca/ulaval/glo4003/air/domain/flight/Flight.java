@@ -1,6 +1,7 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
 import ca.ulaval.glo4003.air.domain.airplane.Airplane;
+import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 
 import java.time.LocalDateTime;
 
@@ -11,17 +12,15 @@ public class Flight {
     private final LocalDateTime departureDate;
     private final String airlineCompany;
     private final Airplane airplane;
-    private int availableSeats;
-    private float seatPrice;
+    private final Seats seats;
 
-    public Flight(String departureAirport, String arrivalAirport, LocalDateTime departureDate, String airlineCompany, Airplane airplane, float seatPrice) {
+    public Flight(String departureAirport, String arrivalAirport, LocalDateTime departureDate, String airlineCompany, Airplane airplane, SeatsPricing seatsPricing) {
         this.departureAirport = departureAirport;
         this.arrivalAirport = arrivalAirport;
         this.departureDate = departureDate;
         this.airlineCompany = airlineCompany;
         this.airplane = airplane;
-        this.availableSeats = this.airplane.getAvailableSeats();
-        this.seatPrice = seatPrice;
+        seats = new Seats(airplane.getSeatMap(), seatsPricing);
     }
 
     public boolean isDepartingFrom(String departureAirport) {
@@ -60,6 +59,18 @@ public class Flight {
         return airplane.isAirVivant();
     }
 
+    public void reserveSeats(SeatMap seatMap) {
+        seats.reserve(seatMap); //todo
+    }
+
+    public void releaseSeats(SeatMap seatMap) {
+        seats.release(seatMap); //todo
+    }
+
+    private boolean isOnSameDay(LocalDateTime date1, LocalDateTime date2) {
+        return date1.getDayOfYear() == date2.getDayOfYear() && date1.getYear() == date2.getYear();
+    }
+
     public String getDepartureAirport() {
         return departureAirport;
     }
@@ -76,24 +87,7 @@ public class Flight {
         return airlineCompany;
     }
 
-    public int getAvailableSeats() {
-        return this.availableSeats;
+    public Seats getSeats() {
+        return this.seats;
     }
-
-    public void reservePlaces(int ticketsQuantity) {
-        availableSeats = availableSeats - ticketsQuantity;
-    }
-
-    public void releasePlaces(int ticketsQuantity) {
-        availableSeats = availableSeats + ticketsQuantity;
-    }
-
-    public float getSeatPrice() {
-        return seatPrice;
-    }
-
-    private boolean isOnSameDay(LocalDateTime date1, LocalDateTime date2) {
-        return date1.getDayOfYear() == date2.getDayOfYear() && date1.getYear() == date2.getYear();
-    }
-
 }

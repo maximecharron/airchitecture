@@ -16,7 +16,7 @@ public class FlightAssembler {
         flightDto.departureDate = flight.getDepartureDate();
         flightDto.departureAirport = flight.getDepartureAirport();
         flightDto.arrivalAirport = flight.getArrivalAirport();
-        flightDto.availableSeats = flight.getAvailableSeats();
+        flightDto.availableSeats = flight.getSeats();
         flightDto.seatPrice = flight.getSeatPrice();
         flightDto.hasAdditionalWeightOption = flight.hasAdditionalWeightOption();
         flightDto.acceptsAdditionalWeight = flight.acceptsAdditionalWeight(weight);

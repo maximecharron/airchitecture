@@ -3,7 +3,6 @@ package ca.ulaval.glo4003.air.service.flight;
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.flight.*;
-import ca.ulaval.glo4003.air.domain.user.InvalidPasswordException;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 import org.junit.Before;
 import org.junit.Test;
@@ -173,7 +172,7 @@ public class FlightServiceTest {
 
         flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
 
-        verify(flight).reservePlaces(TICKETS_QUANTITY);
+        verify(flight).reserveSeats(TICKETS_QUANTITY);
     }
 
     @Test
@@ -209,7 +208,7 @@ public class FlightServiceTest {
 
         flightService.releasePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
 
-        verify(flight).releasePlaces(TICKETS_QUANTITY);
+        verify(flight).releaseSeats(TICKETS_QUANTITY);
     }
 
     @Test

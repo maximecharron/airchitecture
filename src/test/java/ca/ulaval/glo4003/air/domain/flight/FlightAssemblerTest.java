@@ -82,7 +82,7 @@ public class FlightAssemblerTest {
 
     private void assertHasAllTheRelevantProperties(Flight flight, FlightDto flightDto) {
         assertEquals(flight.getAirlineCompany(), flightDto.airlineCompany);
-        assertEquals(flight.getAvailableSeats(), flightDto.availableSeats);
+        assertEquals(flight.getSeats(), flightDto.availableSeats);
         assertEquals(flight.getDepartureAirport(), flightDto.departureAirport);
         assertEquals(flight.getArrivalAirport(), flightDto.arrivalAirport);
         assertEquals(flight.getDepartureDate(), flightDto.departureDate);

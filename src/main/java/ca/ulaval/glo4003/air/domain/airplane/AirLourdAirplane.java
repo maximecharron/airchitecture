@@ -6,8 +6,8 @@ public class AirLourdAirplane extends Airplane {
     private double acceptedAdditionalWeight;
     private double maximumAdditionalWeight;
 
-    public AirLourdAirplane(int availableSeats, double acceptedAdditionalWeight, boolean isAirVivant, String serialNumber) {
-        super(availableSeats, MAXIMUM_WEIGHT, isAirVivant, serialNumber);
+    public AirLourdAirplane(SeatMap seatMap, double acceptedAdditionalWeight, boolean isAirVivant, String serialNumber) {
+        super(seatMap, MAXIMUM_WEIGHT, isAirVivant, serialNumber);
         this.maximumAdditionalWeight = MAXIMUM_WEIGHT + acceptedAdditionalWeight;
     }
 
