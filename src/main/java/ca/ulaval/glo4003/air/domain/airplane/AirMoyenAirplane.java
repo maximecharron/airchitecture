@@ -1,11 +1,11 @@
-package ca.ulaval.glo4003.air.domain.flight.airplane;
+package ca.ulaval.glo4003.air.domain.airplane;
 
 public class AirMoyenAirplane extends Airplane {
 
     public static final double MAXIMUM_WEIGHT = 42;
 
-    public AirMoyenAirplane(int availableSeats, boolean isAirVivant) {
-        super(availableSeats, MAXIMUM_WEIGHT, isAirVivant);
+    public AirMoyenAirplane(int availableSeats, boolean isAirVivant, String serialNumber) {
+        super(availableSeats, MAXIMUM_WEIGHT, isAirVivant, serialNumber);
     }
 
     @Override

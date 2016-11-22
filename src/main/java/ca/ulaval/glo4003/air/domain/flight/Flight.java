@@ -1,6 +1,6 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
-import ca.ulaval.glo4003.air.domain.flight.airplane.Airplane;
+import ca.ulaval.glo4003.air.domain.airplane.Airplane;
 
 import java.time.LocalDateTime;
 

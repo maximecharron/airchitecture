@@ -1,12 +1,14 @@
-package ca.ulaval.glo4003.air.domain.flight.airplane;
+package ca.ulaval.glo4003.air.domain.airplane;
 
 public class AirLourdAirplane extends Airplane {
 
     public static final double MAXIMUM_WEIGHT = 65;
+    private double acceptedAdditionalWeight;
     private double maximumAdditionalWeight;
 
     public AirLourdAirplane(int availableSeats, double acceptedAdditionalWeight, boolean isAirVivant) {
-        super(availableSeats, MAXIMUM_WEIGHT, isAirVivant);
+        super(availableSeats, MAXIMUM_WEIGHT, isAirVivant, serialNumber);
+        , serialNumber
         this.maximumAdditionalWeight = MAXIMUM_WEIGHT + acceptedAdditionalWeight;
     }
 
@@ -20,7 +22,20 @@ public class AirLourdAirplane extends Airplane {
         return true;
     }
 
+    @Override
+    public boolean isAirLourd() {
+        return true;
+    }
+
+    public double getAcceptedAdditionalWeight() {
+        return acceptedAdditionalWeight;
+    }
+
     public boolean acceptsAdditionalWeight(double weight) {
         return weight <= maximumAdditionalWeight;
+    }
+
+    public void setAcceptedAdditionalWeight(double acceptedAdditionalWeight) {
+        this.acceptedAdditionalWeight = acceptedAdditionalWeight;
     }
 }
