@@ -1,4 +1,4 @@
-package ca.ulaval.glo4003.air.domain.flight.airplane;
+package ca.ulaval.glo4003.air.domain.airplane;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,12 +17,13 @@ public class AirLourdAirplaneTest {
     private static final double A_WEIGHT = 30;
     private static final double A_LOWER_WEIGHT = AirLourdAirplane.MAXIMUM_WEIGHT + AN_ACCEPTED_ADDITIONAL_WEIGHT - 1;
     private static final double AN_HIGHER_WEIGHT = AirLourdAirplane.MAXIMUM_WEIGHT + AN_ACCEPTED_ADDITIONAL_WEIGHT + 1;
+    private static final String A_SERIAL_NUMBER = "silent night";
 
     private AirLourdAirplane airplane;
 
     @Before
     public void setUp() throws Exception {
-        airplane = new AirLourdAirplane(A_NUMBER_OF_AVAILABLE_SEATS, AN_ACCEPTED_ADDITIONAL_WEIGHT, A_IS_AIRVIVANT_VALUE);
+        airplane = new AirLourdAirplane(A_NUMBER_OF_AVAILABLE_SEATS, AN_ACCEPTED_ADDITIONAL_WEIGHT, A_IS_AIRVIVANT_VALUE, A_SERIAL_NUMBER);
     }
 
     @Test
@@ -51,5 +52,12 @@ public class AirLourdAirplaneTest {
         boolean result = airplane.acceptsAdditionalWeight(AN_HIGHER_WEIGHT);
 
         assertFalse(result);
+    }
+
+    @Test
+    public void whenCheckingIfIsAirLourd_thenItIs() {
+        boolean result = airplane.isAirLourd();
+
+        assertTrue(result);
     }
 }

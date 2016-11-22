@@ -1,10 +1,10 @@
 package ca.ulaval.glo4003.air.service.user;
 
+import ca.ulaval.glo4003.air.api.user.dto.UserDto;
 import ca.ulaval.glo4003.air.api.user.dto.UserPreferencesDto;
 import ca.ulaval.glo4003.air.domain.user.*;
 import ca.ulaval.glo4003.air.domain.user.encoding.TokenDecoder;
 import ca.ulaval.glo4003.air.transfer.user.UserAssembler;
-import ca.ulaval.glo4003.air.api.user.dto.UserDto;
 
 import javax.naming.AuthenticationException;
 import java.util.logging.Logger;
@@ -55,17 +55,21 @@ public class UserService {
         }
     }
 
-    public UserDto updateAuthenticatedUser(String token, UserPreferencesDto userPreferencesDto) throws InvalidTokenException {
+    public User authenticateUser(String token) throws InvalidTokenException {
         try {
-            UserPreferences userPreferences = userAssembler.createUserPreferences(userPreferencesDto);
-            User user = findUser(tokenDecoder.decode(token));
-            updateUser(user, userPreferences);
-            userRepository.update(user);
-            return userAssembler.create(user);
-        } catch (InvalidTokenException | UserNotFoundException e) {
-            logger.info("Unable to find the authenticated user because the token is invalid.");
-            throw new InvalidTokenException("Invalid token.", e);
+            return findUser(tokenDecoder.decode(token));
+        } catch (UserNotFoundException e) {
+            logger.info("Unable to find the user because the token is invalid.");
+            throw new InvalidTokenException("Unable to find the user because the token is invalid.", e);
         }
+    }
+
+    public UserDto updateAuthenticatedUser(String token, UserPreferencesDto userPreferencesDto) throws InvalidTokenException {
+        UserPreferences userPreferences = userAssembler.createUserPreferences(userPreferencesDto);
+        User user = authenticateUser(token);
+        updateUser(user, userPreferences);
+        userRepository.update(user);
+        return userAssembler.create(user);
     }
 
     private void updateUser(User user, UserPreferences userPreferences) {
