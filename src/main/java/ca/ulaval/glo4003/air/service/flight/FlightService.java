@@ -14,13 +14,11 @@ public class FlightService {
     private final Logger logger = Logger.getLogger(FlightService.class.getName());
 
     private final FlightRepository flightRepository;
-    private final WeightFilterVerifier weightFilterVerifier;
     private final DateTimeFactory dateTimeFactory;
     private final FlightAssembler flightAssembler;
 
-    public FlightService(FlightRepository flightRepository, WeightFilterVerifier weightFilterVerifier, DateTimeFactory dateTimeFactory, FlightAssembler flightAssembler) {
+    public FlightService(FlightRepository flightRepository, DateTimeFactory dateTimeFactory, FlightAssembler flightAssembler) {
         this.flightRepository = flightRepository;
-        this.weightFilterVerifier = weightFilterVerifier;
         this.dateTimeFactory = dateTimeFactory;
         this.flightAssembler = flightAssembler;
     }
@@ -49,7 +47,7 @@ public class FlightService {
         query.acceptsWeight(weight);
         List<Flight> flightsFilteredByWeight = query.toList();
 
-        boolean flightsWereFilteredByWeight = weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, allFlights);
+        boolean flightsWereFilteredByWeight = flightsFilteredByWeight.size() < allFlights.size();
         FlightSearchResult searchResult = new FlightSearchResult(flightsFilteredByWeight, weight, flightsWereFilteredByWeight);
         return flightAssembler.create(searchResult);
     }
