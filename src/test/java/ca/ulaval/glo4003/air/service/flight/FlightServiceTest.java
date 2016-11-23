@@ -33,8 +33,6 @@ public class FlightServiceTest {
     private static final LocalDateTime NOW_DATE = LocalDateTime.now();
     private static double WEIGHT = 40.5;
     private static boolean ONLY_AIRVIVANT = true;
-    private static final String DATE_STRING = DATE.toString();
-    private static final String WEIGHT_STRING = "30.0";
 
     @Mock
     private FlightRepository flightRepository;
