@@ -24,7 +24,10 @@ public class FlightAssembler {
 
     public FlightSearchResultDto create(FlightSearchResult flightSearchResult) {
         FlightSearchResultDto flightSearchResultDto = new FlightSearchResultDto();
-        flightSearchResultDto.flights = flightSearchResult.getFlightsFilteredByWeight().stream().map(flight -> create(flight, flightSearchResult.getWeight())).collect(Collectors.toList());
+        flightSearchResultDto.flights = flightSearchResult.getFlightsFilteredByWeight()
+                                                          .stream()
+                                                          .map(flight -> create(flight, flightSearchResult.getWeight()))
+                                                          .collect(Collectors.toList());
         flightSearchResultDto.flightsWereFilteredByWeight = flightSearchResult.isFlightsWereFilteredByWeight();
         return flightSearchResultDto;
     }
