@@ -41,9 +41,8 @@
             <input type="button" class="btn btn-primary" ng-click="detectWeight()" value="Detect Weight Automatically"/>
         </div>
         <div class="form-group">
-            <label>My luggage is the alive to the living of life</label>
-            <input type="checkbox" ng-model="formData.onlyAirVivant"
-                   ng-true-value="'true'" ng-false-value="'false'">
+            <label>My luggage is alive</label>
+            <input type="checkbox" ng-model="formData.onlyAirVivant">
         </div>
         <div class="form-actions">
             <button type="submit" ng-disabled="!(formData.luggageWeight && formData.from && formData.to)"
