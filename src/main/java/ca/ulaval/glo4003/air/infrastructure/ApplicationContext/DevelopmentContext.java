@@ -10,7 +10,6 @@ import ca.ulaval.glo4003.air.api.weightdetection.WeightDetectionResource;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.airplane.Airplane;
 import ca.ulaval.glo4003.air.domain.flight.Flight;
-import ca.ulaval.glo4003.air.domain.flight.WeightFilterVerifier;
 import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifier;
 import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifierConfiguration;
 import ca.ulaval.glo4003.air.domain.notification.TransactionNotifier;
@@ -124,9 +123,8 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
         List<Flight> flights = flightDevDataFactory.createMockData(airplanes);
         flights.forEach(flightRepository::save);
 
-        WeightFilterVerifier weightFilterVerifier = new WeightFilterVerifier();
         DateTimeFactory dateTimeFactory = new DateTimeFactory();
-        return new FlightService(flightRepository, weightFilterVerifier, dateTimeFactory, flightAssembler);
+        return new FlightService(flightRepository, dateTimeFactory, flightAssembler);
     }
 
 
