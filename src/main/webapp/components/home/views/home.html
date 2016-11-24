@@ -105,12 +105,16 @@
                     <p>{{flight.humanDepartureAirport}}</p>
                     <label>Arrival airport</label>
                     <p>{{flight.humanArrivalAirport}}</p>
-                    <label>Available seats</label>
-                    <p>{{flight.availableSeats}}</p>
-                    <label>Seat price</label>
-                    <p>{{flight.seatPrice | currency}}</p>
                     <label>Departure date</label>
                     <p>{{flight.departureDate}}</p>
+                    <label>Available seats</label>
+                    <p>Economic : {{flight.availableSeatsDto.economicSeats}}</p>
+                    <p>Regular : {{flight.availableSeatsDto.regularSeats}}</p>
+                    <p>Business : {{flight.availableSeatsDto.businessSeats}}</p>
+                    <label>Seats pricing</label>
+                    <p>Economic : {{flight.seatsPricingDto.economicSeatsPrice | currency}}</p>
+                    <p>Regular : {{flight.seatsPricingDto.regularSeatsPrice | currency}}</p>
+                    <p>Business : {{flight.seatsPricingDto.businessSeatsPrice | currency}}</p>
                 </div>
 
                 <div class="modal-footer">

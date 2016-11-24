@@ -12,15 +12,17 @@ public class Flight {
     private final LocalDateTime departureDate;
     private final String airlineCompany;
     private final Airplane airplane;
-    private final Seats seats;
+    private final AvailableSeats availableSeats;
+    private final SeatsPricing seatsPricing;
 
-    public Flight(String departureAirport, String arrivalAirport, LocalDateTime departureDate, String airlineCompany, Airplane airplane, SeatsPricing seatsPricing) {
+    public Flight(String departureAirport, String arrivalAirport, LocalDateTime departureDate, String airlineCompany, Airplane airplane, SeatsPricing seatsPricing, AvailableSeatsFactory availableSeatsFactory) {
         this.departureAirport = departureAirport;
         this.arrivalAirport = arrivalAirport;
         this.departureDate = departureDate;
         this.airlineCompany = airlineCompany;
         this.airplane = airplane;
-        seats = new Seats(airplane.getSeatMap(), seatsPricing);
+        this.seatsPricing = seatsPricing;
+        this.availableSeats = availableSeatsFactory.createFromSeatMap(airplane.getSeatMap());
     }
 
     public boolean isDepartingFrom(String departureAirport) {
@@ -60,11 +62,11 @@ public class Flight {
     }
 
     public void reserveSeats(SeatMap seatMap) {
-        seats.reserve(seatMap); //todo
+        availableSeats.reserve(seatMap);
     }
 
     public void releaseSeats(SeatMap seatMap) {
-        seats.release(seatMap); //todo
+        availableSeats.release(seatMap);
     }
 
     private boolean isOnSameDay(LocalDateTime date1, LocalDateTime date2) {
@@ -87,7 +89,11 @@ public class Flight {
         return airlineCompany;
     }
 
-    public Seats getSeats() {
-        return this.seats;
+    public AvailableSeats getAvailableSeats() {
+        return this.availableSeats;
+    }
+
+    public SeatsPricing getSeatsPricing() {
+        return seatsPricing;
     }
 }

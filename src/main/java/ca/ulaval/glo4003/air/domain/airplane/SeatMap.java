@@ -1,5 +1,7 @@
 package ca.ulaval.glo4003.air.domain.airplane;
 
+import java.util.Objects;
+
 public class SeatMap {
 
     private final int economicSeats;
@@ -22,5 +24,20 @@ public class SeatMap {
 
     public int getBusinessSeats() {
         return businessSeats;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SeatMap seatMap = (SeatMap) o;
+        return economicSeats == seatMap.economicSeats &&
+            regularSeats == seatMap.regularSeats &&
+            businessSeats == seatMap.businessSeats;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(economicSeats, regularSeats, businessSeats);
     }
 }
