@@ -4,7 +4,7 @@ import java.util.List;
 
 public class WeightFilterVerifier {
 
-    public boolean verifyFlightsFilteredByWeightWithFilters(List<Flight> flightsPossiblyFilteredByWeights, List<Flight> flightsNotFilteredByWeights) {
+    public boolean verifyFlightsFilteredByWeightWithFilters(List<PassengerFlight> flightsPossiblyFilteredByWeights, List<PassengerFlight> flightsNotFilteredByWeights) {
         return flightsPossiblyFilteredByWeights.size() < flightsNotFilteredByWeights.size();
     }
 }

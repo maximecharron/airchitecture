@@ -6,14 +6,15 @@ import ca.ulaval.glo4003.air.domain.airplane.Airplane;
 import java.time.LocalDateTime;
 
 public class AirCargoFlight extends Flight{
-    public AirCargoFlight(String departureAirport, String arrivalAirport, LocalDateTime departureDate, String airlineCompany, Airplane airplane, float seatPrice) {
-        super(departureAirport, arrivalAirport, departureDate, airlineCompany, airplane, seatPrice);
+
+    private double price;
+
+    public AirCargoFlight(String departureAirport, String arrivalAirport, LocalDateTime departureDate, String airlineCompany, Airplane airplane, double price) {
+        super(departureAirport, arrivalAirport, departureDate, airlineCompany, airplane);
+        this.price = price;
     }
 
-    @Override
-    public boolean acceptsWeight(double weight) {
-        return true;
-    }
+
 
     @Override
     public boolean isAirCargo() {
@@ -23,5 +24,9 @@ public class AirCargoFlight extends Flight{
     @Override
     public boolean isPassengerFlight() {
         return false;
+    }
+
+    public double getPrice() {
+        return price;
     }
 }

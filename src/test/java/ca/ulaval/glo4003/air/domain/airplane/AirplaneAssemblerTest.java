@@ -2,26 +2,19 @@ package ca.ulaval.glo4003.air.domain.airplane;
 
 import ca.ulaval.glo4003.air.api.airplane.dto.AirplaneDto;
 import ca.ulaval.glo4003.air.api.airplane.dto.AirplaneSearchResultDto;
-import ca.ulaval.glo4003.air.api.flight.dto.FlightDto;
-import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
-import ca.ulaval.glo4003.air.domain.airplane.Airplane;
 import ca.ulaval.glo4003.air.transfer.airplane.AirplaneAssembler;
 import ca.ulaval.glo4003.air.transfer.airplane.SeatMapAssembler;
-import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.anyDouble;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)

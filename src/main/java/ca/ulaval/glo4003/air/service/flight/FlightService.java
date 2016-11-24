@@ -37,8 +37,7 @@ public class FlightService {
 
         FlightQueryBuilder query = flightRepository.query()
                                                    .isDepartingFrom(departureAirport)
-                                                   .isGoingTo(arrivalAirport)
-                                                   .isNotAirCargo();
+                                                   .isGoingTo(arrivalAirport);
 
         if (departureDate != null) {
             query.isLeavingOn(departureDate);
@@ -50,37 +49,36 @@ public class FlightService {
             query.isAirVivant();
         }
 
-        List<Flight> allFlights = query.toList();
+        List<PassengerFlight> allPassengerFlights = query.getPassengerFlights();
         query.acceptsWeight(weight);
-        List<Flight> flightsFilteredByWeight = query.toList();
+        List<PassengerFlight> flightsFilteredByWeight = query.getPassengerFlights();
 
-        boolean flightsWereFilteredByWeight = weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, allFlights);
+        boolean flightsWereFilteredByWeight = weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, allPassengerFlights);
 
-        Map<Flight, Flight> flightsWithAirCargo = new HashMap<>();
+        Map<PassengerFlight, AirCargoFlight> flightsWithAirCargo = new HashMap<>();
         if (flightsWereFilteredByWeight && acceptsAirCargo) {
-            allFlights.removeAll(flightsFilteredByWeight);
-            flightsWithAirCargo.putAll(searchForAirCargo(allFlights, departureAirport, arrivalAirport, isOnlyAirVivant));
+            allPassengerFlights.removeAll(flightsFilteredByWeight);
+            flightsWithAirCargo.putAll(searchForAirCargo(allPassengerFlights, departureAirport, arrivalAirport, isOnlyAirVivant));
         }
 
         FlightSearchResult searchResult = new FlightSearchResult(flightsFilteredByWeight, weight, flightsWereFilteredByWeight, flightsWithAirCargo);
         return flightAssembler.create(searchResult);
     }
 
-    private Map<Flight, Flight> searchForAirCargo(List<Flight> allFlights, String departureAirport, String arrivalAirport, boolean isOnlyAirVivant) {
+    private Map<PassengerFlight, AirCargoFlight> searchForAirCargo(List<PassengerFlight> allFlights, String departureAirport, String arrivalAirport, boolean isOnlyAirVivant) {
         FlightQueryBuilder query = flightRepository.query()
                 .isDepartingFrom(departureAirport)
-                .isGoingTo(arrivalAirport)
-                .isAirCargo();
+                .isGoingTo(arrivalAirport);
 
         if (isOnlyAirVivant) {
             query.isAirVivant();
         }
 
-        List<Flight> airCargoFlights = query.toList();
-        Map<Flight, Flight> flightsWithAirCargo = new HashMap<>();
+        List<AirCargoFlight> airCargoFlights = query.getAirCargoFlights();
+        Map<PassengerFlight, AirCargoFlight> flightsWithAirCargo = new HashMap<>();
 
         allFlights.forEach(flight -> {
-            Optional<Flight> optionalAirCargoFlight = airCargoFlights.stream().filter(airCargoFlight -> airCargoFlight.isLeavingWithinXDaysOf(flight.getDepartureDate(), 3)).findFirst();
+            Optional<AirCargoFlight> optionalAirCargoFlight = airCargoFlights.stream().filter(airCargoFlight -> airCargoFlight.isLeavingWithinXDaysOf(flight.getDepartureDate(), 3)).findFirst();
             if (optionalAirCargoFlight.isPresent()) {
                 flightsWithAirCargo.put(flight, optionalAirCargoFlight.get());
             }
@@ -98,23 +96,23 @@ public class FlightService {
     }
 
     public void reservePlacesInFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate, SeatMap seatMap) throws FlightNotFoundException {
-        Flight flight = findFlight(airlineCompany, arrivalAirport, departureDate);
+        PassengerFlight flight = findPassengerFlight(airlineCompany, arrivalAirport, departureDate);
         flight.reserveSeats(seatMap);
         this.flightRepository.save(flight);
     }
 
     public void releasePlacesInFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate, SeatMap seatMap) throws FlightNotFoundException {
-        Flight flight = findFlight(airlineCompany, arrivalAirport, departureDate);
+        PassengerFlight flight = findPassengerFlight(airlineCompany, arrivalAirport, departureDate);
         flight.releaseSeats(seatMap);
         this.flightRepository.save(flight);
     }
 
-    private Flight findFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate) throws FlightNotFoundException {
+    private PassengerFlight findPassengerFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate) throws FlightNotFoundException {
         return flightRepository.query()
                                .hasAirlineCompany(airlineCompany)
                                .isGoingTo(arrivalAirport)
                                .isLeavingOn(departureDate)
-                               .findOne()
+                               .findOnePassengerFlight()
                                .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
     }
 

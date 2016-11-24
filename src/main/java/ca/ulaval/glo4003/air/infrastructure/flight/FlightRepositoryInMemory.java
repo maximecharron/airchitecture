@@ -1,8 +1,6 @@
 package ca.ulaval.glo4003.air.infrastructure.flight;
 
-import ca.ulaval.glo4003.air.domain.flight.Flight;
-import ca.ulaval.glo4003.air.domain.flight.FlightQueryBuilder;
-import ca.ulaval.glo4003.air.domain.flight.FlightRepository;
+import ca.ulaval.glo4003.air.domain.flight.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -57,12 +55,6 @@ public class FlightRepositoryInMemory implements FlightRepository {
         }
 
         @Override
-        public FlightQueryBuilder isLeavingWithinXDaysOf(LocalDateTime date, int numberOfDays) {
-            predicates.add(flight -> flight.isLeavingWithinXDaysOf(date, numberOfDays));
-            return this;
-        }
-
-        @Override
         public FlightQueryBuilder acceptsWeight(double weight) {
             predicates.add(flight -> flight.acceptsWeight(weight));
             return this;
@@ -75,33 +67,31 @@ public class FlightRepositoryInMemory implements FlightRepository {
         }
 
         @Override
-        public FlightQueryBuilder isAirCargo() {
-            predicates.add(flight -> flight.isAirCargo());
-            return this;
-        }
-
-        @Override
-        public FlightQueryBuilder isNotAirCargo() {
-            predicates.add(flight -> !flight.isAirCargo());
-            return this;
-        }
-
-        @Override
         public FlightQueryBuilder hasAirlineCompany(String airlineCompany) {
             predicates.add(flight -> flight.isFromCompany(airlineCompany));
             return this;
         }
 
         @Override
-        public List<Flight> toList() {
+        public List<PassengerFlight> getPassengerFlights() {
             Stream<Flight> filteredFlights = filterFlights();
-            return filteredFlights.collect(Collectors.toList());
+            return filteredFlights.filter(flight -> flight.isPassengerFlight()).map(flight -> (PassengerFlight) flight).collect(Collectors.toList());
         }
 
         @Override
-        public Optional<Flight> findOne() {
+        public List<AirCargoFlight> getAirCargoFlights() {
             Stream<Flight> filteredFlights = filterFlights();
-            return filteredFlights.findFirst();
+            return filteredFlights.filter(flight -> flight.isAirCargo()).map(flight -> (AirCargoFlight) flight).collect(Collectors.toList());
+        }
+
+        @Override
+        public Optional<PassengerFlight> findOnePassengerFlight() {
+            Stream<Flight> filteredFlights = filterFlights();
+            return filteredFlights.filter(flight -> flight.isPassengerFlight()).map(flight -> (PassengerFlight) flight).findFirst();
+        }
+
+        private Stream<PassengerFlight> filterPassengerFlights(Stream<Flight> flights) {
+            return flights.filter(flight -> flight.isPassengerFlight()).map(flight -> (PassengerFlight) flight);
         }
 
         private Stream<Flight> filterFlights() {

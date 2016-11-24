@@ -4,6 +4,6 @@ import java.util.List;
 
 public class FlightSearchResultDto {
 
-    public List<FlightDto> flights;
+    public List<PassengerFlightDto> flights;
     public boolean flightsWereFilteredByWeight;
 }

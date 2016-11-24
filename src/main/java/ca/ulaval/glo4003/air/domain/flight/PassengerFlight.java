@@ -1,23 +1,36 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
 import ca.ulaval.glo4003.air.domain.airplane.Airplane;
+import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 
 import java.time.LocalDateTime;
 
-/**
- * Created by bishop on 2016-11-23.
- */
+
 public class PassengerFlight extends Flight {
-    public PassengerFlight(String departureAirport, String arrivalAirport, LocalDateTime departureDate, String airlineCompany, Airplane airplane, float seatPrice) {
-        super(departureAirport, arrivalAirport, departureDate, airlineCompany, airplane, seatPrice);
+
+    private final AvailableSeats availableSeats;
+    private final SeatsPricing seatsPricing;
+
+    public PassengerFlight(String departureAirport, String arrivalAirport, LocalDateTime departureDate, String airlineCompany, Airplane airplane, SeatsPricing seatsPricing, AvailableSeatsFactory availableSeatsFactory) {
+        super(departureAirport, arrivalAirport, departureDate, airlineCompany, airplane);
+        this.seatsPricing = seatsPricing;
+        this.availableSeats = availableSeatsFactory.createFromSeatMap(airplane.getSeatMap());
     }
 
-    public void reservePlaces(int ticketsQuantity) {
-        availableSeats = availableSeats - ticketsQuantity;
+    public AvailableSeats getAvailableSeats() {
+        return this.availableSeats;
     }
 
-    public void releasePlaces(int ticketsQuantity) {
-        availableSeats = availableSeats + ticketsQuantity;
+    public SeatsPricing getSeatsPricing() {
+        return seatsPricing;
+    }
+
+    public void reserveSeats(SeatMap seatMap) {
+        availableSeats.reserve(seatMap);
+    }
+
+    public void releaseSeats(SeatMap seatMap) {
+        availableSeats.release(seatMap);
     }
 
     @Override

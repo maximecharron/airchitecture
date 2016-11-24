@@ -5,19 +5,19 @@ import java.util.Map;
 
 public class FlightSearchResult {
 
-    private final List<Flight> flightsFilteredByWeight;
+    private final List<PassengerFlight> flightsFilteredByWeight;
     private final double weight;
     private final boolean flightsWereFilteredByWeight;
-    private final Map<Flight, Flight> flightsWithAirCargo;
+    private final Map<PassengerFlight, AirCargoFlight> flightsWithAirCargo;
 
-    public FlightSearchResult(List<Flight> flightsFilteredByWeight, double weight, boolean flightsWereFilteredByWeight, Map<Flight, Flight> flightsWithAirCargo) {
+    public FlightSearchResult(List<PassengerFlight> flightsFilteredByWeight, double weight, boolean flightsWereFilteredByWeight, Map<PassengerFlight, AirCargoFlight> flightsWithAirCargo) {
         this.flightsFilteredByWeight = flightsFilteredByWeight;
         this.weight = weight;
         this.flightsWereFilteredByWeight = flightsWereFilteredByWeight;
         this.flightsWithAirCargo = flightsWithAirCargo;
     }
 
-    public List<Flight> getFlightsFilteredByWeight() {
+    public List<PassengerFlight> getFlightsFilteredByWeight() {
         return flightsFilteredByWeight;
     }
 
@@ -53,7 +53,7 @@ public class FlightSearchResult {
         return result;
     }
 
-    public Map<Flight, Flight> getFlightsWithAirCargo() {
+    public Map<PassengerFlight, AirCargoFlight> getFlightsWithAirCargo() {
         return flightsWithAirCargo;
     }
 }

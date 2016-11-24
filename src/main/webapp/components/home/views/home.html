@@ -45,6 +45,11 @@
             <input type="checkbox" ng-model="formData.onlyAirVivant"
                    ng-true-value="'true'" ng-false-value="'false'">
         </div>
+        <div class="form-group">
+            <label>My luggage can travel on a different airplane than me</label>
+            <input type="checkbox" ng-model="formData.acceptsAirCargo"
+                   ng-true-value="'true'" ng-false-value="'false'">
+        </div>
         <div class="form-actions">
             <button type="submit" ng-disabled="!(formData.luggageWeight && formData.from && formData.to)"
                     class="btn btn-primary">Find flights!
@@ -112,9 +117,16 @@
                     <p>Regular : {{flight.availableSeatsDto.regularSeats}}</p>
                     <p>Business : {{flight.availableSeatsDto.businessSeats}}</p>
                     <label>Seats pricing</label>
-                    <p>Economic : {{flight.seatsPricingDto.economicSeatsPrice | currency}}</p>
-                    <p>Regular : {{flight.seatsPricingDto.regularSeatsPrice | currency}}</p>
-                    <p>Business : {{flight.seatsPricingDto.businessSeatsPrice | currency}}</p>
+                    <div ng-show="!flight.airCargoFlight">
+                        <p>Economic : {{flight.seatsPricingDto.economicSeatsPrice | currency}}</p>
+                        <p>Regular : {{flight.seatsPricingDto.regularSeatsPrice | currency}}</p>
+                        <p>Business : {{flight.seatsPricingDto.businessSeatsPrice | currency}}</p>
+                    </div>
+                    <div ng-show="flight.airCargoFlight">
+                        <p>Economic : {{flight.seatsPricingDto.economicSeatsPrice + flight.airCargoFlight.price | currency}}</p>
+                        <p>Regular : {{flight.seatsPricingDto.regularSeatsPrice + flight.airCargoFlight.price | currency}}</p>
+                        <p>Business : {{flight.seatsPricingDto.businessSeatsPrice + flight.airCargoFlight.price | currency}}</p>
+                    </div>
                 </div>
 
                 <div class="modal-footer">

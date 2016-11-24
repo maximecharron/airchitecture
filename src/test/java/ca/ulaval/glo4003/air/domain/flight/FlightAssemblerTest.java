@@ -1,6 +1,6 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
-import ca.ulaval.glo4003.air.api.flight.dto.FlightDto;
+import ca.ulaval.glo4003.air.api.flight.dto.PassengerFlightDto;
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.domain.airplane.Airplane;
 import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
@@ -14,7 +14,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,6 +35,7 @@ public class FlightAssemblerTest {
     private static final double WEIGHT = 30.0;
     private static final boolean A_FILTERED_BY_WEIGHT_RESULT = true;
     private static final String AIRLINE_COMPANY = "AirFrenette";
+    private static final Map<PassengerFlight, AirCargoFlight> PASSENGER_FLIGHTS_WITH_AIR_CARGO = new HashMap<>();
 
     @Mock
     private Airplane airplane;
@@ -59,18 +62,18 @@ public class FlightAssemblerTest {
 
     @Test
     public void givenAFlight_whenCreatingAFlightDto_thenItHasAllTheRelevantProperties() {
-        Flight flight = givenAFlight();
+        PassengerFlight flight = givenAPassengerFlight();
 
-        FlightDto flightDto = flightAssembler.create(flight, WEIGHT);
+        PassengerFlightDto passengerFlightDto = flightAssembler.create(flight, WEIGHT);
 
-        assertHasAllTheRelevantProperties(flight, flightDto);
+        assertHasAllTheRelevantProperties(flight, passengerFlightDto);
     }
 
     @Test
     public void givenFlights_whenCreatingAFlightSearchDto_thenFlightsAreMappedToTheirEquivalentDto() {
-        Flight flight = givenAFlight();
-        List<Flight> flights = Stream.of(flight).collect(Collectors.toList());
-        FlightSearchResult flightSearchResult = new FlightSearchResult(flights, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT, flightsWithAirCargo);
+        PassengerFlight flight = givenAPassengerFlight();
+        List<PassengerFlight> flights = Stream.of(flight).collect(Collectors.toList());
+        FlightSearchResult flightSearchResult = new FlightSearchResult(flights, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT, PASSENGER_FLIGHTS_WITH_AIR_CARGO);
 
         FlightSearchResultDto flightSearchResultDto = flightAssembler.create(flightSearchResult);
 
@@ -79,31 +82,31 @@ public class FlightAssemblerTest {
 
     @Test
     public void givenFlightFilteredByWeightResult_whenCreatingAFlightSearchDtoWithThisResult_thenItHasTheSameFlightFilteredByWeightResult() {
-        Flight flight = givenAFlight();
-        List<Flight> flights = Stream.of(flight).collect(Collectors.toList());
-        FlightSearchResult flightSearchResult = new FlightSearchResult(flights, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT, flightsWithAirCargo);
+        PassengerFlight flight = givenAPassengerFlight();
+        List<PassengerFlight> flights = Stream.of(flight).collect(Collectors.toList());
+        FlightSearchResult flightSearchResult = new FlightSearchResult(flights, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT, PASSENGER_FLIGHTS_WITH_AIR_CARGO);
 
         FlightSearchResultDto flightSearchResultDto = flightAssembler.create(flightSearchResult);
 
         assertEquals(A_FILTERED_BY_WEIGHT_RESULT, flightSearchResultDto.flightsWereFilteredByWeight);
     }
 
-    private Flight givenAFlight() {
-        return new Flight(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, AIRLINE_COMPANY, airplane, SEATS_PRICING, availableSeatsFactory);
+    private PassengerFlight givenAPassengerFlight() {
+        return new PassengerFlight(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, AIRLINE_COMPANY, airplane, SEATS_PRICING, availableSeatsFactory);
     }
 
-    private void assertHasAllTheRelevantProperties(Flight flight, FlightDto flightDto) {
-        assertEquals(flight.getAirlineCompany(), flightDto.airlineCompany);
-        assertEquals(flight.getAvailableSeats().getEconomicSeats(), flightDto.availableSeatsDto.economicSeats);
-        assertEquals(flight.getAvailableSeats().getRegularSeats(), flightDto.availableSeatsDto.regularSeats);
-        assertEquals(flight.getAvailableSeats().getBusinessSeats(), flightDto.availableSeatsDto.businessSeats);
-        assertEquals(flight.getSeatsPricing().getEconomicSeatsPrice(), flightDto.seatsPricingDto.economicSeatsPrice, 0);
-        assertEquals(flight.getSeatsPricing().getRegularSeatsPrice(), flightDto.seatsPricingDto.regularSeatsPrice, 0);
-        assertEquals(flight.getSeatsPricing().getBusinessSeatsPrice(), flightDto.seatsPricingDto.businessSeatsPrice, 0);
-        assertEquals(flight.getDepartureAirport(), flightDto.departureAirport);
-        assertEquals(flight.getArrivalAirport(), flightDto.arrivalAirport);
-        assertEquals(flight.getDepartureDate(), flightDto.departureDate);
-        assertEquals(flight.hasAdditionalWeightOption(), flightDto.hasAdditionalWeightOption);
-        assertEquals(flight.acceptsAdditionalWeight(WEIGHT), flightDto.acceptsAdditionalWeight);
+    private void assertHasAllTheRelevantProperties(PassengerFlight flight, PassengerFlightDto passengerFlightDto) {
+        assertEquals(flight.getAirlineCompany(), passengerFlightDto.airlineCompany);
+        assertEquals(flight.getAvailableSeats().getEconomicSeats(), passengerFlightDto.availableSeatsDto.economicSeats);
+        assertEquals(flight.getAvailableSeats().getRegularSeats(), passengerFlightDto.availableSeatsDto.regularSeats);
+        assertEquals(flight.getAvailableSeats().getBusinessSeats(), passengerFlightDto.availableSeatsDto.businessSeats);
+        assertEquals(flight.getSeatsPricing().getEconomicSeatsPrice(), passengerFlightDto.seatsPricingDto.economicSeatsPrice, 0);
+        assertEquals(flight.getSeatsPricing().getRegularSeatsPrice(), passengerFlightDto.seatsPricingDto.regularSeatsPrice, 0);
+        assertEquals(flight.getSeatsPricing().getBusinessSeatsPrice(), passengerFlightDto.seatsPricingDto.businessSeatsPrice, 0);
+        assertEquals(flight.getDepartureAirport(), passengerFlightDto.departureAirport);
+        assertEquals(flight.getArrivalAirport(), passengerFlightDto.arrivalAirport);
+        assertEquals(flight.getDepartureDate(), passengerFlightDto.departureDate);
+        assertEquals(flight.hasAdditionalWeightOption(), passengerFlightDto.hasAdditionalWeightOption);
+        assertEquals(flight.acceptsAdditionalWeight(WEIGHT), passengerFlightDto.acceptsAdditionalWeight);
     }
 }
