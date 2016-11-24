@@ -67,15 +67,11 @@ public class UserService {
     public UserDto updateAuthenticatedUser(String token, UserPreferencesDto userPreferencesDto) throws InvalidTokenException {
         UserPreferences userPreferences = userAssembler.createUserPreferences(userPreferencesDto);
         User user = authenticateUser(token);
-        updateUser(user, userPreferences);
-        userRepository.update(user);
-        return userAssembler.create(user);
-    }
-
-    private void updateUser(User user, UserPreferences userPreferences) {
         if (!userPreferences.userWantsToSeeWeightFilteredAlert()) {
             user.stopShowingFilteredAlert();
         }
+        userRepository.update(user);
+        return userAssembler.create(user);
     }
 
     private User findUser(String email) throws UserNotFoundException {

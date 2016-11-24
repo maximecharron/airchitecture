@@ -1,8 +1,8 @@
 package ca.ulaval.glo4003.air.infrastructure;
 
 import ca.ulaval.glo4003.air.api.config.CORSResponseFilter;
-import ca.ulaval.glo4003.air.infrastructure.ApplicationContext.AirChitectureApplicationContext;
-import ca.ulaval.glo4003.air.infrastructure.ApplicationContext.DevelopmentContext;
+import ca.ulaval.glo4003.air.infrastructure.context.AirChitectureApplicationContext;
+import ca.ulaval.glo4003.air.infrastructure.context.DevelopmentContext;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;

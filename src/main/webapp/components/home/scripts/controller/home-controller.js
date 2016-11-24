@@ -64,6 +64,7 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
             for (var index in data.flights) {
                 var flight = data.flights[index];
                 flight.id = flight.airlineCompany + flight.departureDate + flight.arrivalAirport;
+                flight.availableSeats = flight.availableSeatsDto.regularSeats + flight.availableSeatsDto.economicSeats + flight.availableSeatsDto.businessSeats;
                 flight.humanArrivalAirport = $scope.formData.to.name;
                 flight.humanDepartureAirport = $scope.formData.from.name;
                 flight.luggageWeight = $scope.formData.luggageWeight;

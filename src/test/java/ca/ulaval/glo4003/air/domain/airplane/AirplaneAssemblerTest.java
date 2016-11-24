@@ -6,6 +6,7 @@ import ca.ulaval.glo4003.air.api.flight.dto.FlightDto;
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.domain.airplane.Airplane;
 import ca.ulaval.glo4003.air.transfer.airplane.AirplaneAssembler;
+import ca.ulaval.glo4003.air.transfer.airplane.SeatMapAssembler;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +22,7 @@ import java.util.stream.Stream;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AirplaneAssemblerTest {
@@ -29,12 +31,16 @@ public class AirplaneAssemblerTest {
     private static final int SEATS = 42;
     private static final double ACCEPTED_ADDITIONNAL_WEIGHT = 100;
     private static final boolean IS_AIR_VIVANT = true;
+    private static final SeatMap SEAT_MAP = new SeatMap(100, 60, 20);
 
     private AirplaneAssembler airplaneAssembler;
 
+    @Mock
+    private SeatMapAssembler seatMapAssembler;
+
     @Before
     public void setup() {
-        airplaneAssembler = new AirplaneAssembler();
+        airplaneAssembler = new AirplaneAssembler(seatMapAssembler);
     }
 
     @Test
@@ -58,11 +64,11 @@ public class AirplaneAssemblerTest {
     }
 
     private AirLourdAirplane givenAnAirplane() {
-        return new AirLourdAirplane(SEATS, ACCEPTED_ADDITIONNAL_WEIGHT, IS_AIR_VIVANT, SERIAL_NUMBER);
+        return new AirLourdAirplane(SEAT_MAP, ACCEPTED_ADDITIONNAL_WEIGHT, IS_AIR_VIVANT, SERIAL_NUMBER);
     }
 
     private void assertHasAllTheRelevantProperties(AirLourdAirplane airplane, AirplaneDto airplaneDto) {
-        assertEquals(airplane.getAvailableSeats(), airplaneDto.availableSeats);
+        verify(seatMapAssembler).create(airplane.getSeatMap());
         assertEquals(airplane.getMaximumWeight(), airplaneDto.maximumWeight, 0.01);
         assertEquals(airplane.getSerialNumber(), airplaneDto.serialNumber);
         assertEquals(airplane.getAcceptedAdditionalWeight(), airplaneDto.acceptedAdditionalWeight, 0.01);
