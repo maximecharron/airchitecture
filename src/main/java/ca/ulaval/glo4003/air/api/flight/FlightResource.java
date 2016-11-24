@@ -27,7 +27,7 @@ public class FlightResource {
     public FlightSearchResultDto findAllWithFilters(@QueryParam("from") String departureAirport,
                                                     @QueryParam("to") String arrivalAirport,
                                                     @QueryParam("datetime") String departureDate,
-                                                    @QueryParam("weight") Double weight,
+                                                    @QueryParam("weight") double weight,
                                                     @QueryParam("onlyAirVivant") boolean onlyAirVivant) {
         LocalDateTime parsedDate = null;
         if (departureDate != null) {
