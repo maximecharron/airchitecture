@@ -7,6 +7,7 @@ import ca.ulaval.glo4003.air.domain.transaction.cart.CartItem;
 import ca.ulaval.glo4003.air.service.flight.FlightService;
 import ca.ulaval.glo4003.air.transfer.transaction.CartItemAssembler;
 
+import java.time.LocalDateTime;
 import java.util.logging.Logger;
 
 public class CartItemService {
@@ -20,13 +21,13 @@ public class CartItemService {
         this.cartItemAssembler = cartItemAssembler;
     }
 
-    public void reserveTickets(CartItemDto cartItemDto) throws FlightNotFoundException {
+    public void reserveTickets(CartItemDto cartItemDto, LocalDateTime airCargoDepartureDate) throws FlightNotFoundException {
         CartItem cartItem = cartItemAssembler.create(cartItemDto);
         try {
             SeatMap seatMap = cartItem.getSeatMap();
             this.flightService.reservePlacesInFlight(cartItem.getAirlineCompany(), cartItem.getArrivalAirport(), cartItem.getDepartureDate(), seatMap);
-            if (cartItemDto.airCargoFlight != null) {
-                this.flightService.reserveSpaceInAirCargoFlight(cartItemDto.airCargoFlight, cartItem.getLuggageWeight());
+            if (cartItemDto.airCargoDepartureDate != null) {
+                this.flightService.reserveSpaceInAirCargoFlight(cartItemDto.airCargoAirLineCompany, cartItem.getArrivalAirport(), airCargoDepartureDate, cartItem.getLuggageWeight());
             }
         } catch (FlightNotFoundException e) {
             logger.info("Unable to reserve tickets for flight " + cartItem.getAirlineCompany() + " " + cartItem.getArrivalAirport() + " because it doesn't exist");
@@ -34,13 +35,13 @@ public class CartItemService {
         }
     }
 
-    public void releaseTickets(CartItemDto cartItemDto) throws FlightNotFoundException {
+    public void releaseTickets(CartItemDto cartItemDto, LocalDateTime airCargoDepartureDate) throws FlightNotFoundException {
         CartItem cartItem = cartItemAssembler.create(cartItemDto);
         try {
             SeatMap seatMap = cartItem.getSeatMap();
             this.flightService.releasePlacesInFlight(cartItem.getAirlineCompany(), cartItem.getArrivalAirport(), cartItem.getDepartureDate(), seatMap);
-            if (cartItemDto.airCargoFlight != null) {
-                this.flightService.releaseSpaceInAirCargoFlight(cartItemDto.airCargoFlight, cartItem.getLuggageWeight());
+            if (cartItemDto.airCargoDepartureDate != null) {
+                this.flightService.releaseSpaceInAirCargoFlight(cartItemDto.airCargoAirLineCompany, cartItem.getArrivalAirport(), airCargoDepartureDate, cartItem.getLuggageWeight());
             }
         } catch (FlightNotFoundException e) {
             logger.info("Unable to release tickets for flight " + cartItem.getAirlineCompany() + " " + cartItem.getArrivalAirport() + " because it doesn't exist");
