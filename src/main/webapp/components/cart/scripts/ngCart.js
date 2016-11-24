@@ -53,20 +53,23 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
                         "arrivalAirport": data.arrivalAirport,
                         "airlineCompany": data.airlineCompany,
                         "departureDate": data.departureDate,
+                        "airCargoFlight": data.airCargoFlight,
                         "seatMapDto": {"economicSeats": 1, "regularSeats": 0, "businessSeats": 0}
                     });
-                } else if (id.indexOf("Business") > -1) {
+                } else if (id.indexOf("Regular") > -1) {
                     cartResource.reserveTicket({
                         "arrivalAirport": data.arrivalAirport,
                         "airlineCompany": data.airlineCompany,
                         "departureDate": data.departureDate,
+                        "airCargoFlight": data.airCargoFlight,
                         "seatMapDto": {"economicSeats": 0, "regularSeats": 1, "businessSeats": 0}
                     });
-                } else {
+                } else if (id.indexOf("Business") > -1)  {
                     cartResource.reserveTicket({
                         "arrivalAirport": data.arrivalAirport,
                         "airlineCompany": data.airlineCompany,
                         "departureDate": data.departureDate,
+                        "airCargoFlight": data.airCargoFlight,
                         "seatMapDto": {"economicSeats": 0, "regularSeats": 0, "businessSeats": 1}
                     });
                 }
@@ -169,11 +172,12 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
                                 "arrivalAirport": item.getData().arrivalAirport,
                                 "airlineCompany": item.getData().airlineCompany,
                                 "departureDate": item.getData().departureDate,
+                                "airCargoFlight": item.getData().airCargoFlight,
                                 "seatMapDto": {"economicSeats": 1, "regularSeats": 0, "businessSeats": 0}
                             },
                             headers: {'Content-Type': 'application/json;charset=utf-8'}
                         });
-                    } else if (id.indexOf("Business") > -1) {
+                    } else if (id.indexOf("Regular") > -1) {
                         $http({
                             method: 'DELETE',
                             url: 'http://localhost:8081/api/cartItems',
@@ -181,11 +185,12 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
                                 "arrivalAirport": item.getData().arrivalAirport,
                                 "airlineCompany": item.getData().airlineCompany,
                                 "departureDate": item.getData().departureDate,
-                                "seatMapDto": {"economicSeats": 1, "regularSeats": 0, "businessSeats": 0}
+                                "airCargoFlight": item.getData().airCargoFlight,
+                                "seatMapDto": {"economicSeats": 0, "regularSeats": 1, "businessSeats": 0}
                             },
                             headers: {'Content-Type': 'application/json;charset=utf-8'}
                         });
-                    } else {
+                    } else if (id.indexOf("Business") > -1){
                         $http({
                             method: 'DELETE',
                             url: 'http://localhost:8081/api/cartItems',
@@ -193,25 +198,13 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
                                 "arrivalAirport": item.getData().arrivalAirport,
                                 "airlineCompany": item.getData().airlineCompany,
                                 "departureDate": item.getData().departureDate,
-                                "seatMapDto": {"economicSeats": 1, "regularSeats": 0, "businessSeats": 0}
+                                "airCargoFlight": item.getData().airCargoFlight,
+                                "seatMapDto": {"economicSeats": 0, "regularSeats": 0, "businessSeats": 1}
                             },
                             headers: {'Content-Type': 'application/json;charset=utf-8'}
                         });
                     }
-                    $http({
-                            method: 'DELETE',
-                            url: 'http://localhost:8081/api/cartItems',
-                            data: {
-                                "arrivalAirport": item.getData().arrivalAirport,
-                                "airlineCompany": item.getData().airlineCompany,
-                                "departureDate": item.getData().departureDate,
-                                "seatMapDto": {"economicSeats": 1, "regularSeats": 0, "businessSeats": 0}
-                            },
-                            headers: {
-                                'Content-Type': 'application/json;charset=utf-8'
-                            }
-                        }
-                    );
+
                     item.setQuantity(-1, true);
                 }
             });
@@ -222,12 +215,31 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
             var cart = this.getCart();
             angular.forEach(cart.items, function (item, index) {
                 if (item.getId() === id) {
-                    cartResource.reserveTicket({
-                        "arrivalAirport": item.getData().arrivalAirport,
-                        "airlineCompany": item.getData().airlineCompany,
-                        "departureDate": item.getData().departureDate,
-                        "ticketsQuantity": 1
-                    });
+                    if (id.indexOf("Economic") > -1) {
+                        cartResource.reserveTicket({
+                            "arrivalAirport": data.arrivalAirport,
+                            "airlineCompany": data.airlineCompany,
+                            "departureDate": data.departureDate,
+                            "airCargoFlight": data.airCargoFlight,
+                            "seatMapDto": {"economicSeats": 1, "regularSeats": 0, "businessSeats": 0}
+                        });
+                    } else if (id.indexOf("Regular") > -1) {
+                        cartResource.reserveTicket({
+                            "arrivalAirport": data.arrivalAirport,
+                            "airlineCompany": data.airlineCompany,
+                            "departureDate": data.departureDate,
+                            "airCargoFlight": data.airCargoFlight,
+                            "seatMapDto": {"economicSeats": 0, "regularSeats": 1, "businessSeats": 0}
+                        });
+                    } else if (id.indexOf("Business") > -1)  {
+                        cartResource.reserveTicket({
+                            "arrivalAirport": data.arrivalAirport,
+                            "airlineCompany": data.airlineCompany,
+                            "departureDate": data.departureDate,
+                            "airCargoFlight": data.airCargoFlight,
+                            "seatMapDto": {"economicSeats": 0, "regularSeats": 0, "businessSeats": 1}
+                        });
+                    }
                     item.setQuantity(1, true);
                 }
             });
@@ -238,17 +250,46 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
             var cart = this.getCart();
             angular.forEach(cart.items, function (item, index) {
                 if (item.getId() === id) {
-                    $http({
-                        method: 'DELETE',
-                        url: 'http://localhost:8081/api/cartItems',
-                        data: {
-                            "arrivalAirport": item.getData().arrivalAirport,
-                            "airlineCompany": item.getData().airlineCompany,
-                            "departureDate": item.getData().departureDate,
-                            "ticketsQuantity": item.getQuantity()
-                        },
-                        headers: {'Content-Type': 'application/json;charset=utf-8'}
-                    });
+                    if (id.indexOf("Economic") > -1) {
+                        $http({
+                            method: 'DELETE',
+                            url: 'http://localhost:8081/api/cartItems',
+                            data: {
+                                "arrivalAirport": item.getData().arrivalAirport,
+                                "airlineCompany": item.getData().airlineCompany,
+                                "departureDate": item.getData().departureDate,
+                                "airCargoFlight": item.getData().airCargoFlight,
+                                "seatMapDto": {"economicSeats": 1, "regularSeats": 0, "businessSeats": 0}
+                            },
+                            headers: {'Content-Type': 'application/json;charset=utf-8'}
+                        });
+                    } else if (id.indexOf("Regular") > -1) {
+                        $http({
+                            method: 'DELETE',
+                            url: 'http://localhost:8081/api/cartItems',
+                            data: {
+                                "arrivalAirport": item.getData().arrivalAirport,
+                                "airlineCompany": item.getData().airlineCompany,
+                                "departureDate": item.getData().departureDate,
+                                "airCargoFlight": item.getData().airCargoFlight,
+                                "seatMapDto": {"economicSeats": 0, "regularSeats": 1, "businessSeats": 0}
+                            },
+                            headers: {'Content-Type': 'application/json;charset=utf-8'}
+                        });
+                    } else if (id.indexOf("Business") > -1){
+                        $http({
+                            method: 'DELETE',
+                            url: 'http://localhost:8081/api/cartItems',
+                            data: {
+                                "arrivalAirport": item.getData().arrivalAirport,
+                                "airlineCompany": item.getData().airlineCompany,
+                                "departureDate": item.getData().departureDate,
+                                "airCargoFlight": item.getData().airCargoFlight,
+                                "seatMapDto": {"economicSeats": 0, "regularSeats": 0, "businessSeats": 1}
+                            },
+                            headers: {'Content-Type': 'application/json;charset=utf-8'}
+                        });
+                    }
                     cart.items.splice(index, 1);
                 }
             });
@@ -425,6 +466,7 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
                     arrivalAirport: this.getData().arrivalAirport,
                     airlineCompany: this.getData().airlineCompany,
                     departureDate: this.getData().departureDate,
+                  airCargoFlight: this.getData().airCargoFlight,
                   weight: this.getData().luggageWeight,
                     seatMapDto: {economicSeats: 1, regularSeats: 0, businessSeats: 0}
                 };
@@ -433,6 +475,7 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
                     arrivalAirport: this.getData().arrivalAirport,
                     airlineCompany: this.getData().airlineCompany,
                     departureDate: this.getData().departureDate,
+                    airCargoFlight: this.getData().airCargoFlight,
                     weight: this.getData().luggageWeight,
                     seatMapDto: {economicSeats: 0, regularSeats: 1, businessSeats: 0}
                 };
@@ -441,6 +484,7 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
                     arrivalAirport: this.getData().arrivalAirport,
                     airlineCompany: this.getData().airlineCompany,
                     departureDate: this.getData().departureDate,
+                    airCargoFlight: this.getData().airCargoFlight,
                     weight: this.getData().luggageWeight,
                     seatMapDto: {economicSeats: 0, regularSeats: 0, businessSeats: 1}
                 };
