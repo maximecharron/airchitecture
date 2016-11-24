@@ -28,13 +28,14 @@ public class FlightResource {
                                                     @QueryParam("to") String arrivalAirport,
                                                     @QueryParam("datetime") String departureDate,
                                                     @QueryParam("weight") double weight,
-                                                    @QueryParam("onlyAirVivant") boolean onlyAirVivant) {
+                                                    @QueryParam("onlyAirVivant") boolean onlyAirVivant,
+                                                    @QueryParam("acceptsAirCargo") boolean acceptsAirCargo) {
         LocalDateTime parsedDate = null;
         if (departureDate != null) {
             parsedDate = parseDate(departureDate);
         }
         try {
-            return flightService.findAllWithFilters(departureAirport, arrivalAirport, parsedDate, weight, onlyAirVivant);
+            return flightService.findAllWithFilters(departureAirport, arrivalAirport, parsedDate, weight, onlyAirVivant, acceptsAirCargo);
         } catch (InvalidParameterException e){
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
                                                       .entity(e.getMessage())

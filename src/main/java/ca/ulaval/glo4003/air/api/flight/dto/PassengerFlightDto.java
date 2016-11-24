@@ -2,7 +2,7 @@ package ca.ulaval.glo4003.air.api.flight.dto;
 
 import java.time.LocalDateTime;
 
-public class FlightDto {
+public class PassengerFlightDto {
 
     public String departureAirport;
     public String arrivalAirport;
@@ -12,4 +12,5 @@ public class FlightDto {
     public SeatsPricingDto seatsPricingDto;
     public boolean hasAdditionalWeightOption;
     public boolean acceptsAdditionalWeight;
+    public AirCargoFlightDto airCargoFlight;
 }
