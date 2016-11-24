@@ -63,6 +63,15 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
         if ($scope.formData.acceptsAirCargo) {
             searchCriteria.acceptsAirCargo = $scope.formData.acceptsAirCargo;
         }
+        if ($scope.formData.economic) {
+            searchCriteria.hasEconomySeats = $scope.formData.economic;
+        }
+        if ($scope.formData.regular) {
+            searchCriteria.hasRegularSeats = $scope.formData.regular;
+        }
+        if ($scope.formData.business) {
+            searchCriteria.hasBusinessSeats = $scope.formData.business;
+        }
         homeResource.get(searchCriteria, function onSuccess(data) {
             var flights = [];
             for (var index in data.flights) {
