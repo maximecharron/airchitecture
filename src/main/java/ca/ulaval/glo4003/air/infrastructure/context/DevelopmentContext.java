@@ -1,4 +1,4 @@
-package ca.ulaval.glo4003.air.infrastructure.ApplicationContext;
+package ca.ulaval.glo4003.air.infrastructure.context;
 
 import ca.ulaval.glo4003.air.api.airplane.AirplaneResource;
 import ca.ulaval.glo4003.air.api.flight.FlightResource;
@@ -9,6 +9,7 @@ import ca.ulaval.glo4003.air.api.user.UserResource;
 import ca.ulaval.glo4003.air.api.weightdetection.WeightDetectionResource;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.airplane.Airplane;
+import ca.ulaval.glo4003.air.domain.flight.AvailableSeatsFactory;
 import ca.ulaval.glo4003.air.domain.flight.Flight;
 import ca.ulaval.glo4003.air.domain.flight.WeightFilterVerifier;
 import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifier;
@@ -39,7 +40,10 @@ import ca.ulaval.glo4003.air.service.transaction.cart.CartItemService;
 import ca.ulaval.glo4003.air.service.user.UserService;
 import ca.ulaval.glo4003.air.service.weightdetection.WeightDetectionService;
 import ca.ulaval.glo4003.air.transfer.airplane.AirplaneAssembler;
+import ca.ulaval.glo4003.air.transfer.airplane.SeatMapAssembler;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
+import ca.ulaval.glo4003.air.transfer.flight.AvailableSeatsAssembler;
+import ca.ulaval.glo4003.air.transfer.flight.SeatsPricingAssembler;
 import ca.ulaval.glo4003.air.transfer.transaction.CartItemAssembler;
 import ca.ulaval.glo4003.air.transfer.transaction.TransactionAssembler;
 import ca.ulaval.glo4003.air.transfer.user.UserAssembler;
@@ -61,12 +65,15 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
         UserService userService = createUserService(userAssembler);
         UserResource userResource = new UserResource(userService);
 
-        AirplaneService airplaneService = createAirplaneService(airplanes, userService);
+        AvailableSeatsAssembler availableSeatsAssembler = new AvailableSeatsAssembler();
+        SeatMapAssembler seatMapAssembler = new SeatMapAssembler();
+
+        AirplaneService airplaneService = createAirplaneService(airplanes, userService, seatMapAssembler);
         AirplaneResource airplaneResource = new AirplaneResource(airplaneService);
-        FlightService flightService = createFlightService(airplanes);
+        FlightService flightService = createFlightService(airplanes, availableSeatsAssembler);
         FlightResource flightResource = new FlightResource(flightService);
 
-        CartItemAssembler cartItemAssembler = new CartItemAssembler();
+        CartItemAssembler cartItemAssembler = new CartItemAssembler(seatMapAssembler);
         CartItemResource cartItemResource = createCartItemResource(flightService, cartItemAssembler);
         TransactionResource transactionResource = createTransactionResource(cartItemAssembler);
 
@@ -87,9 +94,7 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
 
     private static CartItemResource createCartItemResource(FlightService flightService, CartItemAssembler cartItemAssembler) {
         CartItemService cartItemService = new CartItemService(flightService, cartItemAssembler);
-        CartItemResource cartItemResource = new CartItemResource(cartItemService);
-
-        return cartItemResource;
+        return new CartItemResource(cartItemService);
     }
 
     private static TransactionResource createTransactionResource(CartItemAssembler cartItemAssembler) {
@@ -108,20 +113,20 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
         return airplaneDevDataFactory.createMockData();
     }
 
-    private static AirplaneService createAirplaneService(List<Airplane> airplanes, UserService userService) {
+    private static AirplaneService createAirplaneService(List<Airplane> airplanes, UserService userService, SeatMapAssembler seatMapAssembler) {
         AirplaneRepositoryInMemory flightRepository = new AirplaneRepositoryInMemory();
-        AirplaneAssembler flightAssembler = new AirplaneAssembler();
+        AirplaneAssembler flightAssembler = new AirplaneAssembler(seatMapAssembler);
 
         airplanes.forEach(flightRepository::save);
         return new AirplaneService(flightRepository, flightAssembler, userService);
     }
 
-    private static FlightService createFlightService(List<Airplane> airplanes) {
+    private static FlightService createFlightService(List<Airplane> airplanes, AvailableSeatsAssembler availableSeatsAssembler) {
         FlightRepositoryInMemory flightRepository = new FlightRepositoryInMemory();
-        FlightAssembler flightAssembler = new FlightAssembler();
+        FlightAssembler flightAssembler = new FlightAssembler(availableSeatsAssembler, new SeatsPricingAssembler());
 
         FlightDevDataFactory flightDevDataFactory = new FlightDevDataFactory();
-        List<Flight> flights = flightDevDataFactory.createMockData(airplanes);
+        List<Flight> flights = flightDevDataFactory.createMockData(airplanes, new AvailableSeatsFactory());
         flights.forEach(flightRepository::save);
 
         WeightFilterVerifier weightFilterVerifier = new WeightFilterVerifier();

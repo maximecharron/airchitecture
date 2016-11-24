@@ -1,5 +1,6 @@
 package ca.ulaval.glo4003.air.domain.airplane;
 
+import jersey.repackaged.com.google.common.collect.SetMultimap;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +12,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(MockitoJUnitRunner.class)
 public class AirLourdAirplaneTest {
 
-    private static final int A_NUMBER_OF_AVAILABLE_SEATS = 50;
+    private static final SeatMap A_SEAT_MAP = new SeatMap(100, 90, 20);
     private static final boolean A_IS_AIRVIVANT_VALUE = true;
     private static final double AN_ACCEPTED_ADDITIONAL_WEIGHT = 10;
     private static final double A_WEIGHT = 30;
@@ -23,7 +24,7 @@ public class AirLourdAirplaneTest {
 
     @Before
     public void setUp() throws Exception {
-        airplane = new AirLourdAirplane(A_NUMBER_OF_AVAILABLE_SEATS, AN_ACCEPTED_ADDITIONAL_WEIGHT, A_IS_AIRVIVANT_VALUE, A_SERIAL_NUMBER);
+        airplane = new AirLourdAirplane(A_SEAT_MAP, AN_ACCEPTED_ADDITIONAL_WEIGHT, A_IS_AIRVIVANT_VALUE, A_SERIAL_NUMBER);
     }
 
     @Test

@@ -1,6 +1,7 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
 import ca.ulaval.glo4003.air.domain.airplane.Airplane;
+import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 
 import java.time.LocalDateTime;
 
@@ -11,17 +12,17 @@ public abstract class Flight {
     private final LocalDateTime departureDate;
     private final String airlineCompany;
     private final Airplane airplane;
-    private int availableSeats;
-    private float seatPrice;
+    private final AvailableSeats availableSeats;
+    private final SeatsPricing seatsPricing;
 
-    public Flight(String departureAirport, String arrivalAirport, LocalDateTime departureDate, String airlineCompany, Airplane airplane, float seatPrice) {
+    public Flight(String departureAirport, String arrivalAirport, LocalDateTime departureDate, String airlineCompany, Airplane airplane, SeatsPricing seatsPricing, AvailableSeatsFactory availableSeatsFactory) {
         this.departureAirport = departureAirport;
         this.arrivalAirport = arrivalAirport;
         this.departureDate = departureDate;
         this.airlineCompany = airlineCompany;
         this.airplane = airplane;
-        this.availableSeats = this.airplane.getAvailableSeats();
-        this.seatPrice = seatPrice;
+        this.seatsPricing = seatsPricing;
+        this.availableSeats = availableSeatsFactory.createFromSeatMap(airplane.getSeatMap());
     }
 
     public boolean isDepartingFrom(String departureAirport) {
@@ -64,6 +65,18 @@ public abstract class Flight {
         return airplane.isAirVivant();
     }
 
+    public void reserveSeats(SeatMap seatMap) {
+        availableSeats.reserve(seatMap);
+    }
+
+    public void releaseSeats(SeatMap seatMap) {
+        availableSeats.release(seatMap);
+    }
+
+    private boolean isOnSameDay(LocalDateTime date1, LocalDateTime date2) {
+        return date1.getDayOfYear() == date2.getDayOfYear() && date1.getYear() == date2.getYear();
+    }
+
     public String getDepartureAirport() {
         return departureAirport;
     }
@@ -80,19 +93,11 @@ public abstract class Flight {
         return airlineCompany;
     }
 
-    public int getAvailableSeats() {
+    public AvailableSeats getAvailableSeats() {
         return this.availableSeats;
     }
 
-    public float getSeatPrice() {
-        return seatPrice;
-    }
-
-    public abstract boolean isAirCargo();
-
-    public abstract boolean isPassengerFlight();
-
-    private boolean isOnSameDay(LocalDateTime date1, LocalDateTime date2) {
-        return date1.getDayOfYear() == date2.getDayOfYear() && date1.getYear() == date2.getYear();
+    public SeatsPricing getSeatsPricing() {
+        return seatsPricing;
     }
 }

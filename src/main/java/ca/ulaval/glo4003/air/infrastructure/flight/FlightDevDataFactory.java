@@ -1,10 +1,9 @@
 package ca.ulaval.glo4003.air.infrastructure.flight;
 
-import ca.ulaval.glo4003.air.domain.flight.Flight;
-import ca.ulaval.glo4003.air.domain.airplane.AirLegerAirplane;
-import ca.ulaval.glo4003.air.domain.airplane.AirLourdAirplane;
-import ca.ulaval.glo4003.air.domain.airplane.AirMoyenAirplane;
 import ca.ulaval.glo4003.air.domain.airplane.Airplane;
+import ca.ulaval.glo4003.air.domain.flight.AvailableSeatsFactory;
+import ca.ulaval.glo4003.air.domain.flight.Flight;
+import ca.ulaval.glo4003.air.domain.flight.SeatsPricing;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,18 +12,25 @@ import java.util.List;
 
 public class FlightDevDataFactory {
 
-    private static final String AIR_LEGER = "AirLeger";
-    private static final String AIR_LOURD = "AirLourd";
-    private static final String AIR_MOYEN = "AirMoyen";
+    private static final String AIR_NORMAL = "AirNormal";
 
-    public List<Flight> createMockData(List<Airplane> airplanes) {
+    public List<Flight> createMockData(List<Airplane> airplanes, AvailableSeatsFactory availableSeatsFactory) {
         List<Flight> flights = new ArrayList<>();
 
-        Flight quebecToDublin = new Flight("YQB", "DUB", LocalDateTime.of(2017, 4, 23, 20, 15), AIR_LEGER, airplanes.get(0), 127);
-        Flight torontoToLondon = new Flight("YXU", "YYZ", LocalDateTime.of(2016, 10, 20, 9, 45), AIR_MOYEN, airplanes.get(1), 134.00f);
-        Flight osloToMontreal = new Flight("OSL", "YUL", LocalDateTime.of(2018, 6, 14, 21, 0), AIR_LEGER, airplanes.get(2), 54.98f);
-        Flight montrealToOslo2 = new Flight("YUL", "OSL", LocalDateTime.of(2018, 8, 15, 21, 0), AIR_LOURD, airplanes.get(3), 245.45f);
-        Flight montrealToOslo = new Flight("YUL", "OSL", LocalDateTime.of(2018, 8, 16, 21, 2), AIR_LOURD, airplanes.get(4), 890.65f);
+        SeatsPricing pricing1 = new SeatsPricing(80, 90, 100);
+        Flight quebecToDublin = new Flight("YQB", "DUB", LocalDateTime.of(2017, 4, 23, 20, 15), AIR_NORMAL, airplanes.get(0), pricing1, availableSeatsFactory);
+
+        SeatsPricing pricing2 = new SeatsPricing(12.70, 44.67, 98.11);
+        Flight torontoToLondon = new Flight("YXU", "YYZ", LocalDateTime.of(2016, 10, 20, 9, 45), AIR_NORMAL, airplanes.get(1), pricing2, availableSeatsFactory);
+
+        SeatsPricing pricing3 = new SeatsPricing(300.12, 450.99, 829.29);
+        Flight osloToMontreal = new Flight("OSL", "YUL", LocalDateTime.of(2018, 6, 14, 21, 0), AIR_NORMAL, airplanes.get(2), pricing3, availableSeatsFactory);
+
+        SeatsPricing pricing4 = new SeatsPricing(301.50, 402.12, 503.05);
+        Flight montrealToOslo2 = new Flight("YUL", "OSL", LocalDateTime.of(2018, 8, 15, 21, 0), AIR_NORMAL, airplanes.get(3), pricing4, availableSeatsFactory);
+
+        SeatsPricing pricing5 = new SeatsPricing(250.99, 350.99, 450.99);
+        Flight montrealToOslo = new Flight("YUL", "OSL", LocalDateTime.of(2018, 8, 16, 21, 2), AIR_NORMAL, airplanes.get(4), pricing5, availableSeatsFactory);
 
         flights.addAll(Arrays.asList(quebecToDublin, torontoToLondon, montrealToOslo, montrealToOslo2, osloToMontreal));
         return flights;

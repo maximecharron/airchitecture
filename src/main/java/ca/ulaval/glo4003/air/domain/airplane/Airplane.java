@@ -4,11 +4,11 @@ public abstract class Airplane {
 
     private final String serialNumber;
     private final boolean isAirVivant;
-    private final int availableSeats;
+    private final SeatMap seatMap;
     private final double maximumWeight;
 
-    public Airplane(int availableSeats, double maximumWeight, boolean isAirVivant, String serialNumber) {
-        this.availableSeats = availableSeats;
+    public Airplane(SeatMap seatMap, double maximumWeight, boolean isAirVivant, String serialNumber) {
+        this.seatMap = seatMap;
         this.maximumWeight = maximumWeight;
         this.serialNumber = serialNumber;
         this.isAirVivant = isAirVivant;
@@ -18,8 +18,8 @@ public abstract class Airplane {
         return isAirVivant;
     }
 
-    public int getAvailableSeats() {
-        return availableSeats;
+    public SeatMap getSeatMap() {
+        return seatMap;
     }
 
     public boolean acceptsWeight(double weight) {

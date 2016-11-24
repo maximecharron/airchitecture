@@ -1,4 +1,4 @@
-package ca.ulaval.glo4003.air.infrastructure.ApplicationContext;
+package ca.ulaval.glo4003.air.infrastructure.context;
 
 import java.util.HashSet;
 
