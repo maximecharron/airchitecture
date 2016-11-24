@@ -1,9 +1,6 @@
 package ca.ulaval.glo4003.air.infrastructure.airplane;
 
-import ca.ulaval.glo4003.air.domain.airplane.AirLegerAirplane;
-import ca.ulaval.glo4003.air.domain.airplane.AirLourdAirplane;
-import ca.ulaval.glo4003.air.domain.airplane.AirMoyenAirplane;
-import ca.ulaval.glo4003.air.domain.airplane.Airplane;
+import ca.ulaval.glo4003.air.domain.airplane.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,10 +10,17 @@ public class AirplaneDevDataFactory {
 
     public List<Airplane> createMockData() {
         Airplane airplane1 = new AirLegerAirplane(100, true, "a-darius");
-        Airplane airplane2 = new AirMoyenAirplane(2, true, "a-rucker");
+
+        SeatMap seatMap2 = new SeatMap(1, 1, 0);
+        Airplane airplane2 = new AirMoyenAirplane(seatMap2, true, "a-rucker");
+
         Airplane airplane3 = new AirLegerAirplane(42, false, "a-wagon");
-        Airplane airplane4 = new AirLourdAirplane(17, 1000, true, "a-wheel");
-        Airplane airplane5 = new AirLourdAirplane(13, 0, false, "a-rock");
+
+        SeatMap seatMap3 = new SeatMap(10, 2, 5);
+        Airplane airplane4 = new AirLourdAirplane(seatMap3, 1000, true, "a-wheel");
+
+        SeatMap seatMap4 = new SeatMap(0, 9, 4);
+        Airplane airplane5 = new AirLourdAirplane(seatMap4, 0, false, "a-rock");
 
         return new ArrayList<>(Arrays.asList(airplane1, airplane2, airplane3, airplane4, airplane5));
     }

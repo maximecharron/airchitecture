@@ -2,6 +2,7 @@ package ca.ulaval.glo4003.air.service.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
+import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 import ca.ulaval.glo4003.air.domain.flight.*;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 
@@ -55,22 +56,22 @@ public class FlightService {
     }
 
     private void logRequest(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant) {
-        String query = "Finding all flights from " + departureAirport + " to " + arrivalAirport + "with a luggage weight of " + weight + "lbs" + "with a boolean value for being airvivant is" + isOnlyAirVivant;
+        String query = "Finding all flights from " + departureAirport + " to " + arrivalAirport + " with a luggage weight of " + weight + " lbs with a boolean value for being airVivant is " + isOnlyAirVivant;
         if (departureDate != null) {
             query = query.concat(" on " + departureDate.toString());
         }
         logger.info(query);
     }
 
-    public void reservePlacesInFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate, int ticketsQuantity) throws FlightNotFoundException {
+    public void reservePlacesInFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate, SeatMap seatMap) throws FlightNotFoundException {
         Flight flight = findFlight(airlineCompany, arrivalAirport, departureDate);
-        flight.reservePlaces(ticketsQuantity);
+        flight.reserveSeats(seatMap);
         this.flightRepository.save(flight);
     }
 
-    public void releasePlacesInFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate, int ticketsQuantity) throws FlightNotFoundException {
+    public void releasePlacesInFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate, SeatMap seatMap) throws FlightNotFoundException {
         Flight flight = findFlight(airlineCompany, arrivalAirport, departureDate);
-        flight.releasePlaces(ticketsQuantity);
+        flight.releaseSeats(seatMap);
         this.flightRepository.save(flight);
     }
 

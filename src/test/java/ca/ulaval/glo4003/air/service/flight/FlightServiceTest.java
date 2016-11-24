@@ -2,6 +2,7 @@ package ca.ulaval.glo4003.air.service.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
+import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 import ca.ulaval.glo4003.air.domain.flight.*;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 import org.junit.Before;
@@ -25,7 +26,7 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class FlightServiceTest {
 
-    private static final int TICKETS_QUANTITY = 54;
+    private static final SeatMap A_SEAT_MAP = new SeatMap(150, 100, 50);
     private static final String AIRLINE_COMPANY = "AirFrenette";
     private static final String DEPARTURE_AIRPORT = "YQB";
     private static final String ARRIVAL_AIRPORT = "DUB";
@@ -156,7 +157,7 @@ public class FlightServiceTest {
     @Test
     public void givenAValidFlightIdentifier_whenReservingPlacesForFlight_thenFindFlight() throws FlightNotFoundException {
         willReturn(Optional.of(flight)).given(flightQueryBuilder).findOne();
-        flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
+        flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
 
         verify(flightQueryBuilder).hasAirlineCompany(AIRLINE_COMPANY);
         verify(flightQueryBuilder).isLeavingOn(DATE);
@@ -167,16 +168,16 @@ public class FlightServiceTest {
     public void givenAValidFlightIdentifier_whenReservingPlacesForFlight_thenReservesPlaces() throws FlightNotFoundException {
         willReturn(Optional.of(flight)).given(flightQueryBuilder).findOne();
 
-        flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
+        flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
 
-        verify(flight).reservePlaces(TICKETS_QUANTITY);
+        verify(flight).reserveSeats(A_SEAT_MAP);
     }
 
     @Test
     public void givenAValidFlightIdentifier_whenReservingPlacesForFlight_thenUpdateFlight() throws FlightNotFoundException {
         willReturn(Optional.of(flight)).given(flightQueryBuilder).findOne();
 
-        flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
+        flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
 
         verify(flightRepository).save(flight);
     }
@@ -185,14 +186,14 @@ public class FlightServiceTest {
     public void givenAnInValidFlightIdentifier_whenReservingPlacesForFlight_thenUpdateFlight() throws FlightNotFoundException {
         willReturn(Optional.empty()).given(flightQueryBuilder).findOne();
 
-        flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
+        flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
     }
 
     @Test
     public void givenAValidFlightIdentifier_whenReleasingPlacesForFlight_thenFindFlight() throws FlightNotFoundException {
         willReturn(Optional.of(flight)).given(flightQueryBuilder).findOne();
 
-        flightService.releasePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
+        flightService.releasePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
 
         verify(flightQueryBuilder).hasAirlineCompany(AIRLINE_COMPANY);
         verify(flightQueryBuilder).isLeavingOn(DATE);
@@ -203,16 +204,16 @@ public class FlightServiceTest {
     public void givenAValidFlightIdentifier_whenReleasingPlacesForFlight_thenReleasesPlaces() throws FlightNotFoundException {
         willReturn(Optional.of(flight)).given(flightQueryBuilder).findOne();
 
-        flightService.releasePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
+        flightService.releasePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
 
-        verify(flight).releasePlaces(TICKETS_QUANTITY);
+        verify(flight).releaseSeats(A_SEAT_MAP);
     }
 
     @Test
     public void givenAValidFlightIdentifier_whenReleasingPlacesForFlight_thenUpdateFlight() throws FlightNotFoundException {
         willReturn(Optional.of(flight)).given(flightQueryBuilder).findOne();
 
-        flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
+        flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
 
         verify(flightRepository).save(flight);
     }
@@ -221,7 +222,7 @@ public class FlightServiceTest {
     public void givenAnInValidFlightIdentifier_whenReleasingPlacesForFlight_thenUpdateFlight() throws FlightNotFoundException {
         willReturn(Optional.empty()).given(flightQueryBuilder).findOne();
 
-        flightService.releasePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, TICKETS_QUANTITY);
+        flightService.releasePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
     }
 
     @Test(expected = InvalidParameterException.class)
