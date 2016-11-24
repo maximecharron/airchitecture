@@ -18,7 +18,8 @@
     "ngCart": "ngcart#^1.0.0",
     "angular-ui": "^0.4.0",
     "angular-bootstrap": "^2.2.0",
-    "angular-modal-service": "^0.10.1"
+    "angular-modal-service": "^0.10.1",
+    "angular-datatables": "^0.5.5"
   },
   "resolutions": {
     "angular": "1.4.5",

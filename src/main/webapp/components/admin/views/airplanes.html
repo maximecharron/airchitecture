@@ -1,0 +1,55 @@
+<div>
+    <div>
+        <h3>Airplanes List</h3>
+    </div>
+    <div class="results-container">
+        <table datatable="ng" class="table-hover">
+            <thead>
+                <tr class="table-header">
+                    <th>Serial Number</th>
+                    <th>Maximum Weight</th>
+                    <th>Accepted Additional Weight</th>
+                    <th>AirLourd</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-attr-data-toggle="{{'modal'}}"
+                    data-target="#{{$index}}" ng-repeat="airplane in airplanes">
+                    <td>{{airplane.serialNumber}}</td>
+                    <td>{{airplane.maximumWeight}}</td>
+                    <td>{{airplane.acceptedAdditionalWeight}}</td>
+                    <td>{{airplane.isAirLourd}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="modal fade" id="{{$index}}" ng-repeat="airplane in airplanes" tabindex="-1"
+         role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">{{airplane.serialNumber}}</h4>
+                </div>
+                <div class="modal-body">
+                    <label>Serial Number</label>
+                    <p>{{airplane.serialNumber}}</p>
+                    <label>Maximum Weight</label>
+                    <p>{{airplane.maximumWeight}}</p>
+                    <label>Accepted Additional Weight</label>
+                    <p ng-hide="airplane.isAirLourd">{{airplane.acceptedAdditionalWeight}}</p>
+                    <input ng-show="airplane.isAirLourd"type="number" name="maximumWeight" ng-model="airplane.acceptedAdditionalWeight"
+                           min="0" max="1000" step="0.5" required>
+                </div>
+
+                <div class="modal-footer">
+                    <button ng-show="airplane.isAirLourd" type="button" class="btn btn-primary" ng-click="updateWeight(airplane)">Update weight</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

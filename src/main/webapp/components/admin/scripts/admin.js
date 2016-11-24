@@ -1,3 +1,3 @@
 'use strict';
 
-var adminApp = angular.module('airchitecture.admin', ['ngRoute']);
+var adminApp = angular.module('airchitecture.admin', ['ngRoute', 'datatables']);
