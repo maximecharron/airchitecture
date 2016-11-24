@@ -18,15 +18,15 @@ public class PassengerFlight extends Flight {
     }
 
     public boolean hasAvailableEconomySeats() {
-        return this.getAvailableSeats().getEconomicSeats() > 0;
+        return this.availableSeats.hasEconomicSeats();
     }
 
     public boolean hasAvailableRegularSeats() {
-        return this.getAvailableSeats().getRegularSeats() > 0;
+        return this.availableSeats.hasRegularSeats();
     }
 
     public boolean hasAvailableBusinessSeats() {
-        return this.getAvailableSeats().getBusinessSeats() > 0;
+        return this.availableSeats.hasRegularSeats();
     }
 
     public AvailableSeats getAvailableSeats() {

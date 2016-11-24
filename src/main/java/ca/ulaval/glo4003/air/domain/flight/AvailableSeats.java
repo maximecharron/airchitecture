@@ -37,4 +37,16 @@ public class AvailableSeats {
     public int getBusinessSeats() {
         return businessSeats;
     }
+
+    public boolean hasEconomicSeats() {
+        return economicSeats > 0;
+    }
+
+    public boolean hasRegularSeats() {
+        return regularSeats > 0;
+    }
+
+    public boolean hasBusinessSeats() {
+        return businessSeats > 0;
+    }
 }
