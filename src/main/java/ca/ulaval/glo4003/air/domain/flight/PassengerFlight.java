@@ -17,6 +17,18 @@ public class PassengerFlight extends Flight {
         this.availableSeats = availableSeatsFactory.createFromSeatMap(airplane.getSeatMap());
     }
 
+    public boolean hasAvailableEconomySeats() {
+        return this.getAvailableSeats().getEconomicSeats() > 0;
+    }
+
+    public boolean hasAvailableRegularSeats() {
+        return this.getAvailableSeats().getRegularSeats() > 0;
+    }
+
+    public boolean hasAvailableBusinessSeats() {
+        return this.getAvailableSeats().getBusinessSeats() > 0;
+    }
+
     public AvailableSeats getAvailableSeats() {
         return this.availableSeats;
     }

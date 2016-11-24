@@ -30,11 +30,11 @@ public class FlightService {
         this.flightAssembler = flightAssembler;
     }
 
-    public FlightSearchResultDto findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant, boolean acceptsAirCargo) {
+    public FlightSearchResultDto findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant, boolean acceptsAirCargo, boolean hasEconomySeats, boolean hasRegularSeats, boolean hasBusinessSeats) {
 
         validateAirportsArePresent(departureAirport, arrivalAirport);
         validateWeightIsPresent(weight);
-        logRequest(departureAirport, arrivalAirport, departureDate, weight, isOnlyAirVivant);
+        logRequest(departureAirport, arrivalAirport, departureDate, weight, isOnlyAirVivant, hasEconomySeats, hasRegularSeats, hasBusinessSeats);
 
         FlightQueryBuilder query = flightRepository.query()
                                                    .isDepartingFrom(departureAirport)
@@ -48,6 +48,16 @@ public class FlightService {
 
         if (isOnlyAirVivant) {
             query.isAirVivant();
+        }
+
+        if (hasEconomySeats) {
+            query.hasEconomySeatsAvailable();
+        }
+        if (hasRegularSeats) {
+            query.hasRegularSeatsAvailable();
+        }
+        if (hasBusinessSeats) {
+            query.hasBusinessSeatsAvailable();
         }
 
         List<PassengerFlight> allPassengerFlights = query.getPassengerFlights();
@@ -88,8 +98,8 @@ public class FlightService {
         return flightsWithAirCargo;
     }
 
-    private void logRequest(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant) {
-        String query = "Finding all flights from " + departureAirport + " to " + arrivalAirport + " with a luggage weight of " + weight + " lbs with a boolean value for being airVivant is " + isOnlyAirVivant;
+    private void logRequest(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant, boolean onlyEconomicFlights, boolean onlyRegularFlights, boolean onlyBusinessFlights) {
+        String query = "Finding all flights from " + departureAirport + " to " + arrivalAirport + " with a luggage weight of " + weight + " lbs with a boolean value for being airVivant is " + isOnlyAirVivant + " and show Economic Flights is " + onlyEconomicFlights + " and Regular Flights is " + onlyRegularFlights + " and Business flights is " + onlyBusinessFlights;
         if (departureDate != null) {
             query = query.concat(" on " + departureDate.toString());
         }

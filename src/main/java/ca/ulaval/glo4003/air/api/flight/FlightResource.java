@@ -1,10 +1,8 @@
 package ca.ulaval.glo4003.air.api.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
-import ca.ulaval.glo4003.air.domain.flight.FlightSearchResult;
 import ca.ulaval.glo4003.air.service.flight.FlightService;
 import ca.ulaval.glo4003.air.service.flight.InvalidParameterException;
-import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -29,14 +27,25 @@ public class FlightResource {
                                                     @QueryParam("datetime") String departureDate,
                                                     @QueryParam("weight") double weight,
                                                     @QueryParam("onlyAirVivant") boolean onlyAirVivant,
-                                                    @QueryParam("acceptsAirCargo") boolean acceptsAirCargo) {
+                                                    @QueryParam("acceptsAirCargo") boolean acceptsAirCargo,
+                                                    @QueryParam("hasEconomySeats") boolean hasEconomySeats,
+                                                    @QueryParam("hasRegularSeats") boolean hasRegularSeats,
+                                                    @QueryParam("hasBusinessSeats") boolean hasBusinessSeats) {
         LocalDateTime parsedDate = null;
         if (departureDate != null) {
             parsedDate = parseDate(departureDate);
         }
         try {
-            return flightService.findAllWithFilters(departureAirport, arrivalAirport, parsedDate, weight, onlyAirVivant, acceptsAirCargo);
-        } catch (InvalidParameterException e){
+            return flightService.findAllWithFilters(departureAirport,
+                                                    arrivalAirport,
+                                                    parsedDate,
+                                                    weight,
+                                                    onlyAirVivant,
+                                                    acceptsAirCargo,
+                                                    hasEconomySeats,
+                                                    hasRegularSeats,
+                                                    hasBusinessSeats);
+        } catch (InvalidParameterException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
                                                       .entity(e.getMessage())
                                                       .build());
