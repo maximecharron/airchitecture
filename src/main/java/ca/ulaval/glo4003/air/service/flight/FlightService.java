@@ -27,12 +27,8 @@ public class FlightService {
 
     public FlightSearchResultDto findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant) {
 
-        if (departureAirport == null || arrivalAirport == null) {
-            throw new InvalidParameterException("Missing departure or arrival airport.");
-        }
-        if (weight == 0) {
-            throw new InvalidParameterException("Missing luggage weight.");
-        }
+        validateAirportsArePresent(departureAirport, arrivalAirport);
+        validateWeightIsPresent(weight);
         logRequest(departureAirport, arrivalAirport, departureDate, weight, isOnlyAirVivant);
 
         FlightQueryBuilder query = flightRepository.query()
@@ -87,4 +83,15 @@ public class FlightService {
                                .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
     }
 
+    private void validateAirportsArePresent(String departureAirport, String arrivalAirport) {
+        if (departureAirport == null || arrivalAirport == null) {
+            throw new InvalidParameterException("Missing departure or arrival airport.");
+        }
+    }
+
+    private void validateWeightIsPresent(double weight) {
+        if (weight == 0) {
+            throw new InvalidParameterException("Missing luggage weight.");
+        }
+    }
 }
