@@ -1,7 +1,6 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
 import ca.ulaval.glo4003.air.domain.airplane.Airplane;
-import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 
 import java.time.LocalDateTime;
 
@@ -43,18 +42,6 @@ public abstract class Flight {
 
     public boolean isLeavingWithinXDaysOf(LocalDateTime date, int numberOfDays) {
         return departureDate.isBefore(date.plusDays(numberOfDays));
-    }
-
-    public boolean hasAvailableEconomySeats() {
-        return this.getAvailableSeats().getEconomicSeats() > 0;
-    }
-
-    public boolean hasAvailableRegularSeats() {
-        return this.getAvailableSeats().getRegularSeats() > 0;
-    }
-
-    public boolean hasAvailableBusinessSeats() {
-        return this.getAvailableSeats().getBusinessSeats() > 0;
     }
 
     public boolean acceptsWeight(double weight) {

@@ -51,7 +51,7 @@ public class FlightService {
         }
 
         if (hasEconomySeats) {
-            query.hasEconomicSeatsAvailable();
+            query.hasEconomySeatsAvailable();
         }
         if (hasRegularSeats) {
             query.hasRegularSeatsAvailable();
@@ -60,7 +60,6 @@ public class FlightService {
             query.hasBusinessSeatsAvailable();
         }
 
-        List<Flight> allFlights = query.toList();
         List<PassengerFlight> allPassengerFlights = query.getPassengerFlights();
         query.acceptsWeight(weight);
         List<PassengerFlight> flightsFilteredByWeight = query.getPassengerFlights();

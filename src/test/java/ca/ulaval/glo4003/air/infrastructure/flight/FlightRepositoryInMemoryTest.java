@@ -50,6 +50,26 @@ public class FlightRepositoryInMemoryTest {
     }
 
     @Test
+    public void givenPassengerFlightsWithEconomySeats_whenSearchingForFlightsWithEconomySeats_thenOnlyMatchFlightsAreReturned() {
+        given(matchingFlight.hasAvailableEconomySeats()).willReturn(true);
+
+        List<PassengerFlight> matchingFlights = flightRepository.query().hasEconomySeatsAvailable().getPassengerFlights();
+
+        assertTrue("no matching flights returned", matchingFlights.size() > 0);
+        assertTrue(matchingFlights.stream().allMatch(flight -> flight.hasAvailableEconomySeats()));
+    }
+
+    @Test
+    public void givenPassengerFlightsWithoutEconomySeats_whenSearchingForFlightsWithEconomySeats_thenOnlyMatchFlightsAreReturned() {
+        given(matchingFlight.hasAvailableEconomySeats()).willReturn(false);
+
+        List<PassengerFlight> matchingFlights = flightRepository.query().hasEconomySeatsAvailable().getPassengerFlights();
+
+        assertTrue("A non-supposed matching flight was returned", matchingFlights.size() == 0);
+        assertTrue(matchingFlights.stream().allMatch(flight -> flight.hasAvailableEconomySeats()));
+    }
+
+    @Test
     public void givenPersistedFlights_whenFindingAllFlightsWithDepartingFromFilter_thenOnlyMatchingFlightsAreReturned() {
         List<PassengerFlight> matchingFlights = flightRepository.query().isDepartingFrom(DEPARTURE_AIRPORT).getPassengerFlights();
 

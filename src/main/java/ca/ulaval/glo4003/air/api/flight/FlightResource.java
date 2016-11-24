@@ -27,10 +27,10 @@ public class FlightResource {
                                                     @QueryParam("datetime") String departureDate,
                                                     @QueryParam("weight") double weight,
                                                     @QueryParam("onlyAirVivant") boolean onlyAirVivant,
-                                                    @QueryParam("acceptsAirCargo") boolean acceptsAirCargo) {
-                                                    @QueryParam("onlyEconomicFlights") boolean onlyEconomicFlights,
-                                                    @QueryParam("onlyRegularFlights") boolean onlyRegularFlights,
-                                                    @QueryParam("onlyBusinessFlights") boolean onlyBusinessFlights) {
+                                                    @QueryParam("acceptsAirCargo") boolean acceptsAirCargo,
+                                                    @QueryParam("hasEconomySeats") boolean hasEconomySeats,
+                                                    @QueryParam("hasRegularSeats") boolean hasRegularSeats,
+                                                    @QueryParam("hasBusinessSeats") boolean hasBusinessSeats) {
         LocalDateTime parsedDate = null;
         if (departureDate != null) {
             parsedDate = parseDate(departureDate);
@@ -42,9 +42,9 @@ public class FlightResource {
                                                     weight,
                                                     onlyAirVivant,
                                                     acceptsAirCargo,
-                                                    onlyEconomicFlights,
-                                                    onlyRegularFlights,
-                                                    onlyBusinessFlights);
+                                                    hasEconomySeats,
+                                                    hasRegularSeats,
+                                                    hasBusinessSeats);
         } catch (InvalidParameterException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
                                                       .entity(e.getMessage())

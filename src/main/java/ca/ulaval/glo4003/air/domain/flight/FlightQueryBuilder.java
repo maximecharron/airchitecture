@@ -18,7 +18,7 @@ public interface FlightQueryBuilder {
 
     FlightQueryBuilder isAirVivant();
 
-    FlightQueryBuilder hasEconomicSeatsAvailable();
+    FlightQueryBuilder hasEconomySeatsAvailable();
 
     FlightQueryBuilder hasRegularSeatsAvailable();
 

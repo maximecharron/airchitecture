@@ -67,20 +67,20 @@ public class FlightRepositoryInMemory implements FlightRepository {
         }
 
         @Override
-        public FlightQueryBuilder hasEconomicSeatsAvailable() {
-            predicates.add(flight -> flight.hasAvailableEconomySeats());
+        public FlightQueryBuilder hasEconomySeatsAvailable() {
+            predicates.add(flight -> flight.isPassengerFlight() && ((PassengerFlight)flight).hasAvailableEconomySeats());
             return this;
         }
 
         @Override
         public FlightQueryBuilder hasRegularSeatsAvailable() {
-            predicates.add(flight -> flight.hasAvailableRegularSeats());
+            predicates.add(flight -> flight.isPassengerFlight() && ((PassengerFlight)flight).hasAvailableRegularSeats());
             return this;
         }
 
         @Override
         public FlightQueryBuilder hasBusinessSeatsAvailable() {
-            predicates.add(flight -> flight.hasAvailableBusinessSeats());
+            predicates.add(flight -> flight.isPassengerFlight() && ((PassengerFlight)flight).hasAvailableBusinessSeats());
             return this;
         }
 
