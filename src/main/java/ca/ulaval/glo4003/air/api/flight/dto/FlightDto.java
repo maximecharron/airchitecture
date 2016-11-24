@@ -12,4 +12,5 @@ public class FlightDto {
     public float seatPrice;
     public boolean hasAdditionalWeightOption;
     public boolean acceptsAdditionalWeight;
+    public FlightDto airCargoFlight;
 }

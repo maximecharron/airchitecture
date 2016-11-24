@@ -57,6 +57,12 @@ public class FlightRepositoryInMemory implements FlightRepository {
         }
 
         @Override
+        public FlightQueryBuilder isLeavingWithinXDaysOf(LocalDateTime date, int numberOfDays) {
+            predicates.add(flight -> flight.isLeavingWithinXDaysOf(date, numberOfDays));
+            return this;
+        }
+
+        @Override
         public FlightQueryBuilder acceptsWeight(double weight) {
             predicates.add(flight -> flight.acceptsWeight(weight));
             return this;
@@ -65,6 +71,18 @@ public class FlightRepositoryInMemory implements FlightRepository {
         @Override
         public FlightQueryBuilder isAirVivant() {
             predicates.add(flight -> flight.isAirVivant());
+            return this;
+        }
+
+        @Override
+        public FlightQueryBuilder isAirCargo() {
+            predicates.add(flight -> flight.isAirCargo());
+            return this;
+        }
+
+        @Override
+        public FlightQueryBuilder isNotAirCargo() {
+            predicates.add(flight -> !flight.isAirCargo());
             return this;
         }
 

@@ -1,10 +1,7 @@
 package ca.ulaval.glo4003.air.api.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
-import ca.ulaval.glo4003.air.domain.flight.FlightSearchResult;
 import ca.ulaval.glo4003.air.service.flight.FlightService;
-import ca.ulaval.glo4003.air.service.flight.InvalidParameterException;
-import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,7 +50,7 @@ public class FlightResourceTest {
 
     @Test
     public void givenAFlightResource_whenFindingAllFlightsWithFilters_thenItsDelegatedToTheService() {
-        given(flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, IS_ONLY_AIRVIVANT)).willReturn(flightSearchResultDto);
+        given(flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, IS_ONLY_AIRVIVANT, parsedAcceptsAirCargo)).willReturn(flightSearchResultDto);
 
         FlightSearchResultDto searchResult = flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING, WEIGHT_STRING, IS_ONLY_AIRVIVANT_STRING);
 

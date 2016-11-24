@@ -58,7 +58,7 @@ public class FlightAssemblerTest {
     public void givenFlights_whenCreatingAFlightSearchDto_thenFlightsAreMappedToTheirEquivalentDto() {
         Flight flight = givenAFlight();
         List<Flight> flights = Stream.of(flight).collect(Collectors.toList());
-        FlightSearchResult flightSearchResult = new FlightSearchResult(flights, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT);
+        FlightSearchResult flightSearchResult = new FlightSearchResult(flights, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT, flightsWithAirCargo);
 
         FlightSearchResultDto flightSearchResultDto = flightAssembler.create(flightSearchResult);
 
@@ -69,7 +69,7 @@ public class FlightAssemblerTest {
     public void givenFlightFilteredByWeightResult_whenCreatingAFlightSearchDtoWithThisResult_thenItHasTheSameFlightFilteredByWeightResult() {
         Flight flight = givenAFlight();
         List<Flight> flights = Stream.of(flight).collect(Collectors.toList());
-        FlightSearchResult flightSearchResult = new FlightSearchResult(flights, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT);
+        FlightSearchResult flightSearchResult = new FlightSearchResult(flights, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT, flightsWithAirCargo);
 
         FlightSearchResultDto flightSearchResultDto = flightAssembler.create(flightSearchResult);
 

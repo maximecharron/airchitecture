@@ -4,7 +4,7 @@ import ca.ulaval.glo4003.air.domain.airplane.Airplane;
 
 import java.time.LocalDateTime;
 
-public class Flight {
+public abstract class Flight {
 
     private final String departureAirport;
     private final String arrivalAirport;
@@ -44,6 +44,10 @@ public class Flight {
         return departureDate.isAfter(date);
     }
 
+    public boolean isLeavingWithinXDaysOf(LocalDateTime date, int numberOfDays) {
+        return departureDate.isBefore(date.plusDays(numberOfDays));
+    }
+
     public boolean acceptsWeight(double weight) {
         return airplane.acceptsWeight(weight);
     }
@@ -80,20 +84,15 @@ public class Flight {
         return this.availableSeats;
     }
 
-    public void reservePlaces(int ticketsQuantity) {
-        availableSeats = availableSeats - ticketsQuantity;
-    }
-
-    public void releasePlaces(int ticketsQuantity) {
-        availableSeats = availableSeats + ticketsQuantity;
-    }
-
     public float getSeatPrice() {
         return seatPrice;
     }
 
+    public abstract boolean isAirCargo();
+
+    public abstract boolean isPassengerFlight();
+
     private boolean isOnSameDay(LocalDateTime date1, LocalDateTime date2) {
         return date1.getDayOfYear() == date2.getDayOfYear() && date1.getYear() == date2.getYear();
     }
-
 }

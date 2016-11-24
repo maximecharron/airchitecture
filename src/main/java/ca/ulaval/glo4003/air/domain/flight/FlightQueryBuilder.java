@@ -14,9 +14,15 @@ public interface FlightQueryBuilder {
 
     FlightQueryBuilder isLeavingAfter(LocalDateTime date);
 
+    FlightQueryBuilder isLeavingWithinXDaysOf(LocalDateTime date, int numberOfDays);
+
     FlightQueryBuilder acceptsWeight(double weight);
 
     FlightQueryBuilder isAirVivant();
+
+    FlightQueryBuilder isAirCargo();
+
+    FlightQueryBuilder isNotAirCargo();
 
     FlightQueryBuilder hasAirlineCompany(String flightNumber);
 

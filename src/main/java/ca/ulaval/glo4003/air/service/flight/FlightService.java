@@ -6,7 +6,10 @@ import ca.ulaval.glo4003.air.domain.flight.*;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 public class FlightService {
@@ -25,7 +28,7 @@ public class FlightService {
         this.flightAssembler = flightAssembler;
     }
 
-    public FlightSearchResultDto findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant) {
+    public FlightSearchResultDto findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant, boolean acceptsAirCargo) {
 
         validateAirportsArePresent(departureAirport, arrivalAirport);
         validateWeightIsPresent(weight);
@@ -33,7 +36,8 @@ public class FlightService {
 
         FlightQueryBuilder query = flightRepository.query()
                                                    .isDepartingFrom(departureAirport)
-                                                   .isGoingTo(arrivalAirport);
+                                                   .isGoingTo(arrivalAirport)
+                                                   .isNotAirCargo();
 
         if (departureDate != null) {
             query.isLeavingOn(departureDate);
@@ -50,8 +54,38 @@ public class FlightService {
         List<Flight> flightsFilteredByWeight = query.toList();
 
         boolean flightsWereFilteredByWeight = weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, allFlights);
-        FlightSearchResult searchResult = new FlightSearchResult(flightsFilteredByWeight, weight, flightsWereFilteredByWeight);
+
+        Map<Flight, Flight> flightsWithAirCargo = new HashMap<>();
+        if (flightsWereFilteredByWeight && acceptsAirCargo) {
+            allFlights.removeAll(flightsFilteredByWeight);
+            flightsWithAirCargo.putAll(searchForAirCargo(allFlights, departureAirport, arrivalAirport, isOnlyAirVivant));
+        }
+
+        FlightSearchResult searchResult = new FlightSearchResult(flightsFilteredByWeight, weight, flightsWereFilteredByWeight, flightsWithAirCargo);
         return flightAssembler.create(searchResult);
+    }
+
+    private Map<Flight, Flight> searchForAirCargo(List<Flight> allFlights, String departureAirport, String arrivalAirport, boolean isOnlyAirVivant) {
+        FlightQueryBuilder query = flightRepository.query()
+                .isDepartingFrom(departureAirport)
+                .isGoingTo(arrivalAirport)
+                .isAirCargo();
+
+        if (isOnlyAirVivant) {
+            query.isAirVivant();
+        }
+
+        List<Flight> airCargoFlights = query.toList();
+        Map<Flight, Flight> flightsWithAirCargo = new HashMap<>();
+
+        allFlights.forEach(flight -> {
+            Optional<Flight> optionalAirCargoFlight = airCargoFlights.stream().filter(airCargoFlight -> airCargoFlight.isLeavingWithinXDaysOf(flight.getDepartureDate(), 3)).findFirst();
+            if (optionalAirCargoFlight.isPresent()) {
+                flightsWithAirCargo.put(flight, optionalAirCargoFlight.get());
+            }
+        });
+
+        return flightsWithAirCargo;
     }
 
     private void logRequest(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant) {

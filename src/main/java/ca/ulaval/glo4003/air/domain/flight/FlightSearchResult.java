@@ -1,17 +1,20 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
 import java.util.List;
+import java.util.Map;
 
 public class FlightSearchResult {
 
     private final List<Flight> flightsFilteredByWeight;
     private final double weight;
     private final boolean flightsWereFilteredByWeight;
+    private final Map<Flight, Flight> flightsWithAirCargo;
 
-    public FlightSearchResult(List<Flight> flightsFilteredByWeight, double weight, boolean flightsWereFilteredByWeight) {
+    public FlightSearchResult(List<Flight> flightsFilteredByWeight, double weight, boolean flightsWereFilteredByWeight, Map<Flight, Flight> flightsWithAirCargo) {
         this.flightsFilteredByWeight = flightsFilteredByWeight;
         this.weight = weight;
         this.flightsWereFilteredByWeight = flightsWereFilteredByWeight;
+        this.flightsWithAirCargo = flightsWithAirCargo;
     }
 
     public List<Flight> getFlightsFilteredByWeight() {
@@ -48,5 +51,9 @@ public class FlightSearchResult {
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (flightsWereFilteredByWeight ? 1 : 0);
         return result;
+    }
+
+    public Map<Flight, Flight> getFlightsWithAirCargo() {
+        return flightsWithAirCargo;
     }
 }

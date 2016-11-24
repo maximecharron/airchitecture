@@ -3,7 +3,6 @@ package ca.ulaval.glo4003.air.service.flight;
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.flight.*;
-import ca.ulaval.glo4003.air.domain.user.InvalidPasswordException;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 import org.junit.Before;
 import org.junit.Test;
@@ -83,7 +82,7 @@ public class FlightServiceTest {
 
     @Test
     public void givenSearchFiltersWithADepartureDate_whenFindingAllMatchingFlights_thenTheRepositoryFindsCorrespondingFlights() {
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, parsedAcceptsAirCargo);
 
         verify(flightQueryBuilder).isLeavingOn(DATE);
     }
@@ -92,35 +91,35 @@ public class FlightServiceTest {
     public void givenSearchFiltersWithNoDepartureDate_whenFindingAllMatchingFlights_thenTheRepositoryFindsFutureFlights() {
         given(dateTimeFactory.now()).willReturn(NOW_DATE);
 
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, null, WEIGHT, ONLY_AIRVIVANT);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, null, WEIGHT, ONLY_AIRVIVANT, parsedAcceptsAirCargo);
 
         verify(flightQueryBuilder).isLeavingAfter(NOW_DATE);
     }
 
     @Test
     public void givenSearchFiltersWithADepartingAirport_whenFindingAllMatchingFlights_thenTheRepositoryFindsCorrespondingFlights() {
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, parsedAcceptsAirCargo);
 
         verify(flightQueryBuilder).isDepartingFrom(DEPARTURE_AIRPORT);
     }
 
     @Test
     public void givenSearchFiltersWithAnArrivalAirport_whenFindingAllMatchingFlights_thenTheRepositoryFindsCorrespondingFlights() {
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, parsedAcceptsAirCargo);
 
         verify(flightQueryBuilder).isGoingTo(ARRIVAL_AIRPORT);
     }
 
     @Test
     public void givenSearchFiltersWithAWeight_whenFindingAllMatchingFlights_thenTheRepositoryFindsCorrespondingFlights() {
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, parsedAcceptsAirCargo);
 
         verify(flightQueryBuilder).acceptsWeight(WEIGHT);
     }
 
     @Test
     public void givenSearchFiltersWithAOnlyAirVivantFilter_whenFindingAllMatchingFlights_thenTheRepositoryFindsCorrespondingFlights() {
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, parsedAcceptsAirCargo);
 
         verify(flightQueryBuilder).isAirVivant();
     }
@@ -131,14 +130,14 @@ public class FlightServiceTest {
         given(weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, flights))
             .willReturn(FLIGHT_WERE_FILTERED_BY_WEIGHT_RESULT);
 
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, parsedAcceptsAirCargo);
 
         verify(weightFilterVerifier).verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, flights);
     }
 
     @Test
     public void givenPersistedFlights_whenFindingAllFlightsWithFilters_thenFiltersWithoutWeightBeforeFilteringByWeight() {
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, parsedAcceptsAirCargo);
 
         InOrder inOrder = inOrder(flightQueryBuilder);
         inOrder.verify(flightQueryBuilder).toList();
@@ -152,7 +151,7 @@ public class FlightServiceTest {
         given(weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, flights)).willReturn(FLIGHT_WERE_FILTERED_BY_WEIGHT_RESULT);
         willReturn(flightSearchResultDto).given(flightAssembler).create(any(FlightSearchResult.class));
 
-        FlightSearchResultDto result = flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT);
+        FlightSearchResultDto result = flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, parsedAcceptsAirCargo);
 
         assertEquals(result, flightSearchResultDto);
     }
@@ -232,20 +231,20 @@ public class FlightServiceTest {
     public void givenAMissingDepartureAirport_whenFindingAllFlightsWithFilters_then400IsThrown() {
         String departureAirport = null;
 
-        flightService.findAllWithFilters(departureAirport, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT);
+        flightService.findAllWithFilters(departureAirport, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, parsedAcceptsAirCargo);
     }
 
     @Test(expected = InvalidParameterException.class)
     public void givenAMissingArrivalAirport_whenFindingAllFlightsWithFilters_then400IsThrown() {
         String arrivalAirport = null;
 
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, arrivalAirport, DATE, WEIGHT, ONLY_AIRVIVANT);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, arrivalAirport, DATE, WEIGHT, ONLY_AIRVIVANT, parsedAcceptsAirCargo);
     }
 
     @Test(expected = InvalidParameterException.class)
     public void givenAMissingWeight_whenFindingAllFlightsWithFilters_then400IsThrown() {
         double weight = 0;
 
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, weight, ONLY_AIRVIVANT);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, weight, ONLY_AIRVIVANT, parsedAcceptsAirCargo);
     }
 }
