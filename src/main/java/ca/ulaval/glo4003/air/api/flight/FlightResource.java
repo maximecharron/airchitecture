@@ -27,27 +27,15 @@ public class FlightResource {
     public FlightSearchResultDto findAllWithFilters(@QueryParam("from") String departureAirport,
                                                     @QueryParam("to") String arrivalAirport,
                                                     @QueryParam("datetime") String departureDate,
-                                                    @QueryParam("weight") String weight,
-                                                    @QueryParam("onlyAirVivant") String onlyAirVivant,
-                                                    @QueryParam("acceptsAirCargo") String acceptsAirCargo) {
+                                                    @QueryParam("weight") double weight,
+                                                    @QueryParam("onlyAirVivant") boolean onlyAirVivant,
+                                                    @QueryParam("acceptsAirCargo") boolean acceptsAirCargo) {
         LocalDateTime parsedDate = null;
         if (departureDate != null) {
             parsedDate = parseDate(departureDate);
         }
-        double parsedWeight = 0;
-        if (weight != null){
-            parsedWeight = parseWeight(weight);
-        }
-        boolean parsedOnlyAirVivant = false;
-        if (onlyAirVivant != null) {
-            parsedOnlyAirVivant = Boolean.parseBoolean(onlyAirVivant);
-        }
-        boolean parsedAcceptsAirCargo = false;
-        if (acceptsAirCargo != null) {
-            parsedAcceptsAirCargo = Boolean.parseBoolean(acceptsAirCargo);
-        }
         try {
-            return flightService.findAllWithFilters(departureAirport, arrivalAirport, parsedDate, parsedWeight, parsedOnlyAirVivant, parsedAcceptsAirCargo);
+            return flightService.findAllWithFilters(departureAirport, arrivalAirport, parsedDate, weight, onlyAirVivant, acceptsAirCargo);
         } catch (InvalidParameterException e){
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
                                                       .entity(e.getMessage())
@@ -61,16 +49,6 @@ public class FlightResource {
         } catch (DateTimeParseException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
                                                       .entity("Invalid datetime format. " + e.getMessage())
-                                                      .build());
-        }
-    }
-
-    private double parseWeight(String weight) {
-        try {
-            return Double.parseDouble(weight);
-        } catch (NumberFormatException e) {
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
-                                                      .entity("Invalid weight format. " + e.getMessage())
                                                       .build());
         }
     }
