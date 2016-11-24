@@ -223,29 +223,29 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
                 if (item.getId() === id) {
                     if (id.indexOf("Economic") > -1) {
                         cartResource.reserveTicket({
-                            "arrivalAirport": data.arrivalAirport,
-                            "airlineCompany": data.airlineCompany,
-                            "departureDate": data.departureDate,
-                            "airCargoDepartureDate": data.airCargoDepartureDate,
-                            "airCargoAirLineCompany": data.airCargoAirLineCompany,
+                            "arrivalAirport": item.getData().arrivalAirport,
+                            "airlineCompany": item.getData().airlineCompany,
+                            "departureDate": item.getData().departureDate,
+                            "airCargoDepartureDate": item.getData().airCargoDepartureDate,
+                            "airCargoAirLineCompany": item.getData().airCargoAirLineCompany,
                             "seatMapDto": {"economicSeats": 1, "regularSeats": 0, "businessSeats": 0}
                         });
                     } else if (id.indexOf("Regular") > -1) {
                         cartResource.reserveTicket({
-                            "arrivalAirport": data.arrivalAirport,
-                            "airlineCompany": data.airlineCompany,
-                            "departureDate": data.departureDate,
-                            "airCargoDepartureDate": data.airCargoDepartureDate,
-                            "airCargoAirLineCompany": data.airCargoAirLineCompany,
+                            "arrivalAirport": item.getData().arrivalAirport,
+                            "airlineCompany": item.getData().airlineCompany,
+                            "departureDate": item.getData().departureDate,
+                            "airCargoDepartureDate": item.getData().airCargoDepartureDate,
+                            "airCargoAirLineCompany": item.getData().airCargoAirLineCompany,
                             "seatMapDto": {"economicSeats": 0, "regularSeats": 1, "businessSeats": 0}
                         });
                     } else if (id.indexOf("Business") > -1) {
                         cartResource.reserveTicket({
-                            "arrivalAirport": data.arrivalAirport,
-                            "airlineCompany": data.airlineCompany,
-                            "departureDate": data.departureDate,
-                            "airCargoDepartureDate": data.airCargoDepartureDate,
-                            "airCargoAirLineCompany": data.airCargoAirLineCompany,
+                            "arrivalAirport": item.getData().arrivalAirport,
+                            "airlineCompany": item.getData().airlineCompany,
+                            "departureDate": item.getData().departureDate,
+                            "airCargoDepartureDate": item.getData().airCargoDepartureDate,
+                            "airCargoAirLineCompany": item.getData().airCargoAirLineCompany,
                             "seatMapDto": {"economicSeats": 0, "regularSeats": 0, "businessSeats": 1}
                         });
                     }
