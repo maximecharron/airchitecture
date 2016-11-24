@@ -28,9 +28,9 @@ public class FlightResourceTest {
     private static final String DATE_STRING = DATE.toString();
     private static final double WEIGHT = 30.0;
     private static final boolean IS_ONLY_AIRVIVANT = true;
-    private static final boolean ONLY_ECONOMIC_FLIGHTS = true;
-    private static final boolean ONLY_REGULAR_FLIGHTS = true;
-    private static final boolean ONLY_BUSINESS_FLIGHTS = true;
+    private static final boolean HAS_ECONOMIC_FLIGHTS = false;
+    private static final boolean HAS_REGULAR_FLIGHTS = false;
+    private static final boolean HAS_BUSINESS_FLIGHTS = false;
 
     @Mock
     private FlightService flightService;
@@ -50,9 +50,9 @@ public class FlightResourceTest {
 
     @Test
     public void givenAFlightResource_whenFindingAllFlightsWithFilters_thenItsDelegatedToTheService() {
-        given(flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, IS_ONLY_AIRVIVANT, ONLY_ECONOMIC_FLIGHTS, ONLY_REGULAR_FLIGHTS, ONLY_BUSINESS_FLIGHTS)).willReturn(flightSearchResultDto);
+        given(flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, IS_ONLY_AIRVIVANT, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS)).willReturn(flightSearchResultDto);
 
-        FlightSearchResultDto searchResult = flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING, WEIGHT, IS_ONLY_AIRVIVANT, ONLY_ECONOMIC_FLIGHTS, ONLY_REGULAR_FLIGHTS, ONLY_BUSINESS_FLIGHTS);
+        FlightSearchResultDto searchResult = flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING, WEIGHT, IS_ONLY_AIRVIVANT, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
 
         assertEquals(flightSearchResultDto, searchResult);
     }
@@ -62,7 +62,7 @@ public class FlightResourceTest {
         String badlyFormattedDatetime = "2016-06-bacon";
 
         try {
-            flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, badlyFormattedDatetime, WEIGHT, IS_ONLY_AIRVIVANT, ONLY_ECONOMIC_FLIGHTS, ONLY_REGULAR_FLIGHTS, ONLY_BUSINESS_FLIGHTS);
+            flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, badlyFormattedDatetime, WEIGHT, IS_ONLY_AIRVIVANT, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
             fail("Exception not thrown");
         } catch (WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.BAD_REQUEST_400)));

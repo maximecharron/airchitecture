@@ -26,11 +26,11 @@ public class FlightService {
         this.flightAssembler = flightAssembler;
     }
 
-    public FlightSearchResultDto findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant, boolean onlyEconomicFlights, boolean onlyRegularFlights, boolean onlyBusinessFlights) {
+    public FlightSearchResultDto findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant, boolean hasEconomySeats, boolean hasRegularSeats, boolean hasBusinessSeats) {
 
         validateAirportsArePresent(departureAirport, arrivalAirport);
         validateWeightIsPresent(weight);
-        logRequest(departureAirport, arrivalAirport, departureDate, weight, isOnlyAirVivant, onlyEconomicFlights, onlyRegularFlights, onlyBusinessFlights);
+        logRequest(departureAirport, arrivalAirport, departureDate, weight, isOnlyAirVivant, hasEconomySeats, hasRegularSeats, hasBusinessSeats);
 
         FlightQueryBuilder query = flightRepository.query()
                                                    .isDepartingFrom(departureAirport)
@@ -46,13 +46,13 @@ public class FlightService {
             query.isAirVivant();
         }
 
-        if (onlyEconomicFlights) {
+        if (hasEconomySeats) {
             query.hasEconomicSeatsAvailable();
         }
-        if (onlyRegularFlights) {
+        if (hasRegularSeats) {
             query.hasRegularSeatsAvailable();
         }
-        if (onlyBusinessFlights) {
+        if (hasBusinessSeats) {
             query.hasBusinessSeatsAvailable();
         }
 
