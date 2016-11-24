@@ -25,4 +25,6 @@ public interface FlightQueryBuilder {
     List<AirCargoFlight> getAirCargoFlights();
 
     Optional<PassengerFlight> findOnePassengerFlight();
+
+    Optional<AirCargoFlight> findOneAirCargoFlight();
 }

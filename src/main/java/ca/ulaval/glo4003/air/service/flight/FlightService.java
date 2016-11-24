@@ -1,5 +1,6 @@
 package ca.ulaval.glo4003.air.service.flight;
 
+import ca.ulaval.glo4003.air.api.flight.dto.AirCargoFlightDto;
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
@@ -105,6 +106,27 @@ public class FlightService {
         PassengerFlight flight = findPassengerFlight(airlineCompany, arrivalAirport, departureDate);
         flight.releaseSeats(seatMap);
         this.flightRepository.save(flight);
+    }
+
+    public void reserveSpaceInAirCargoFlight(AirCargoFlightDto airCargoFlight, double luggageWeight) throws FlightNotFoundException {
+        AirCargoFlight flight = findAirCargoFlight(airCargoFlight.airlineCompany, airCargoFlight.arrivalAirport, airCargoFlight.departureDate);
+        flight.reserveSpace(luggageWeight);
+        this.flightRepository.save(flight);
+    }
+
+    public void releaseSpaceInAirCargoFlight(AirCargoFlightDto airCargoFlight, double luggageWeight) throws FlightNotFoundException {
+        AirCargoFlight flight = findAirCargoFlight(airCargoFlight.airlineCompany, airCargoFlight.arrivalAirport, airCargoFlight.departureDate);
+        flight.releaseSpace(luggageWeight);
+        this.flightRepository.save(flight);
+    }
+
+    private AirCargoFlight findAirCargoFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate) throws FlightNotFoundException {
+        return flightRepository.query()
+                .hasAirlineCompany(airlineCompany)
+                .isGoingTo(arrivalAirport)
+                .isLeavingOn(departureDate)
+                .findOneAirCargoFlight()
+                .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
     }
 
     private PassengerFlight findPassengerFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate) throws FlightNotFoundException {

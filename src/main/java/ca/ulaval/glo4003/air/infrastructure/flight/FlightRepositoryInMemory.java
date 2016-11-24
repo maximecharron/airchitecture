@@ -75,23 +75,33 @@ public class FlightRepositoryInMemory implements FlightRepository {
         @Override
         public List<PassengerFlight> getPassengerFlights() {
             Stream<Flight> filteredFlights = filterFlights();
-            return filteredFlights.filter(flight -> flight.isPassengerFlight()).map(flight -> (PassengerFlight) flight).collect(Collectors.toList());
+            return filterPassengerFlights(filteredFlights).collect(Collectors.toList());
         }
 
         @Override
         public List<AirCargoFlight> getAirCargoFlights() {
             Stream<Flight> filteredFlights = filterFlights();
-            return filteredFlights.filter(flight -> flight.isAirCargo()).map(flight -> (AirCargoFlight) flight).collect(Collectors.toList());
+            return filterAirCargoFlights(filteredFlights).collect(Collectors.toList());
         }
 
         @Override
         public Optional<PassengerFlight> findOnePassengerFlight() {
             Stream<Flight> filteredFlights = filterFlights();
-            return filteredFlights.filter(flight -> flight.isPassengerFlight()).map(flight -> (PassengerFlight) flight).findFirst();
+            return filterPassengerFlights(filteredFlights).findFirst();
+        }
+
+        @Override
+        public Optional<AirCargoFlight> findOneAirCargoFlight() {
+            Stream<Flight> filteredFlights = filterFlights();
+            return filterAirCargoFlights(filteredFlights).findFirst();
         }
 
         private Stream<PassengerFlight> filterPassengerFlights(Stream<Flight> flights) {
             return flights.filter(flight -> flight.isPassengerFlight()).map(flight -> (PassengerFlight) flight);
+        }
+
+        private Stream<AirCargoFlight> filterAirCargoFlights(Stream<Flight> flights) {
+            return flights.filter(flight -> flight.isAirCargo()).map(flight -> (AirCargoFlight) flight);
         }
 
         private Stream<Flight> filterFlights() {
