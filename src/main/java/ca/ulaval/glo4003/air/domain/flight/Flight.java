@@ -45,6 +45,18 @@ public class Flight {
         return departureDate.isAfter(date);
     }
 
+    public boolean hasAvailableEconomySeats() {
+        return this.getAvailableSeats().getEconomicSeats() > 0;
+    }
+
+    public boolean hasAvailableRegularSeats() {
+        return this.getAvailableSeats().getRegularSeats() > 0;
+    }
+
+    public boolean hasAvailableBusinessSeats() {
+        return this.getAvailableSeats().getBusinessSeats() > 0;
+    }
+
     public boolean acceptsWeight(double weight) {
         return airplane.acceptsWeight(weight);
     }
@@ -96,4 +108,5 @@ public class Flight {
     public SeatsPricing getSeatsPricing() {
         return seatsPricing;
     }
+
 }

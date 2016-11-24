@@ -18,9 +18,16 @@ public interface FlightQueryBuilder {
 
     FlightQueryBuilder isAirVivant();
 
+    FlightQueryBuilder hasEconomicSeatsAvailable();
+
+    FlightQueryBuilder hasRegularSeatsAvailable();
+
+    FlightQueryBuilder hasBusinessSeatsAvailable();
+
     FlightQueryBuilder hasAirlineCompany(String flightNumber);
 
     List<Flight> toList();
 
     Optional<Flight> findOne();
+
 }
