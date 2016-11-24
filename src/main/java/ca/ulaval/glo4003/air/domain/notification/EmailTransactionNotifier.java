@@ -7,7 +7,7 @@ import ca.ulaval.glo4003.air.domain.transaction.cart.CartItem;
 public class EmailTransactionNotifier implements TransactionNotifier {
 
     private static final String NOTIFICATION_MESSAGE_SUBJECT = "Here are your transaction informations";
-    private static final String NOTIFICATION_MESSAGE_BODY = "Here are the details of your last transaction with us:\n\n%s";
+    private static final String NOTIFICATION_MESSAGE_BODY = "Here are the details of your last transaction with us:\r\n\r\n%s";
 
     private final EmailTransactionNotifierConfiguration emailConfiguration;
     private final EmailSender emailSender;
@@ -20,7 +20,7 @@ public class EmailTransactionNotifier implements TransactionNotifier {
     public void notifyOnNewCompletedTransaction(Transaction transaction) throws NotificationFailedException {
         StringBuilder bodyBuilder = new StringBuilder();
 
-        bodyBuilder.append("\tAIRLINE\t\tDEPARTURE DATE\tTICKETS:\tECO\tREG\tBUS\n\n");
+        bodyBuilder.append("\tAIRLINE\t\tDEPARTURE DATE\tTICKETS:\tECO\tREG\tBUS\r\n\r\n");
 
         for (CartItem cartItem : transaction.getCartItems()) {
             SeatMap seatMap = cartItem.getSeatMap();
