@@ -5,7 +5,7 @@ import ca.ulaval.glo4003.air.domain.airplane.Airplane;
 
 import java.time.LocalDateTime;
 
-public class AirCargoFlight extends Flight{
+public class AirCargoFlight extends Flight {
 
     private double price;
     private double totalWeight = 0;
@@ -14,8 +14,6 @@ public class AirCargoFlight extends Flight{
         super(departureAirport, arrivalAirport, departureDate, airlineCompany, airplane);
         this.price = price;
     }
-
-
 
     @Override
     public boolean isAirCargo() {
@@ -38,4 +36,5 @@ public class AirCargoFlight extends Flight{
     public void releaseSpace(double luggageWeight) {
         totalWeight -= luggageWeight;
     }
+
 }

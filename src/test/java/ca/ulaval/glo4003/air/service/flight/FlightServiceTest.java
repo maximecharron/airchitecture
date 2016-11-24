@@ -32,6 +32,9 @@ public class FlightServiceTest {
     private static final String ARRIVAL_AIRPORT = "DUB";
     private static final LocalDateTime DATE = LocalDateTime.of(2020, 10, 10, 21, 45);
     private static final LocalDateTime NOW_DATE = LocalDateTime.now();
+    private static final boolean HAS_ECONOMIC_FLIGHTS = false;
+    private static final boolean HAS_REGULAR_FLIGHTS = false;
+    private static final boolean HAS_BUSINESS_FLIGHTS = false;
     private static double WEIGHT = 40.5;
     private static boolean ONLY_AIRVIVANT = true;
     private static boolean ACCEPTS_AIRCARGO = false;
@@ -81,7 +84,7 @@ public class FlightServiceTest {
 
     @Test
     public void givenSearchFiltersWithADepartureDate_whenFindingAllMatchingFlights_thenTheRepositoryFindsCorrespondingFlights() {
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
 
         verify(flightQueryBuilder).isLeavingOn(DATE);
     }
@@ -90,35 +93,35 @@ public class FlightServiceTest {
     public void givenSearchFiltersWithNoDepartureDate_whenFindingAllMatchingFlights_thenTheRepositoryFindsFutureFlights() {
         given(dateTimeFactory.now()).willReturn(NOW_DATE);
 
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, null, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, null, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
 
         verify(flightQueryBuilder).isLeavingAfter(NOW_DATE);
     }
 
     @Test
     public void givenSearchFiltersWithADepartingAirport_whenFindingAllMatchingFlights_thenTheRepositoryFindsCorrespondingFlights() {
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
 
         verify(flightQueryBuilder).isDepartingFrom(DEPARTURE_AIRPORT);
     }
 
     @Test
     public void givenSearchFiltersWithAnArrivalAirport_whenFindingAllMatchingFlights_thenTheRepositoryFindsCorrespondingFlights() {
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
 
         verify(flightQueryBuilder).isGoingTo(ARRIVAL_AIRPORT);
     }
 
     @Test
     public void givenSearchFiltersWithAWeight_whenFindingAllMatchingFlights_thenTheRepositoryFindsCorrespondingFlights() {
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
 
         verify(flightQueryBuilder).acceptsWeight(WEIGHT);
     }
 
     @Test
     public void givenSearchFiltersWithAOnlyAirVivantFilter_whenFindingAllMatchingFlights_thenTheRepositoryFindsCorrespondingFlights() {
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
 
         verify(flightQueryBuilder).isAirVivant();
     }
@@ -129,14 +132,14 @@ public class FlightServiceTest {
         given(weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, passengerFlights))
             .willReturn(FLIGHT_WERE_FILTERED_BY_WEIGHT_RESULT);
 
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
 
         verify(weightFilterVerifier).verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, passengerFlights);
     }
 
     @Test
     public void givenPersistedFlights_whenFindingAllFlightsWithFilters_thenFiltersWithoutWeightBeforeFilteringByWeight() {
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
 
         InOrder inOrder = inOrder(flightQueryBuilder);
         inOrder.verify(flightQueryBuilder).getPassengerFlights();
@@ -150,7 +153,7 @@ public class FlightServiceTest {
         given(weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, passengerFlights)).willReturn(FLIGHT_WERE_FILTERED_BY_WEIGHT_RESULT);
         willReturn(flightSearchResultDto).given(flightAssembler).create(any(FlightSearchResult.class));
 
-        FlightSearchResultDto result = flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO);
+        FlightSearchResultDto result = flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
 
         assertEquals(result, flightSearchResultDto);
     }
@@ -230,20 +233,20 @@ public class FlightServiceTest {
     public void givenAMissingDepartureAirport_whenFindingAllFlightsWithFilters_then400IsThrown() {
         String departureAirport = null;
 
-        flightService.findAllWithFilters(departureAirport, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO);
+        flightService.findAllWithFilters(departureAirport, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
     }
 
     @Test(expected = InvalidParameterException.class)
     public void givenAMissingArrivalAirport_whenFindingAllFlightsWithFilters_then400IsThrown() {
         String arrivalAirport = null;
 
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, arrivalAirport, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, arrivalAirport, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
     }
 
     @Test(expected = InvalidParameterException.class)
     public void givenAMissingWeight_whenFindingAllFlightsWithFilters_then400IsThrown() {
         double weight = 0;
 
-        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, weight, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO);
+        flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, weight, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
     }
 }
