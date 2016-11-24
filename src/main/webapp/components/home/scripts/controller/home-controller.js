@@ -7,8 +7,8 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
         from: "",
         to: "",
         date: "",
-        luggageWeight: "",
-        onlyAirVivant: ""
+        luggageWeight: 0.0,
+        onlyAirVivant: false
     };
     $scope.haveResults = false;
     $scope.flightsResults = [];
@@ -53,7 +53,7 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
             searchCriteria.datetime = new Date($scope.formData.date).toISOString().slice(0, 16);
         }
         if ($scope.formData.luggageWeight) {
-            $scope.formData.luggageWeight = Number((Math.ceil($scope.formData.luggageWeight * 2) / 2).toFixed(1));
+            $scope.formData.luggageWeight = Number((Math.ceil($scope.formData.luggageWeight * 2) / 2));
             searchCriteria.weight = $scope.formData.luggageWeight;
         }
         if ($scope.formData.onlyAirVivant) {
