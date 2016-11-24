@@ -8,8 +8,8 @@ public class FlightDto {
     public String arrivalAirport;
     public LocalDateTime departureDate;
     public String airlineCompany;
-    public int availableSeats;
-    public float seatPrice;
+    public AvailableSeatsDto availableSeatsDto;
+    public SeatsPricingDto seatsPricingDto;
     public boolean hasAdditionalWeightOption;
     public boolean acceptsAdditionalWeight;
 }

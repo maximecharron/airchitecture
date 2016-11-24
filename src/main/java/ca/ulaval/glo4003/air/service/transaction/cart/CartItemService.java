@@ -1,6 +1,7 @@
 package ca.ulaval.glo4003.air.service.transaction.cart;
 
 import ca.ulaval.glo4003.air.api.transaction.dto.CartItemDto;
+import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 import ca.ulaval.glo4003.air.domain.flight.FlightNotFoundException;
 import ca.ulaval.glo4003.air.domain.transaction.cart.CartItem;
 import ca.ulaval.glo4003.air.service.flight.FlightService;
@@ -22,7 +23,8 @@ public class CartItemService {
     public void reserveTickets(CartItemDto cartItemDto) throws FlightNotFoundException {
         CartItem cartItem = cartItemAssembler.create(cartItemDto);
         try {
-            this.flightService.reservePlacesInFlight(cartItem.getAirlineCompany(), cartItem.getArrivalAirport(), cartItem.getDepartureDate(), cartItem.getTicketsQuantity());
+            SeatMap seatMap = cartItem.getSeatMap();
+            this.flightService.reservePlacesInFlight(cartItem.getAirlineCompany(), cartItem.getArrivalAirport(), cartItem.getDepartureDate(), seatMap);
         } catch (FlightNotFoundException e) {
             logger.info("Unable to reserve tickets for flight " + cartItem.getAirlineCompany() + " " + cartItem.getArrivalAirport() + " because it doesn't exist");
             throw e;
@@ -32,7 +34,8 @@ public class CartItemService {
     public void releaseTickets(CartItemDto cartItemDto) throws FlightNotFoundException {
         CartItem cartItem = cartItemAssembler.create(cartItemDto);
         try {
-            this.flightService.releasePlacesInFlight(cartItem.getAirlineCompany(), cartItem.getArrivalAirport(), cartItem.getDepartureDate(), cartItem.getTicketsQuantity());
+            SeatMap seatMap = cartItem.getSeatMap();
+            this.flightService.releasePlacesInFlight(cartItem.getAirlineCompany(), cartItem.getArrivalAirport(), cartItem.getDepartureDate(), seatMap);
         } catch (FlightNotFoundException e) {
             logger.info("Unable to release tickets for flight " + cartItem.getAirlineCompany() + " " + cartItem.getArrivalAirport() + " because it doesn't exist");
             throw e;

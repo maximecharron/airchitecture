@@ -1,5 +1,7 @@
 package ca.ulaval.glo4003.air.domain.notification;
 
+import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
+import ca.ulaval.glo4003.air.domain.flight.AvailableSeats;
 import ca.ulaval.glo4003.air.domain.transaction.Transaction;
 import ca.ulaval.glo4003.air.domain.transaction.cart.CartItem;
 import org.junit.Before;
@@ -35,7 +37,8 @@ public class EmailTransactionNotifierTest {
     @Before
     public void setUp() throws IOException {
         List<CartItem> cartItems = new ArrayList<>();
-        cartItems.add(new CartItem(1, "YQB", "AirFrenette", LocalDateTime.now(), 10, 10));
+        SeatMap seatMap = new SeatMap(10, 5, 1);
+        cartItems.add(new CartItem(seatMap, "YQB", "AirFrenette", LocalDateTime.now(), 10));
 
         given(transaction.getEmailAddress()).willReturn(TO_ADDRESS);
         given(transaction.getCartItems()).willReturn(cartItems);

@@ -15,6 +15,12 @@ import java.util.stream.Collectors;
 
 public class AirplaneAssembler {
 
+    private final SeatMapAssembler seatMapAssembler;
+
+    public AirplaneAssembler(SeatMapAssembler seatMapAssembler) {
+        this.seatMapAssembler = seatMapAssembler;
+    }
+
     public AirplaneSearchResultDto createAirplaneSearchResult(AirplaneSearchResult airplaneSearchResult) {
         AirplaneSearchResultDto airplaneSearchResultDto = new AirplaneSearchResultDto();
         airplaneSearchResultDto.airplanes = airplaneSearchResult.getAirplanes().stream().map(this::createAirplane).collect(Collectors.toList());
@@ -23,7 +29,7 @@ public class AirplaneAssembler {
 
     public AirplaneDto createAirplane(Airplane airplane) {
         AirplaneDto airplaneDto = new AirplaneDto();
-        airplaneDto.availableSeats = airplane.getAvailableSeats();
+        airplaneDto.seatMapDto = seatMapAssembler.create(airplane.getSeatMap());
         airplaneDto.maximumWeight = airplane.getMaximumWeight();
         airplaneDto.serialNumber = airplane.getSerialNumber();
 

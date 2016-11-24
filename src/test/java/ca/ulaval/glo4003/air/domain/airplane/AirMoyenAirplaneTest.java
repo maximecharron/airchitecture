@@ -11,18 +11,21 @@ import static org.junit.Assert.assertTrue;
 @RunWith(MockitoJUnitRunner.class)
 public class AirMoyenAirplaneTest {
 
-    private static final int A_NUMBER_OF_AVAILABLE_SEATS = 50;
     private static final boolean A_IS_AIRVIVANT_VALUE = true;
     private static final double A_WEIGHT = 30;
     private static final double A_LOWER_WEIGHT = AirMoyenAirplane.MAXIMUM_WEIGHT - 1;
     private static final double AN_HIGHER_WEIGHT = AirMoyenAirplane.MAXIMUM_WEIGHT + 1;
     private static final String A_SERIAL_NUMBER = "rudolph the red nosed reindeer";
+    private static final int ECONOMIC_SEATS = 20;
+    private static final int REGULAR_SEATS = 10;
+    private static final int BUSINESS_SEATS = 5;
 
     private AirMoyenAirplane airplane;
 
     @Before
     public void setUp() throws Exception {
-        airplane = new AirMoyenAirplane(A_NUMBER_OF_AVAILABLE_SEATS, A_IS_AIRVIVANT_VALUE, A_SERIAL_NUMBER);
+        SeatMap seatMap = new SeatMap(ECONOMIC_SEATS, REGULAR_SEATS, BUSINESS_SEATS);
+        airplane = new AirMoyenAirplane(seatMap, A_IS_AIRVIVANT_VALUE, A_SERIAL_NUMBER);
     }
 
     @Test
