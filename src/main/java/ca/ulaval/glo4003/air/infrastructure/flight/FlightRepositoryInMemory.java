@@ -1,8 +1,6 @@
 package ca.ulaval.glo4003.air.infrastructure.flight;
 
-import ca.ulaval.glo4003.air.domain.flight.Flight;
-import ca.ulaval.glo4003.air.domain.flight.FlightQueryBuilder;
-import ca.ulaval.glo4003.air.domain.flight.FlightRepository;
+import ca.ulaval.glo4003.air.domain.flight.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -93,15 +91,35 @@ public class FlightRepositoryInMemory implements FlightRepository {
         }
 
         @Override
-        public List<Flight> toList() {
+        public List<PassengerFlight> getPassengerFlights() {
             Stream<Flight> filteredFlights = filterFlights();
-            return filteredFlights.collect(Collectors.toList());
+            return filterPassengerFlights(filteredFlights).collect(Collectors.toList());
         }
 
         @Override
-        public Optional<Flight> findOne() {
+        public List<AirCargoFlight> getAirCargoFlights() {
             Stream<Flight> filteredFlights = filterFlights();
-            return filteredFlights.findFirst();
+            return filterAirCargoFlights(filteredFlights).collect(Collectors.toList());
+        }
+
+        @Override
+        public Optional<PassengerFlight> findOnePassengerFlight() {
+            Stream<Flight> filteredFlights = filterFlights();
+            return filterPassengerFlights(filteredFlights).findFirst();
+        }
+
+        @Override
+        public Optional<AirCargoFlight> findOneAirCargoFlight() {
+            Stream<Flight> filteredFlights = filterFlights();
+            return filterAirCargoFlights(filteredFlights).findFirst();
+        }
+
+        private Stream<PassengerFlight> filterPassengerFlights(Stream<Flight> flights) {
+            return flights.filter(flight -> flight.isPassengerFlight()).map(flight -> (PassengerFlight) flight);
+        }
+
+        private Stream<AirCargoFlight> filterAirCargoFlights(Stream<Flight> flights) {
+            return flights.filter(flight -> flight.isAirCargo()).map(flight -> (AirCargoFlight) flight);
         }
 
         private Stream<Flight> filterFlights() {

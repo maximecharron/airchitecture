@@ -50,7 +50,7 @@ public class FlightTest {
 
     @Test
     public void givenAFlight_whenCheckingIfItsLeavingAfterADateFollowingItsDepartureDate_thenItsNot() {
-        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
+        Flight flight = new PassengerFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
 
         boolean result = flight.isLeavingAfter(A_DEPARTURE_DATE.plusDays(1));
 
@@ -59,7 +59,7 @@ public class FlightTest {
 
     @Test
     public void givenAFlight_whenCheckingIfItsLeavingAfterADatePriorToItsDepartureDate_thenItIs() {
-        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
+        Flight flight = new PassengerFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
 
         boolean result = flight.isLeavingAfter(A_DEPARTURE_DATE.minusDays(1));
 
@@ -68,7 +68,7 @@ public class FlightTest {
 
     @Test
     public void givenAFlight_whenCheckingIfItsLeavingAfterItsDepartureDate_thenItsNot() {
-        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
+        Flight flight = new PassengerFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
 
         boolean result = flight.isLeavingAfter(A_DEPARTURE_DATE);
 
@@ -77,49 +77,49 @@ public class FlightTest {
 
     @Test
     public void givenAFlightDepartingFromA_whenCheckingIfItsLeavingFromA_thenItIs() {
-        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
+        Flight flight = new PassengerFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
 
         assertTrue(flight.isDepartingFrom(AIRPORT_A));
     }
 
     @Test
     public void givenAFlightLeavingToB_whenCheckingIfItsGoingToB_thenItIs() {
-        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
+        Flight flight = new PassengerFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
 
         assertTrue(flight.isGoingTo(AIRPORT_B));
     }
 
     @Test
     public void givenAFlightDepartingFromA_whenCheckingIfItsLeavingFromB_thenItIsNot() {
-        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
+        Flight flight = new PassengerFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
 
         assertFalse(flight.isDepartingFrom(AIRPORT_B));
     }
 
     @Test
     public void givenAFlightLeavingToB_whenCheckingIfItsGoingToA_thenItIsNot() {
-        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
+        Flight flight = new PassengerFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
 
         assertFalse(flight.isGoingTo(AIRPORT_A));
     }
 
     @Test
     public void givenAFlightLeavingOnADate_whenCheckingIfItsLeavingOnThisDate_thenItIs() {
-        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
+        Flight flight = new PassengerFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
 
         assertTrue(flight.isLeavingOn(A_DEPARTURE_DATE));
     }
 
     @Test
     public void givenAFlightLeavingOnDateA_whenCheckingIfItsLeavingOnDateB_thenItsNot() {
-        Flight flight = new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
+        Flight flight = new PassengerFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
 
         assertFalse(flight.isLeavingOn(ANOTHER_DEPARTURE_DATE));
     }
 
     @Test
     public void givenAFlight_whenCheckingIfItAcceptsAWeight_thenItsDelegatedToTheAirplane() {
-        Flight flight = givenAFlight();
+        Flight flight = givenAPassengerFlight();
 
         flight.acceptsWeight(A_WEIGHT);
 
@@ -128,7 +128,7 @@ public class FlightTest {
 
     @Test
     public void givenAFlight_whenCheckingIfAcceptingAdditionalWeight_thenItsDelegatedToTheAirplane() {
-        Flight flight = givenAFlight();
+        Flight flight = givenAPassengerFlight();
 
         flight.acceptsAdditionalWeight(A_WEIGHT);
 
@@ -137,7 +137,7 @@ public class FlightTest {
 
     @Test
     public void givenAFlight_whenCheckingIfItHasAdditionalWeightOption_thenItsDelegatedToTheAirplane() {
-        Flight flight = givenAFlight();
+        Flight flight = givenAPassengerFlight();
 
         flight.hasAdditionalWeightOption();
 
@@ -146,7 +146,7 @@ public class FlightTest {
 
     @Test
     public void givenAFlight_whenCheckingIfItIsAirVivant_thenItsDelegatedToTheAirplane() {
-        Flight flight = givenAFlight();
+        Flight flight = givenAPassengerFlight();
 
         flight.isAirVivant();
 
@@ -155,7 +155,7 @@ public class FlightTest {
 
     @Test
     public void givenAFlight_whenReservingPlaces_thenAvailableSeatsDecreases() {
-        Flight flight = givenAFlight();
+        PassengerFlight flight = givenAPassengerFlight();
 
         flight.reserveSeats(A_SEAT_MAP);
 
@@ -164,14 +164,14 @@ public class FlightTest {
 
     @Test
     public void givenAFlight_whenReleasingPlaces_thenAvailableSeatsIncreases() {
-        Flight flight = givenAFlight();
+        PassengerFlight flight = givenAPassengerFlight();
 
         flight.releaseSeats(A_SEAT_MAP);
 
         verify(availableSeats).release(A_SEAT_MAP);
     }
 
-    private Flight givenAFlight() {
-        return new Flight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
+    private PassengerFlight givenAPassengerFlight() {
+        return new PassengerFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
     }
 }

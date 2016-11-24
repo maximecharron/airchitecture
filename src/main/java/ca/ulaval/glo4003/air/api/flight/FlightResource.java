@@ -27,6 +27,7 @@ public class FlightResource {
                                                     @QueryParam("datetime") String departureDate,
                                                     @QueryParam("weight") double weight,
                                                     @QueryParam("onlyAirVivant") boolean onlyAirVivant,
+                                                    @QueryParam("acceptsAirCargo") boolean acceptsAirCargo) {
                                                     @QueryParam("onlyEconomicFlights") boolean onlyEconomicFlights,
                                                     @QueryParam("onlyRegularFlights") boolean onlyRegularFlights,
                                                     @QueryParam("onlyBusinessFlights") boolean onlyBusinessFlights) {
@@ -40,6 +41,7 @@ public class FlightResource {
                                                     parsedDate,
                                                     weight,
                                                     onlyAirVivant,
+                                                    acceptsAirCargo,
                                                     onlyEconomicFlights,
                                                     onlyRegularFlights,
                                                     onlyBusinessFlights);

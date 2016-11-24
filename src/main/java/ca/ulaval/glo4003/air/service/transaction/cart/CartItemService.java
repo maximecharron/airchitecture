@@ -25,6 +25,9 @@ public class CartItemService {
         try {
             SeatMap seatMap = cartItem.getSeatMap();
             this.flightService.reservePlacesInFlight(cartItem.getAirlineCompany(), cartItem.getArrivalAirport(), cartItem.getDepartureDate(), seatMap);
+            if (cartItemDto.airCargoFlight != null) {
+                this.flightService.reserveSpaceInAirCargoFlight(cartItemDto.airCargoFlight, cartItem.getLuggageWeight());
+            }
         } catch (FlightNotFoundException e) {
             logger.info("Unable to reserve tickets for flight " + cartItem.getAirlineCompany() + " " + cartItem.getArrivalAirport() + " because it doesn't exist");
             throw e;
@@ -36,6 +39,9 @@ public class CartItemService {
         try {
             SeatMap seatMap = cartItem.getSeatMap();
             this.flightService.releasePlacesInFlight(cartItem.getAirlineCompany(), cartItem.getArrivalAirport(), cartItem.getDepartureDate(), seatMap);
+            if (cartItemDto.airCargoFlight != null) {
+                this.flightService.releaseSpaceInAirCargoFlight(cartItemDto.airCargoFlight, cartItem.getLuggageWeight());
+            }
         } catch (FlightNotFoundException e) {
             logger.info("Unable to release tickets for flight " + cartItem.getAirlineCompany() + " " + cartItem.getArrivalAirport() + " because it doesn't exist");
             throw e;

@@ -26,8 +26,11 @@ public interface FlightQueryBuilder {
 
     FlightQueryBuilder hasAirlineCompany(String flightNumber);
 
-    List<Flight> toList();
+    List<PassengerFlight> getPassengerFlights();
 
-    Optional<Flight> findOne();
+    List<AirCargoFlight> getAirCargoFlights();
 
+    Optional<PassengerFlight> findOnePassengerFlight();
+
+    Optional<AirCargoFlight> findOneAirCargoFlight();
 }
