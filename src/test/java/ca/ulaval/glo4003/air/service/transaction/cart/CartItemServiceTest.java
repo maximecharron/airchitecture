@@ -53,7 +53,7 @@ public class CartItemServiceTest {
 
     @Test
     public void givenACartItem_whenReservingTickets_thenReservePlacesInFlight() throws FlightNotFoundException {
-        cartItemService.reserveTickets(cartItemDto);
+        cartItemService.reserveTickets(cartItemDto, null);
 
         verify(flightService).reservePlacesInFlight(eq(A_FLIGHT_NUMBER), eq(ARRIVAL_AIRPORT),  any(LocalDateTime.class), eq(SEAT_MAP));
     }
@@ -62,12 +62,12 @@ public class CartItemServiceTest {
     public void givenACartItem_whenReservingTicketsForANonExistentFlight_thenThrowException() throws FlightNotFoundException {
         willThrow(new FlightNotFoundException("")).given(flightService).reservePlacesInFlight(eq(A_FLIGHT_NUMBER), eq(ARRIVAL_AIRPORT),  any(LocalDateTime.class), eq(SEAT_MAP));
 
-        cartItemService.reserveTickets(cartItemDto);
+        cartItemService.reserveTickets(cartItemDto, null);
     }
 
     @Test
     public void givenACartItem_whenReleasingTickets_thenReleasePlacesInFlight() throws FlightNotFoundException {
-        cartItemService.releaseTickets(cartItemDto);
+        cartItemService.releaseTickets(cartItemDto, null);
 
         verify(flightService).releasePlacesInFlight(eq(A_FLIGHT_NUMBER), eq(ARRIVAL_AIRPORT), any(LocalDateTime.class), eq(SEAT_MAP));
     }
@@ -76,6 +76,6 @@ public class CartItemServiceTest {
     public void givenACartItem_whenReleasingTicketsForANonExistentFlight_thenThrowException() throws FlightNotFoundException {
         willThrow(new FlightNotFoundException("")).given(flightService).releasePlacesInFlight(eq(A_FLIGHT_NUMBER), eq(ARRIVAL_AIRPORT),  any(LocalDateTime.class), eq(SEAT_MAP));
 
-        cartItemService.releaseTickets(cartItemDto);
+        cartItemService.releaseTickets(cartItemDto, null);
     }
 }

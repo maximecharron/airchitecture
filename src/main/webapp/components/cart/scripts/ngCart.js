@@ -12,9 +12,9 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
         };
     })
 
-    .run(['$rootScope', 'ngCart','ngCartItem', 'store', function ($rootScope, ngCart, ngCartItem, store) {
+    .run(['$rootScope', 'ngCart', 'ngCartItem', 'store', function ($rootScope, ngCart, ngCartItem, store) {
 
-        $rootScope.$on('ngCart:change', function(){
+        $rootScope.$on('ngCart:change', function () {
             ngCart.$save();
         });
 
@@ -29,12 +29,12 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
 
     .service('ngCart', ['$rootScope', 'ngCartItem', 'store', 'cartResource', '$http', '$location', function ($rootScope, ngCartItem, store, cartResource, $http, $location) {
 
-        this.init = function(){
+        this.init = function () {
             this.$cart = {
-                shipping : null,
-                taxRate : null,
-                tax : null,
-                items : []
+                shipping: null,
+                taxRate: null,
+                tax: null,
+                items: []
             };
         };
 
@@ -42,13 +42,40 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
 
             var inCart = this.getItemById(id);
 
-            if (typeof inCart === 'object'){
+            if (typeof inCart === 'object') {
                 //Update quantity of an item if it's already in the cart
                 inCart.setQuantity(quantity, false);
             } else {
                 var newItem = new ngCartItem(id, name, price, quantity, data);
                 this.$cart.items.push(newItem);
-                cartResource.reserveTicket({"arrivalAirport": data.arrivalAirport, "airlineCompany": data.airlineCompany, "departureDate": data.departureDate, "ticketsQuantity": 1});
+                if (id.indexOf("Economic") > -1) {
+                    cartResource.reserveTicket({
+                        "arrivalAirport": data.arrivalAirport,
+                        "airlineCompany": data.airlineCompany,
+                        "departureDate": data.departureDate,
+                        "airCargoDepartureDate": data.airCargoDepartureDate,
+                        "airCargoAirLineCompany": data.airCargoAirLineCompany,
+                        "seatMapDto": {"economicSeats": 1, "regularSeats": 0, "businessSeats": 0}
+                    });
+                } else if (id.indexOf("Regular") > -1) {
+                    cartResource.reserveTicket({
+                        "arrivalAirport": data.arrivalAirport,
+                        "airlineCompany": data.airlineCompany,
+                        "departureDate": data.departureDate,
+                        "airCargoDepartureDate": data.airCargoDepartureDate,
+                        "airCargoAirLineCompany": data.airCargoAirLineCompany,
+                        "seatMapDto": {"economicSeats": 0, "regularSeats": 1, "businessSeats": 0}
+                    });
+                } else if (id.indexOf("Business") > -1) {
+                    cartResource.reserveTicket({
+                        "arrivalAirport": data.arrivalAirport,
+                        "airlineCompany": data.airlineCompany,
+                        "departureDate": data.departureDate,
+                        "airCargoDepartureDate": data.airCargoDepartureDate,
+                        "airCargoAirLineCompany": data.airCargoAirLineCompany,
+                        "seatMapDto": {"economicSeats": 0, "regularSeats": 0, "businessSeats": 1}
+                    });
+                }
                 $rootScope.$broadcast('ngCart:itemAdded', newItem);
             }
 
@@ -60,34 +87,34 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
             var build = false;
 
             angular.forEach(items, function (item) {
-                if  (item.getId() === itemId) {
+                if (item.getId() === itemId) {
                     build = item;
                 }
             });
             return build;
         };
 
-        this.setShipping = function(shipping){
+        this.setShipping = function (shipping) {
             this.$cart.shipping = shipping;
             return this.getShipping();
         };
 
-        this.getShipping = function(){
+        this.getShipping = function () {
             if (this.getCart().items.length == 0) return 0;
-            return  this.getCart().shipping;
+            return this.getCart().shipping;
         };
 
-        this.setTaxRate = function(taxRate){
+        this.setTaxRate = function (taxRate) {
             this.$cart.taxRate = +parseFloat(taxRate).toFixed(2);
             return this.getTaxRate();
         };
 
-        this.getTaxRate = function(){
+        this.getTaxRate = function () {
             return this.$cart.taxRate
         };
 
-        this.getTax = function(){
-            return +parseFloat(((this.getSubTotal()/100) * this.getCart().taxRate )).toFixed(2);
+        this.getTax = function () {
+            return +parseFloat(((this.getSubTotal() / 100) * this.getCart().taxRate )).toFixed(2);
         };
 
         this.setCart = function (cart) {
@@ -95,11 +122,11 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
             return this.getCart();
         };
 
-        this.getCart = function(){
+        this.getCart = function () {
             return this.$cart;
         };
 
-        this.getItems = function(){
+        this.getItems = function () {
             return this.getCart().items;
         };
 
@@ -116,7 +143,7 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
             return this.getCart().items.length;
         };
 
-        this.getSubTotal = function(){
+        this.getSubTotal = function () {
             var total = 0;
             angular.forEach(this.getCart().items, function (item) {
                 total += item.getTotal();
@@ -135,27 +162,93 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
 
         };
 
-        this.removeOne = function(id){
+        this.removeOne = function (id) {
             var cart = this.getCart();
             angular.forEach(cart.items, function (item, index) {
-                if  (item.getId() === id && item.getQuantity() != 1) {
-                    $http({
-                        method: 'DELETE',
-                        url: 'http://localhost:8081/api/cartItems',
-                        data: {"arrivalAirport": item.getData().arrivalAirport, "airlineCompany": item.getData().airlineCompany, "departureDate": item.getData().departureDate, "ticketsQuantity": 1},
-                        headers: {'Content-Type': 'application/json;charset=utf-8'}
-                    });
+                if (item.getId() === id && item.getQuantity() != 1) {
+
+                    if (id.indexOf("Economic") > -1) {
+                        $http({
+                            method: 'DELETE',
+                            url: 'http://localhost:8081/api/cartItems',
+                            data: {
+                                "arrivalAirport": item.getData().arrivalAirport,
+                                "airlineCompany": item.getData().airlineCompany,
+                                "departureDate": item.getData().departureDate,
+                                "airCargoDepartureDate": item.getData().airCargoDepartureDate,
+                                "airCargoAirLineCompany": item.getData().airCargoAirLineCompany,
+                                "seatMapDto": {"economicSeats": 1, "regularSeats": 0, "businessSeats": 0}
+                            },
+                            headers: {'Content-Type': 'application/json;charset=utf-8'}
+                        });
+                    } else if (id.indexOf("Regular") > -1) {
+                        $http({
+                            method: 'DELETE',
+                            url: 'http://localhost:8081/api/cartItems',
+                            data: {
+                                "arrivalAirport": item.getData().arrivalAirport,
+                                "airlineCompany": item.getData().airlineCompany,
+                                "departureDate": item.getData().departureDate,
+                                "airCargoDepartureDate": item.getData().airCargoDepartureDate,
+                                "airCargoAirLineCompany": item.getData().airCargoAirLineCompany,
+                                "seatMapDto": {"economicSeats": 0, "regularSeats": 1, "businessSeats": 0}
+                            },
+                            headers: {'Content-Type': 'application/json;charset=utf-8'}
+                        });
+                    } else if (id.indexOf("Business") > -1) {
+                        $http({
+                            method: 'DELETE',
+                            url: 'http://localhost:8081/api/cartItems',
+                            data: {
+                                "arrivalAirport": item.getData().arrivalAirport,
+                                "airlineCompany": item.getData().airlineCompany,
+                                "departureDate": item.getData().departureDate,
+                                "airCargoDepartureDate": item.getData().airCargoDepartureDate,
+                                "airCargoAirLineCompany": item.getData().airCargoAirLineCompany,
+                                "seatMapDto": {"economicSeats": 0, "regularSeats": 0, "businessSeats": 1}
+                            },
+                            headers: {'Content-Type': 'application/json;charset=utf-8'}
+                        });
+                    }
+
                     item.setQuantity(-1, true);
                 }
             });
             $rootScope.$broadcast('ngCart:change', {});
         }
 
-        this.addOne = function(id){
+        this.addOne = function (id) {
             var cart = this.getCart();
             angular.forEach(cart.items, function (item, index) {
-                if  (item.getId() === id) {
-                    cartResource.reserveTicket({"arrivalAirport": item.getData().arrivalAirport, "airlineCompany": item.getData().airlineCompany, "departureDate": item.getData().departureDate, "ticketsQuantity": 1});
+                if (item.getId() === id) {
+                    if (id.indexOf("Economic") > -1) {
+                        cartResource.reserveTicket({
+                            "arrivalAirport": data.arrivalAirport,
+                            "airlineCompany": data.airlineCompany,
+                            "departureDate": data.departureDate,
+                            "airCargoDepartureDate": data.airCargoDepartureDate,
+                            "airCargoAirLineCompany": data.airCargoAirLineCompany,
+                            "seatMapDto": {"economicSeats": 1, "regularSeats": 0, "businessSeats": 0}
+                        });
+                    } else if (id.indexOf("Regular") > -1) {
+                        cartResource.reserveTicket({
+                            "arrivalAirport": data.arrivalAirport,
+                            "airlineCompany": data.airlineCompany,
+                            "departureDate": data.departureDate,
+                            "airCargoDepartureDate": data.airCargoDepartureDate,
+                            "airCargoAirLineCompany": data.airCargoAirLineCompany,
+                            "seatMapDto": {"economicSeats": 0, "regularSeats": 1, "businessSeats": 0}
+                        });
+                    } else if (id.indexOf("Business") > -1) {
+                        cartResource.reserveTicket({
+                            "arrivalAirport": data.arrivalAirport,
+                            "airlineCompany": data.airlineCompany,
+                            "departureDate": data.departureDate,
+                            "airCargoDepartureDate": data.airCargoDepartureDate,
+                            "airCargoAirLineCompany": data.airCargoAirLineCompany,
+                            "seatMapDto": {"economicSeats": 0, "regularSeats": 0, "businessSeats": 1}
+                        });
+                    }
                     item.setQuantity(1, true);
                 }
             });
@@ -165,13 +258,50 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
         this.removeItemById = function (id) {
             var cart = this.getCart();
             angular.forEach(cart.items, function (item, index) {
-                if  (item.getId() === id) {
-                    $http({
-                        method: 'DELETE',
-                        url: 'http://localhost:8081/api/cartItems',
-                        data: {"arrivalAirport": item.getData().arrivalAirport, "airlineCompany": item.getData().airlineCompany, "departureDate": item.getData().departureDate, "ticketsQuantity": item.getQuantity()},
-                        headers: {'Content-Type': 'application/json;charset=utf-8'}
-                    });
+                if (item.getId() === id) {
+                    if (id.indexOf("Economic") > -1) {
+                        $http({
+                            method: 'DELETE',
+                            url: 'http://localhost:8081/api/cartItems',
+                            data: {
+                                "arrivalAirport": item.getData().arrivalAirport,
+                                "airlineCompany": item.getData().airlineCompany,
+                                "departureDate": item.getData().departureDate,
+                                "airCargoDepartureDate": item.getData().airCargoDepartureDate,
+                                "airCargoAirLineCompany": item.getData().airCargoAirLineCompany,
+                                "seatMapDto": {"economicSeats": 1, "regularSeats": 0, "businessSeats": 0}
+                            },
+                            headers: {'Content-Type': 'application/json;charset=utf-8'}
+                        });
+                    } else if (id.indexOf("Regular") > -1) {
+                        $http({
+                            method: 'DELETE',
+                            url: 'http://localhost:8081/api/cartItems',
+                            data: {
+                                "arrivalAirport": item.getData().arrivalAirport,
+                                "airlineCompany": item.getData().airlineCompany,
+                                "departureDate": item.getData().departureDate,
+                                "airCargoDepartureDate": item.getData().airCargoDepartureDate,
+                                "airCargoAirLineCompany": item.getData().airCargoAirLineCompany,
+                                "seatMapDto": {"economicSeats": 0, "regularSeats": 1, "businessSeats": 0}
+                            },
+                            headers: {'Content-Type': 'application/json;charset=utf-8'}
+                        });
+                    } else if (id.indexOf("Business") > -1) {
+                        $http({
+                            method: 'DELETE',
+                            url: 'http://localhost:8081/api/cartItems',
+                            data: {
+                                "arrivalAirport": item.getData().arrivalAirport,
+                                "airlineCompany": item.getData().airlineCompany,
+                                "departureDate": item.getData().departureDate,
+                                "airCargoDepartureDate": item.getData().airCargoDepartureDate,
+                                "airCargoAirLineCompany": item.getData().airCargoAirLineCompany,
+                                "seatMapDto": {"economicSeats": 0, "regularSeats": 0, "businessSeats": 1}
+                            },
+                            headers: {'Content-Type': 'application/json;charset=utf-8'}
+                        });
+                    }
                     cart.items.splice(index, 1);
                 }
             });
@@ -181,56 +311,56 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
         };
 
         this.empty = function () {
-            
+
             $rootScope.$broadcast('ngCart:change', {});
             this.$cart.items = [];
             localStorage.removeItem('cart');
         };
-        
+
         this.isEmpty = function () {
-            
+
             return (this.$cart.items.length > 0 ? false : true);
-            
+
         };
 
-        this.toObject = function() {
+        this.toObject = function () {
 
             if (this.getItems().length === 0) return false;
 
             var items = [];
-            angular.forEach(this.getItems(), function(item){
-                items.push (item.toObject());
+            angular.forEach(this.getItems(), function (item) {
+                items.push(item.toObject());
             });
 
             return {
-                items:items
+                items: items
             }
         };
 
-        this.toDTO = function(email) {
+        this.toDTO = function (email) {
 
             if (this.getItems().length === 0) return false;
 
             var items = [];
-            angular.forEach(this.getItems(), function(item){
-                items.push (item.toDTO());
+            angular.forEach(this.getItems(), function (item) {
+                items.push(item.toDTO());
             });
 
             return {
                 emailAddress: email,
-                cartItemDtos:items
+                cartItemDtos: items
             }
         };
 
 
-        this.$restore = function(storedCart){
+        this.$restore = function (storedCart) {
             var _self = this;
             _self.init();
             _self.$cart.shipping = storedCart.shipping;
             _self.$cart.tax = storedCart.tax;
 
             angular.forEach(storedCart.items, function (item) {
-                _self.$cart.items.push(new ngCartItem(item._id,  item._name, item._price, item._quantity, item._data));
+                _self.$cart.items.push(new ngCartItem(item._id, item._name, item._price, item._quantity, item._data));
             });
             this.$save();
         };
@@ -253,29 +383,29 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
         };
 
 
-        item.prototype.setId = function(id){
+        item.prototype.setId = function (id) {
             if (id)  this._id = id;
             else {
                 $log.error('An ID must be provided');
             }
         };
 
-        item.prototype.getId = function(){
+        item.prototype.getId = function () {
             return this._id;
         };
 
 
-        item.prototype.setName = function(name){
+        item.prototype.setName = function (name) {
             if (name)  this._name = name;
             else {
                 $log.error('A name must be provided');
             }
         };
-        item.prototype.getName = function(){
+        item.prototype.getName = function () {
             return this._name;
         };
 
-        item.prototype.setPrice = function(price){
+        item.prototype.setPrice = function (price) {
             var priceFloat = parseFloat(price);
             if (priceFloat) {
                 if (priceFloat <= 0) {
@@ -287,18 +417,18 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
                 $log.error('A price must be provided');
             }
         };
-        item.prototype.getPrice = function(){
+        item.prototype.getPrice = function () {
             return this._price;
         };
 
 
-        item.prototype.setQuantity = function(quantity, relative){
+        item.prototype.setQuantity = function (quantity, relative) {
 
 
             var quantityInt = parseInt(quantity);
-            if (quantityInt % 1 === 0){
-                if (relative === true){
-                    this._quantity  += quantityInt;
+            if (quantityInt % 1 === 0) {
+                if (relative === true) {
+                    this._quantity += quantityInt;
                 } else {
                     this._quantity = quantityInt;
                 }
@@ -312,25 +442,25 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
 
         };
 
-        item.prototype.getQuantity = function(){
+        item.prototype.getQuantity = function () {
             return this._quantity;
         };
 
-        item.prototype.setData = function(data){
+        item.prototype.setData = function (data) {
             if (data) this._data = data;
         };
 
-        item.prototype.getData = function(){
+        item.prototype.getData = function () {
             if (this._data) return this._data;
             else $log.info('This item has no data');
         };
 
 
-        item.prototype.getTotal = function(){
+        item.prototype.getTotal = function () {
             return +parseFloat(this.getQuantity() * this.getPrice()).toFixed(2);
         };
 
-        item.prototype.toObject = function() {
+        item.prototype.toObject = function () {
             return {
                 id: this.getId(),
                 name: this.getName(),
@@ -341,13 +471,40 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
             }
         };
 
-        item.prototype.toDTO = function() {
-            return {arrivalAirport: this.getData().arrivalAirport,
-                airlineCompany: this.getData().airlineCompany,
-                departureDate: this.getData().departureDate,
-                ticketsPrice: this.getData().seatPrice,
-                weight: this.getData().luggageWeight,
-                ticketsQuantity: this.getQuantity()}
+        item.prototype.toDTO = function () {
+            var itemDto = {};
+            if (this.getId().indexOf("Economic") > -1) {
+                itemDto = {
+                    arrivalAirport: this.getData().arrivalAirport,
+                    airlineCompany: this.getData().airlineCompany,
+                    departureDate: this.getData().departureDate,
+                    airCargoDepartureDate: this.getData().airCargoDepartureDate,
+                    airCargoAirLineCompany: this.getData().airCargoAirLineCompany,
+                    weight: this.getData().luggageWeight,
+                    seatMapDto: {economicSeats: 1, regularSeats: 0, businessSeats: 0}
+                };
+            } else if (this.getId().indexOf("Business") > -1) {
+                itemDto = {
+                    arrivalAirport: this.getData().arrivalAirport,
+                    airlineCompany: this.getData().airlineCompany,
+                    departureDate: this.getData().departureDate,
+                    airCargoDepartureDate: this.getData().airCargoDepartureDate,
+                    airCargoAirLineCompany: this.getData().airCargoAirLineCompany,
+                    weight: this.getData().luggageWeight,
+                    seatMapDto: {economicSeats: 0, regularSeats: 1, businessSeats: 0}
+                };
+            } else {
+                itemDto = {
+                    arrivalAirport: this.getData().arrivalAirport,
+                    airlineCompany: this.getData().airlineCompany,
+                    departureDate: this.getData().departureDate,
+                    airCargoDepartureDate: this.getData().airCargoDepartureDate,
+                    airCargoAirLineCompany: this.getData().airCargoAirLineCompany,
+                    weight: this.getData().luggageWeight,
+                    seatMapDto: {economicSeats: 0, regularSeats: 0, businessSeats: 1}
+                };
+            }
+            return itemDto;
         };
 
         return item;
@@ -380,7 +537,7 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
         }
     }])
 
-    .controller('CartController',['$scope', 'ngCart', function($scope, ngCart) {
+    .controller('CartController', ['$scope', 'ngCart', function ($scope, ngCart) {
         $scope.ngCart = ngCart;
 
     }])
@@ -391,43 +548,43 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
 
 angular.module('ngCart.directives', ['ngCart.fulfilment'])
 
-    .controller('CartController',['$scope', 'ngCart', function($scope, ngCart) {
+    .controller('CartController', ['$scope', 'ngCart', function ($scope, ngCart) {
         $scope.ngCart = ngCart;
     }])
 
-    .directive('ngcartAddtocart', ['ngCart', function(ngCart){
+    .directive('ngcartAddtocart', ['ngCart', function (ngCart) {
         return {
-            restrict : 'E',
-            controller : 'CartController',
+            restrict: 'E',
+            controller: 'CartController',
             scope: {
-                id:'@',
-                name:'@',
-                quantity:'@',
-                quantityMax:'@',
-                price:'@',
-                data:'='
+                id: '@',
+                name: '@',
+                quantity: '@',
+                quantityMax: '@',
+                price: '@',
+                data: '='
             },
             transclude: true,
-            templateUrl: function(element, attrs) {
-                if ( typeof attrs.templateUrl == 'undefined' ) {
+            templateUrl: function (element, attrs) {
+                if (typeof attrs.templateUrl == 'undefined') {
                     return 'template/ngCart/addtocart.html';
                 } else {
                     return attrs.templateUrl;
                 }
             },
-            link:function(scope, element, attrs){
+            link: function (scope, element, attrs) {
                 scope.attrs = attrs;
-                scope.inCart = function(){
-                    return  ngCart.getItemById(attrs.id);
+                scope.inCart = function () {
+                    return ngCart.getItemById(attrs.id);
                 };
 
-                if (scope.inCart()){
+                if (scope.inCart()) {
                     scope.q = ngCart.getItemById(attrs.id).getQuantity();
                 } else {
                     scope.q = parseInt(scope.quantity);
                 }
 
-                scope.qtyOpt =  [];
+                scope.qtyOpt = [];
                 for (var i = 1; i <= scope.quantityMax; i++) {
                     scope.qtyOpt.push(i);
                 }
@@ -437,32 +594,32 @@ angular.module('ngCart.directives', ['ngCart.fulfilment'])
         };
     }])
 
-    .directive('ngcartCart', [function(){
+    .directive('ngcartCart', [function () {
         return {
-            restrict : 'E',
-            controller : 'CartController',
+            restrict: 'E',
+            controller: 'CartController',
             scope: {},
-            templateUrl: function(element, attrs) {
-                if ( typeof attrs.templateUrl == 'undefined' ) {
+            templateUrl: function (element, attrs) {
+                if (typeof attrs.templateUrl == 'undefined') {
                     return 'template/ngCart/cart.html';
                 } else {
                     return attrs.templateUrl;
                 }
             },
-            link:function(scope, element, attrs){
+            link: function (scope, element, attrs) {
 
             }
         };
     }])
 
-    .directive('ngcartSummary', [function(){
+    .directive('ngcartSummary', [function () {
         return {
-            restrict : 'E',
-            controller : 'CartController',
+            restrict: 'E',
+            controller: 'CartController',
             scope: {},
             transclude: true,
-            templateUrl: function(element, attrs) {
-                if ( typeof attrs.templateUrl == 'undefined' ) {
+            templateUrl: function (element, attrs) {
+                if (typeof attrs.templateUrl == 'undefined') {
                     return 'template/ngCart/summary.html';
                 } else {
                     return attrs.templateUrl;
@@ -471,10 +628,10 @@ angular.module('ngCart.directives', ['ngCart.fulfilment'])
         };
     }])
 
-    .directive('ngcartCheckout', [function(){
+    .directive('ngcartCheckout', [function () {
         return {
-            restrict : 'E',
-            controller : ('CartController', ['$rootScope', '$scope', 'ngCart', 'fulfilmentProvider', '$location', function($rootScope, $scope, ngCart, fulfilmentProvider, $location) {
+            restrict: 'E',
+            controller: ('CartController', ['$rootScope', '$scope', 'ngCart', 'fulfilmentProvider', '$location', function ($rootScope, $scope, ngCart, fulfilmentProvider, $location) {
                 $scope.ngCart = ngCart;
 
                 $scope.checkout = function () {
@@ -494,12 +651,12 @@ angular.module('ngCart.directives', ['ngCart.fulfilment'])
                 }
             }]),
             scope: {
-                service:'@',
-                settings:'='
+                service: '@',
+                settings: '='
             },
             transclude: true,
-            templateUrl: function(element, attrs) {
-                if ( typeof attrs.templateUrl == 'undefined' ) {
+            templateUrl: function (element, attrs) {
+                if (typeof attrs.templateUrl == 'undefined') {
                     return 'template/ngCart/checkout.html';
                 } else {
                     return attrs.templateUrl;
@@ -509,33 +666,33 @@ angular.module('ngCart.directives', ['ngCart.fulfilment'])
     }]);
 ;
 angular.module('ngCart.fulfilment', [])
-    .service('fulfilmentProvider', ['$injector', function($injector){
+    .service('fulfilmentProvider', ['$injector', function ($injector) {
 
         this._obj = {
-            service : undefined,
-            settings : undefined
+            service: undefined,
+            settings: undefined
         };
 
-        this.setService = function(service){
+        this.setService = function (service) {
             this._obj.service = service;
         };
 
-        this.setSettings = function(settings){
+        this.setSettings = function (settings) {
             this._obj.settings = settings;
         };
 
-        this.checkout = function(){
+        this.checkout = function () {
             var provider = $injector.get('ngCart.fulfilment.' + this._obj.service);
-              return provider.checkout(this._obj.settings);
+            return provider.checkout(this._obj.settings);
 
         }
 
     }])
 
-.service('ngCart.fulfilment.http', ['$http', 'ngCart', '$rootScope', '$location', function($http, ngCart, $rootScope, $location){
+    .service('ngCart.fulfilment.http', ['$http', 'ngCart', '$rootScope', '$location', function ($http, ngCart, $rootScope, $location) {
 
-        this.checkout = function(){
+        this.checkout = function () {
             return $http.post('http://localhost:8081/api/transactions',
                 ngCart.toDTO($rootScope.checkoutEmail))
         }
- }]);
+    }]);

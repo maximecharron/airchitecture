@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.logging.Logger;
 
+@Path("/airplanes")
 public class AirplaneResource {
 
     private final Logger logger = Logger.getLogger(AirplaneResource.class.getName());
@@ -24,14 +25,14 @@ public class AirplaneResource {
     }
 
     @GET
-    @Path("/search/airplanes")
+    @Path("/search")
     @Produces(MediaType.APPLICATION_JSON)
-    public AirplaneSearchResultDto findAllWithFilters(@QueryParam("needsToBeAirLourd") Boolean needsToBeAirLourd) {
+    public AirplaneSearchResultDto findAllWithFilters(@QueryParam("needsToBeAirLourd") boolean needsToBeAirLourd) {
         return airplaneService.findAllWithFilters(needsToBeAirLourd);
     }
 
     @PUT
-    @Path("/airplanes/{serialNumber}")
+    @Path("/{serialNumber}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public AirplaneDto update(AirplaneUpdateDto airplaneUpdateDto, @PathParam("serialNumber") String serialNumber, @HeaderParam("X-Access-Token") String token) {

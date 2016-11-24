@@ -108,14 +108,14 @@ public class FlightService {
         this.flightRepository.save(flight);
     }
 
-    public void reserveSpaceInAirCargoFlight(AirCargoFlightDto airCargoFlight, double luggageWeight) throws FlightNotFoundException {
-        AirCargoFlight flight = findAirCargoFlight(airCargoFlight.airlineCompany, airCargoFlight.arrivalAirport, airCargoFlight.departureDate);
+    public void reserveSpaceInAirCargoFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate, double luggageWeight) throws FlightNotFoundException {
+        AirCargoFlight flight = findAirCargoFlight(airlineCompany, arrivalAirport, departureDate);
         flight.reserveSpace(luggageWeight);
         this.flightRepository.save(flight);
     }
 
-    public void releaseSpaceInAirCargoFlight(AirCargoFlightDto airCargoFlight, double luggageWeight) throws FlightNotFoundException {
-        AirCargoFlight flight = findAirCargoFlight(airCargoFlight.airlineCompany, airCargoFlight.arrivalAirport, airCargoFlight.departureDate);
+    public void releaseSpaceInAirCargoFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate, double luggageWeight) throws FlightNotFoundException {
+        AirCargoFlight flight = findAirCargoFlight(airlineCompany, arrivalAirport, departureDate);
         flight.releaseSpace(luggageWeight);
         this.flightRepository.save(flight);
     }
