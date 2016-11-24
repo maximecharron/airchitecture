@@ -18,10 +18,10 @@ public class WeightFilterVerifierTest {
     private final static int NOT_FILTERED_BY_WEIGHTS_SIZE = 12;
 
     @Mock
-    private List<Flight> filteredByWeightsFlights;
+    private List<PassengerFlight> filteredByWeightsFlights;
 
     @Mock
-    private List<Flight> notFilteredByWeightsFlights;
+    private List<PassengerFlight> notFilteredByWeightsFlights;
 
     private WeightFilterVerifier weightFilterVerifier;
 
