@@ -7,7 +7,7 @@ import ca.ulaval.glo4003.air.domain.transaction.cart.CartItem;
 public class EmailTransactionNotifier implements TransactionNotifier {
 
     private static final String NOTIFICATION_MESSAGE_SUBJECT = "Here are your transaction informations";
-    private static final String NOTIFICATION_MESSAGE_BODY = "Here are the details of your last transaction with us: %s";
+    private static final String NOTIFICATION_MESSAGE_BODY = "Here are the details of your last transaction with us:\n\n%s";
 
     private final EmailTransactionNotifierConfiguration emailConfiguration;
     private final EmailSender emailSender;
@@ -20,19 +20,19 @@ public class EmailTransactionNotifier implements TransactionNotifier {
     public void notifyOnNewCompletedTransaction(Transaction transaction) throws NotificationFailedException {
         StringBuilder bodyBuilder = new StringBuilder();
 
-        bodyBuilder.append("AIRLINE\tDEPARTURE DATE\tECONOMIC TICKETS\tREGULAR TICKETS\tBUSINESS TICKETS");
+        bodyBuilder.append("\tAIRLINE\t\tDEPARTURE DATE\tTICKETS:\tECO\tREG\tBUS\n\n");
 
         for (CartItem cartItem : transaction.getCartItems()) {
             SeatMap seatMap = cartItem.getSeatMap();
 
-            String body = String.format("%s\t%s\t%s\t%s\t%s", cartItem.getAirlineCompany(), cartItem.getDepartureDate(), seatMap.getEconomicSeats(), seatMap.getRegularSeats(), seatMap.getBusinessSeats());
+            String body = String.format("\t%s\t%s\t\t\t\t%s\t%s\t%s\n", cartItem.getAirlineCompany(), cartItem.getDepartureDate(), seatMap.getEconomicSeats(), seatMap.getRegularSeats(), seatMap.getBusinessSeats());
             bodyBuilder.append(body);
         }
 
         Email email = new Email(emailConfiguration.getFromAddress(),
-            transaction.getEmailAddress(),
-            NOTIFICATION_MESSAGE_SUBJECT,
-            String.format(NOTIFICATION_MESSAGE_BODY, bodyBuilder.toString()));
+                                transaction.getEmailAddress(),
+                                NOTIFICATION_MESSAGE_SUBJECT,
+                                String.format(NOTIFICATION_MESSAGE_BODY, bodyBuilder.toString()));
 
         this.emailSender.sendEmail(email);
     }
