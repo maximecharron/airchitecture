@@ -18,7 +18,7 @@ public class User {
         this.tokenEncoder = tokenEncoder;
         this.hashingStrategy = hashingStrategy;
         this.isAdmin = isAdmin;
-        hashPassword(password);
+        this.password = hashingStrategy.hashPassword(password);
     }
 
     public String getEmailAddress() {
@@ -51,10 +51,6 @@ public class User {
 
     public void stopShowingFilteredAlert() {
         this.showWeightFilteredAlert = false;
-    }
-
-    private void hashPassword(String password) {
-        this.password = hashingStrategy.hashPassword(password);
     }
 
 }

@@ -5,7 +5,6 @@ import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.domain.flight.Flight;
 import ca.ulaval.glo4003.air.domain.flight.FlightSearchResult;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class FlightAssembler {
@@ -33,12 +32,12 @@ public class FlightAssembler {
 
     public FlightSearchResultDto create(FlightSearchResult flightSearchResult) {
         FlightSearchResultDto flightSearchResultDto = new FlightSearchResultDto();
-        flightSearchResultDto.flights = this.create(flightSearchResult.getFlightsFilteredByWeight(), flightSearchResult.getWeight());
+        flightSearchResultDto.flights = flightSearchResult.getFlightsFilteredByWeight()
+                                                          .stream()
+                                                          .map(flight -> create(flight, flightSearchResult.getWeight()))
+                                                          .collect(Collectors.toList());
         flightSearchResultDto.flightsWereFilteredByWeight = flightSearchResult.isFlightsWereFilteredByWeight();
         return flightSearchResultDto;
     }
 
-    private List<FlightDto> create(List<Flight> flights, double weight) {
-        return flights.stream().map(flight -> create(flight, weight)).collect(Collectors.toList());
-    }
 }
