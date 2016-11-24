@@ -63,12 +63,16 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
             var flights = [];
             for (var index in data.flights) {
                 var flight = data.flights[index];
-                flight.id = flight.airlineCompany + flight.departureDate + flight.arrivalAirport;
+                flight.idEconomic = flight.airlineCompany + flight.departureDate + flight.arrivalAirport + "-Economic";
+                flight.idBusiness = flight.airlineCompany + flight.departureDate + flight.arrivalAirport + "-Business";
+                flight.idRegular = flight.airlineCompany + flight.departureDate + flight.arrivalAirport + "-Regular";
                 flight.availableSeats = flight.availableSeatsDto.regularSeats + flight.availableSeatsDto.economicSeats + flight.availableSeatsDto.businessSeats;
                 flight.humanArrivalAirport = $scope.formData.to.name;
                 flight.humanDepartureAirport = $scope.formData.from.name;
                 flight.luggageWeight = $scope.formData.luggageWeight;
-                flight.name = flight.airlineCompany + " from " + flight.humanDepartureAirport + " to "+ flight.humanArrivalAirport;
+                flight.nameEconomic = flight.airlineCompany + " from " + flight.humanDepartureAirport + " to "+ flight.humanArrivalAirport + " - Economic Seat";
+                flight.nameBusiness = flight.airlineCompany + " from " + flight.humanDepartureAirport + " to "+ flight.humanArrivalAirport + " - Business Seat";
+                flight.nameRegular = flight.airlineCompany + " from " + flight.humanDepartureAirport + " to "+ flight.humanArrivalAirport + " - Regular Seat";
                 flights.push(flight);
             }
             if ($rootScope.user) {$scope.showWeightFilteredAlert = $rootScope.user.showsWeightFilteredAlert}

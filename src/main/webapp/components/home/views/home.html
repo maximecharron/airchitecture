@@ -117,8 +117,14 @@
                 </div>
 
                 <div class="modal-footer">
-                    <ngcart-addtocart id="{{flight.id}}" name="{{flight.name}}" price="{{flight.seatPrice}}"
-                                      quantity="1" data="flight">Add to Cart
+                    <ngcart-addtocart ng-show="flight.availableSeatsDto.economicSeats > 0" id="{{flight.idEconomic}}" name="{{flight.nameEconomic}}" price="{{flight.seatsPricingDto.economicSeatsPrice}}"
+                                      quantity="1" data="flight">Add Economic Seat to Cart
+                    </ngcart-addtocart>
+                    <ngcart-addtocart ng-show="flight.availableSeatsDto.regularSeats > 0" id="{{flight.idRegular}}" name="{{flight.nameRegular}}" price="{{flight.seatsPricingDto.regularSeatsPrice}}"
+                                      quantity="1" data="flight">Add Regular Seat to Cart
+                    </ngcart-addtocart>
+                    <ngcart-addtocart ng-show="flight.availableSeatsDto.businessSeats > 0" id="{{flight.idBusiness}}" name="{{flight.nameBusiness}}" price="{{flight.seatsPricingDto.businessSeatsPrice}}"
+                                      quantity="1" data="flight">Add Business Seat to Cart
                     </ngcart-addtocart>
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                 </div>
