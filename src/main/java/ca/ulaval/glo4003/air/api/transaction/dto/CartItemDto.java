@@ -10,5 +10,6 @@ public class CartItemDto {
     public String arrivalAirport;
     public String airlineCompany;
     public String departureDate;
-    public AirCargoFlightDto airCargoFlight;
+    public String airCargoDepartureDate;
+    public String airCargoAirLineCompany;
 }
