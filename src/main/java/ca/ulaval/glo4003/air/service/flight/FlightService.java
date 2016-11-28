@@ -50,14 +50,8 @@ public class FlightService {
             query.isAirVivant();
         }
 
-        if (hasEconomySeats) {
-            query.hasEconomySeatsAvailable();
-        }
-        if (hasRegularSeats) {
-            query.hasRegularSeatsAvailable();
-        }
-        if (hasBusinessSeats) {
-            query.hasBusinessSeatsAvailable();
+        if (hasEconomySeats || hasBusinessSeats || hasRegularSeats){
+            query.hasSeatsAvailable(hasEconomySeats, hasRegularSeats, hasBusinessSeats);
         }
 
         List<PassengerFlight> allPassengerFlights = query.getPassengerFlights();
