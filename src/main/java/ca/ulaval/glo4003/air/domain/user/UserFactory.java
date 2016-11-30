@@ -14,7 +14,7 @@ public class UserFactory {
     }
 
     public User createUser(String email, String password, boolean isAdmin) {
-        return new User(email, password, tokenEncoder, hashingStrategy, isAdmin);
+        return new User(email, password, tokenEncoder, hashingStrategy, new UserSearchPreferences(), isAdmin);
     }
 
 }

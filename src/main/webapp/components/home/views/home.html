@@ -71,7 +71,7 @@
         </div>
     </form>
 
-    <div ng-show="showWeightFilteredAlert && flightsWereFilteredByWeight" class="alert alert-warning" role="alert">
+    <div ng-show="hideWeightFilteredAlert && flightsWereFilteredByWeight" class="alert alert-warning" role="alert">
         <button type="button" class="close" ng-click="closeWeightFilteredAlert(doNotShow)" aria-label="Close"><span
                 aria-hidden="true">&times;</span></button>
         <strong>Warning!</strong> Some flights are not shown because your luggage weight exceeds their capacity.

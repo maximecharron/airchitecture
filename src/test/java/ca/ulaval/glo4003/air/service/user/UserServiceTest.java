@@ -1,7 +1,7 @@
 package ca.ulaval.glo4003.air.service.user;
 
 import ca.ulaval.glo4003.air.api.user.dto.UserDto;
-import ca.ulaval.glo4003.air.api.user.dto.UserPreferencesDto;
+import ca.ulaval.glo4003.air.api.user.dto.UserSettingsDto;
 import ca.ulaval.glo4003.air.domain.user.*;
 import ca.ulaval.glo4003.air.domain.user.encoding.TokenDecoder;
 import ca.ulaval.glo4003.air.transfer.user.UserAssembler;
@@ -101,7 +101,7 @@ public class UserServiceTest {
         given(tokenDecoder.decode(A_TOKEN)).willReturn(EMAIL);
         given(userRepository.findUserByEmail(EMAIL)).willReturn(Optional.of(user));
 
-        userService.updateAuthenticatedUser(A_TOKEN, new UserPreferencesDto());
+        userService.updateAuthenticatedUser(A_TOKEN, new UserSettingsDto());
 
         verify(userRepository).findUserByEmail(EMAIL);
     }
@@ -110,7 +110,7 @@ public class UserServiceTest {
     public void givenAnInvalidToken_whenUpdatingAuthenticatedUser_thenShouldThrowException() throws InvalidTokenException {
         given(tokenDecoder.decode(A_TOKEN)).willThrow(new InvalidTokenException());
 
-        userService.updateAuthenticatedUser(A_TOKEN, new UserPreferencesDto());
+        userService.updateAuthenticatedUser(A_TOKEN, new UserSettingsDto());
     }
 
     @Test(expected = InvalidTokenException.class)
@@ -118,15 +118,15 @@ public class UserServiceTest {
         given(tokenDecoder.decode(A_TOKEN)).willReturn(EMAIL);
         given(userRepository.findUserByEmail(EMAIL)).willReturn(Optional.empty());
 
-        userService.updateAuthenticatedUser(A_TOKEN, new UserPreferencesDto());
+        userService.updateAuthenticatedUser(A_TOKEN, new UserSettingsDto());
     }
 
     @Test
     public void givenAUser_whenUpdatingAuthenticatedUserWithFalseShowingFilteredAlert_thenShouldStopShowingFilteredAlert() throws InvalidTokenException {
         given(tokenDecoder.decode(A_TOKEN)).willReturn(EMAIL);
         given(userRepository.findUserByEmail(EMAIL)).willReturn(Optional.of(user));
-        UserPreferencesDto userPreferences = new UserPreferencesDto();
-        userPreferences.showWeightFilteredAlert = false;
+        UserSettingsDto userPreferences = new UserSettingsDto();
+        userPreferences.hideWeightFilteredAlert = false;
 
         userService.updateAuthenticatedUser(A_TOKEN, userPreferences);
 
@@ -138,7 +138,7 @@ public class UserServiceTest {
         given(tokenDecoder.decode(A_TOKEN)).willReturn(EMAIL);
         given(userRepository.findUserByEmail(EMAIL)).willReturn(Optional.of(user));
 
-        userService.updateAuthenticatedUser(A_TOKEN, new UserPreferencesDto());
+        userService.updateAuthenticatedUser(A_TOKEN, new UserSettingsDto());
 
         verify(userRepository).update(user);
     }

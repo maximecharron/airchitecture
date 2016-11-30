@@ -1,10 +1,11 @@
 package ca.ulaval.glo4003.air.service.flight;
 
-import ca.ulaval.glo4003.air.api.flight.dto.AirCargoFlightDto;
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 import ca.ulaval.glo4003.air.domain.flight.*;
+import ca.ulaval.glo4003.air.domain.user.InvalidTokenException;
+import ca.ulaval.glo4003.air.service.user.UserService;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 
 import java.time.LocalDateTime;
@@ -22,23 +23,28 @@ public class FlightService {
     private final WeightFilterVerifier weightFilterVerifier;
     private final DateTimeFactory dateTimeFactory;
     private final FlightAssembler flightAssembler;
+    private final UserService userService;
 
-    public FlightService(FlightRepository flightRepository, WeightFilterVerifier weightFilterVerifier, DateTimeFactory dateTimeFactory, FlightAssembler flightAssembler) {
+    public FlightService(FlightRepository flightRepository, WeightFilterVerifier weightFilterVerifier, DateTimeFactory dateTimeFactory, FlightAssembler flightAssembler, UserService userService) {
         this.flightRepository = flightRepository;
         this.weightFilterVerifier = weightFilterVerifier;
         this.dateTimeFactory = dateTimeFactory;
         this.flightAssembler = flightAssembler;
+        this.userService = userService;
     }
 
-    public FlightSearchResultDto findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant, boolean acceptsAirCargo, boolean hasEconomySeats, boolean hasRegularSeats, boolean hasBusinessSeats) {
-
+    public FlightSearchResultDto findAllWithFilters(String accessToken, String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant, boolean acceptsAirCargo, boolean hasEconomySeats, boolean hasRegularSeats, boolean hasBusinessSeats) throws InvalidTokenException {
         validateAirportsArePresent(departureAirport, arrivalAirport);
         validateWeightIsPresent(weight);
         logRequest(departureAirport, arrivalAirport, departureDate, weight, isOnlyAirVivant, hasEconomySeats, hasRegularSeats, hasBusinessSeats);
 
+        if (accessToken != null) {
+            userService.incrementAuthenticatedUserSearchPreferences(accessToken, isOnlyAirVivant, hasEconomySeats, hasRegularSeats, hasBusinessSeats);
+        }
+
         FlightQueryBuilder query = flightRepository.query()
-                                                   .isDepartingFrom(departureAirport)
-                                                   .isGoingTo(arrivalAirport);
+                .isDepartingFrom(departureAirport)
+                .isGoingTo(arrivalAirport);
 
         if (departureDate != null) {
             query.isLeavingOn(departureDate);
@@ -141,11 +147,11 @@ public class FlightService {
 
     private PassengerFlight findPassengerFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate) throws FlightNotFoundException {
         return flightRepository.query()
-                               .hasAirlineCompany(airlineCompany)
-                               .isGoingTo(arrivalAirport)
-                               .isLeavingOn(departureDate)
-                               .findOnePassengerFlight()
-                               .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
+                .hasAirlineCompany(airlineCompany)
+                .isGoingTo(arrivalAirport)
+                .isLeavingOn(departureDate)
+                .findOnePassengerFlight()
+                .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
     }
 
     private void validateAirportsArePresent(String departureAirport, String arrivalAirport) {

@@ -22,7 +22,8 @@ public class FlightResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public FlightSearchResultDto findAllWithFilters(@QueryParam("from") String departureAirport,
+    public FlightSearchResultDto findAllWithFilters(@HeaderParam("X-Access-Token") String accessToken,
+                                                    @QueryParam("from") String departureAirport,
                                                     @QueryParam("to") String arrivalAirport,
                                                     @QueryParam("datetime") String departureDate,
                                                     @QueryParam("weight") double weight,
@@ -36,7 +37,8 @@ public class FlightResource {
             parsedDate = parseDate(departureDate);
         }
         try {
-            return flightService.findAllWithFilters(departureAirport,
+            return flightService.findAllWithFilters(accessToken,
+                                                    departureAirport,
                                                     arrivalAirport,
                                                     parsedDate,
                                                     weight,

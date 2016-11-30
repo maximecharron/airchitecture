@@ -1,12 +1,10 @@
 package ca.ulaval.glo4003.air.api.user;
 
+import ca.ulaval.glo4003.air.api.user.dto.UserSearchPreferencesDto;
 import ca.ulaval.glo4003.air.api.user.dto.UserDto;
-import ca.ulaval.glo4003.air.api.user.dto.UserPreferencesDto;
+import ca.ulaval.glo4003.air.api.user.dto.UserSettingsDto;
 import ca.ulaval.glo4003.air.domain.user.InvalidTokenException;
-import ca.ulaval.glo4003.air.domain.user.User;
-import ca.ulaval.glo4003.air.domain.user.UserPreferences;
 import ca.ulaval.glo4003.air.service.user.UserService;
-import ca.ulaval.glo4003.air.transfer.user.UserAssembler;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -29,14 +27,29 @@ public class UserResource {
     @Path("/me")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public UserDto update(UserPreferencesDto userPreferencesDto, @HeaderParam("X-Access-Token") String token) {
+    public UserDto update(UserSettingsDto userSettingsDto, @HeaderParam("X-Access-Token") String token) {
         try {
-            return this.userService.updateAuthenticatedUser(token, userPreferencesDto);
+            return this.userService.updateAuthenticatedUser(token, userSettingsDto);
         } catch (InvalidTokenException e) {
             logger.info("Update user failed because: " + e.getMessage());
             throw new WebApplicationException(Response.status(Status.UNAUTHORIZED)
                                                       .entity("Token is invalid.")
                                                       .build());
+        }
+    }
+
+    @GET
+    @Path("/me/searchPreferences")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public UserSearchPreferencesDto getSearchPreferences(@HeaderParam("X-Access-Token") String token) {
+        try {
+            return this.userService.getUserSearchPreferences(token);
+        } catch (InvalidTokenException e) {
+            logger.info("Update user failed because: " + e.getMessage());
+            throw new WebApplicationException(Response.status(Status.UNAUTHORIZED)
+                    .entity("Token is invalid.")
+                    .build());
         }
     }
 }
