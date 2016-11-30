@@ -28,6 +28,10 @@ public class UserServiceTest {
     private final static String PASSWORD = "ABC";
     private final static boolean IS_NOT_ADMIN = false;
     private final static String A_TOKEN = "rock.darius.mama.rucker";
+    private static final boolean HAS_SEARCHED_FOR_ECONOMY_CLASS = true;
+    private static final boolean HAS_SEARCHED_FOR_REGULAR_CLASS = true;
+    private static final boolean HAS_SEARCHED_FOR_BUSINESS_CLASS = true;
+    private static final boolean HAS_SEARCHED_FOR_AIR_VIVANT = true;
 
     @Mock
     private UserRepository userRepository;
@@ -123,8 +127,7 @@ public class UserServiceTest {
 
     @Test
     public void givenAUser_whenUpdatingAuthenticatedUserWithFalseShowingFilteredAlert_thenShouldStopShowingFilteredAlert() throws InvalidTokenException {
-        given(tokenDecoder.decode(A_TOKEN)).willReturn(EMAIL);
-        given(userRepository.findUserByEmail(EMAIL)).willReturn(Optional.of(user));
+        givenAValidTokenAndUser();
         UserSettingsDto userPreferences = new UserSettingsDto();
         userPreferences.hideWeightFilteredAlert = false;
 
@@ -135,11 +138,33 @@ public class UserServiceTest {
 
     @Test
     public void givenAUser_whenUpdatingAuthenticatedUser_thenShouldUpdateTheUser() throws InvalidTokenException {
-        given(tokenDecoder.decode(A_TOKEN)).willReturn(EMAIL);
-        given(userRepository.findUserByEmail(EMAIL)).willReturn(Optional.of(user));
+        givenAValidTokenAndUser();
 
         userService.updateAuthenticatedUser(A_TOKEN, new UserSettingsDto());
 
         verify(userRepository).update(user);
+    }
+
+    @Test
+    public void givenAValidTokenAndUser_whenIncrementingAuthenticatedUserSearchPreferences_thenIncrementOnTheRelatedUser() throws InvalidTokenException {
+        givenAValidTokenAndUser();
+
+        userService.incrementAuthenticatedUserSearchPreferences(A_TOKEN, HAS_SEARCHED_FOR_AIR_VIVANT, HAS_SEARCHED_FOR_ECONOMY_CLASS, HAS_SEARCHED_FOR_REGULAR_CLASS, HAS_SEARCHED_FOR_BUSINESS_CLASS);
+
+        verify(user).incrementSearchesPreferences(HAS_SEARCHED_FOR_AIR_VIVANT, HAS_SEARCHED_FOR_ECONOMY_CLASS, HAS_SEARCHED_FOR_REGULAR_CLASS, HAS_SEARCHED_FOR_BUSINESS_CLASS);
+    }
+
+    @Test
+    public void givenAValidTokenAndUser_whenIncrementingAuthenticatedUserSearchPreferences_thenUpdatesTheUser() throws InvalidTokenException {
+        givenAValidTokenAndUser();
+
+        userService.incrementAuthenticatedUserSearchPreferences(A_TOKEN, HAS_SEARCHED_FOR_AIR_VIVANT, HAS_SEARCHED_FOR_ECONOMY_CLASS, HAS_SEARCHED_FOR_REGULAR_CLASS, HAS_SEARCHED_FOR_BUSINESS_CLASS);
+
+        verify(userRepository).update(user);
+    }
+
+    private void givenAValidTokenAndUser() throws InvalidTokenException {
+        given(tokenDecoder.decode(A_TOKEN)).willReturn(EMAIL);
+        given(userRepository.findUserByEmail(EMAIL)).willReturn(Optional.of(user));
     }
 }
