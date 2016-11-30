@@ -1,4 +1,4 @@
-homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cookies, $window, homeResource, weightDetectionResource, userResource, ModalService) {
+homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cookies, $window, homeResource, weightDetectionResource, userResource, userSearchPreferencesResource, ModalService) {
 
     $scope.isLoading = false;
     $scope.doNotShow = false;
@@ -9,13 +9,28 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
         date: "",
         luggageWeight: 0.0,
         onlyAirVivant: false,
-        acceptsAirCargo: false
+        acceptsAirCargo: false,
+        economic: false,
+        regular: false,
+        business: false
     };
     $scope.haveResults = false;
     $scope.flightsResults = [];
 
     $scope.hasError = false;
     $scope.error = undefined;
+
+    if ($rootScope.user) {
+        $scope.isLoading = true;
+        userSearchPreferencesResource.get({}, function onSuccess(data) {
+            console.dir(data);
+            $scope.formData.onlyAirVivant = data.hasMostlySearchedForAirVivantFlights;
+            $scope.formData.economic = data.hasMostlySearchedForEconomyClassFlights;
+            $scope.formData.regular = data.hasMostlySearchedForRegularClassFlights;
+            $scope.formData.business = data.hasMostlySearchedForBusinessClassFlights;
+            $scope.isLoading = false;
+        });
+    }
 
     $http.get('./airports.json')
         .success(function(data) {
@@ -29,14 +44,14 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
     };
 
     $scope.closeWeightFilteredAlert = function () {
-        $scope.showWeightFilteredAlert = false;
+        $scope.hideWeightFilteredAlert = true;
         if ($rootScope.user){
-            userResource.put({showWeightFilteredAlert: false}, function onSuccess(data) {
+            userResource.put({hideWeightFilteredAlert: true}, function onSuccess(data) {
                 $rootScope.user = data;
                 $cookies.putObject("user", $rootScope.user);
             });
         } else{
-            $window.localStorage.setItem("showWeightFilteredAlert", false);
+            $window.localStorage.setItem("hideWeightFilteredAlert", false);
         }
     };
 
@@ -88,8 +103,8 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
                 flight.nameRegular = flight.airlineCompany + " from " + flight.humanDepartureAirport + " to "+ flight.humanArrivalAirport + " - Regular Seat";
                 flights.push(flight);
             }
-            if ($rootScope.user) {$scope.showWeightFilteredAlert = $rootScope.user.showsWeightFilteredAlert}
-            else {$scope.showWeightFilteredAlert = $window.localStorage.getItem("showWeightFilteredAlert") === null}
+            if ($rootScope.user) {$scope.hideWeightFilteredAlert = $rootScope.user.hidesWeightFilteredAlert}
+            else {$scope.hideWeightFilteredAlert = $window.localStorage.getItem("hideWeightFilteredAlert") === null}
 
             $scope.flightsResults = flights;
             $scope.flightsWereFilteredByWeight = data.flightsWereFilteredByWeight;

@@ -46,23 +46,19 @@
         </div>
         <div class="form-group">
             <label>My luggage can travel on a different airplane than me</label>
-            <input type="checkbox" ng-model="formData.acceptsAirCargo"
-                   ng-true-value="'true'" ng-false-value="'false'">
+            <input type="checkbox" ng-model="formData.acceptsAirCargo">
         </div>
         <div class="form-group">
             <label>I want to be in Economic class</label>
-            <input type="checkbox" ng-model="formData.economic"
-                   ng-true-value="'true'" ng-false-value="'false'">
+            <input type="checkbox" ng-model="formData.economic">
         </div>
         <div class="form-group">
             <label>I want to be in Regular class</label>
-            <input type="checkbox" ng-model="formData.regular"
-                   ng-true-value="'true'" ng-false-value="'false'">
+            <input type="checkbox" ng-model="formData.regular">
         </div>
         <div class="form-group">
             <label>I want to be in Business class</label>
-            <input type="checkbox" ng-model="formData.business"
-                   ng-true-value="'true'" ng-false-value="'false'">
+            <input type="checkbox" ng-model="formData.business">
         </div>
         <div class="form-actions">
             <button type="submit" ng-disabled="!(formData.luggageWeight && formData.from && formData.to)"

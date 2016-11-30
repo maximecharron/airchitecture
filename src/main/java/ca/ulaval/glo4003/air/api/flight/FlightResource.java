@@ -1,6 +1,7 @@
 package ca.ulaval.glo4003.air.api.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
+import ca.ulaval.glo4003.air.domain.user.InvalidTokenException;
 import ca.ulaval.glo4003.air.service.flight.FlightService;
 import ca.ulaval.glo4003.air.service.flight.InvalidParameterException;
 
@@ -22,8 +23,7 @@ public class FlightResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public FlightSearchResultDto findAllWithFilters(@HeaderParam("X-Access-Token") String accessToken,
-                                                    @QueryParam("from") String departureAirport,
+    public FlightSearchResultDto findAllWithFilters(@QueryParam("from") String departureAirport,
                                                     @QueryParam("to") String arrivalAirport,
                                                     @QueryParam("datetime") String departureDate,
                                                     @QueryParam("weight") double weight,
@@ -31,7 +31,8 @@ public class FlightResource {
                                                     @QueryParam("acceptsAirCargo") boolean acceptsAirCargo,
                                                     @QueryParam("hasEconomySeats") boolean hasEconomySeats,
                                                     @QueryParam("hasRegularSeats") boolean hasRegularSeats,
-                                                    @QueryParam("hasBusinessSeats") boolean hasBusinessSeats) {
+                                                    @QueryParam("hasBusinessSeats") boolean hasBusinessSeats,
+                                                    @HeaderParam("X-Access-Token") String accessToken) {
         LocalDateTime parsedDate = null;
         if (departureDate != null) {
             parsedDate = parseDate(departureDate);
@@ -51,6 +52,10 @@ public class FlightResource {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
                                                       .entity(e.getMessage())
                                                       .build());
+        } catch (InvalidTokenException e) {
+            throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(e.getMessage())
+                    .build());
         }
     }
 

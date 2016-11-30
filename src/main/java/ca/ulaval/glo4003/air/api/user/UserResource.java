@@ -40,13 +40,15 @@ public class UserResource {
 
     @GET
     @Path("/me/searchPreferences")
+
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public UserSearchPreferencesDto getSearchPreferences(@HeaderParam("X-Access-Token") String token) {
         try {
-            return this.userService.getUserSearchPreferences(token);
+            UserSearchPreferencesDto userSearchPreferences = this.userService.getUserSearchPreferences(token);
+            return userSearchPreferences;
         } catch (InvalidTokenException e) {
-            logger.info("Update user failed because: " + e.getMessage());
+            logger.info("Get user failed: " + e.getMessage());
             throw new WebApplicationException(Response.status(Status.UNAUTHORIZED)
                     .entity("Token is invalid.")
                     .build());
