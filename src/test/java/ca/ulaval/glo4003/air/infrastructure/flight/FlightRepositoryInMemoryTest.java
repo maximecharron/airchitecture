@@ -53,7 +53,7 @@ public class FlightRepositoryInMemoryTest {
     public void givenPassengerFlightsWithEconomySeats_whenSearchingForFlightsWithEconomySeats_thenOnlyMatchFlightsAreReturned() {
         given(matchingFlight.hasAvailableEconomySeats()).willReturn(true);
 
-        List<PassengerFlight> matchingFlights = flightRepository.query().hasEconomySeatsAvailable().getPassengerFlights();
+        List<PassengerFlight> matchingFlights = flightRepository.query().hasSeatsAvailable(true, false, false).getPassengerFlights();
 
         assertTrue("no matching flights returned", matchingFlights.size() > 0);
         assertTrue(matchingFlights.stream().allMatch(flight -> flight.hasAvailableEconomySeats()));
@@ -63,7 +63,7 @@ public class FlightRepositoryInMemoryTest {
     public void givenPassengerFlightsWithoutEconomySeats_whenSearchingForFlightsWithEconomySeats_thenOnlyMatchFlightsAreReturned() {
         given(matchingFlight.hasAvailableEconomySeats()).willReturn(false);
 
-        List<PassengerFlight> matchingFlights = flightRepository.query().hasEconomySeatsAvailable().getPassengerFlights();
+        List<PassengerFlight> matchingFlights = flightRepository.query().hasSeatsAvailable(true, true, true).getPassengerFlights();
 
         assertTrue("A non-supposed matching flight was returned", matchingFlights.size() == 0);
         assertTrue(matchingFlights.stream().allMatch(flight -> flight.hasAvailableEconomySeats()));

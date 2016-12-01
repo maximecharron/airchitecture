@@ -18,11 +18,7 @@ public interface FlightQueryBuilder {
 
     FlightQueryBuilder isAirVivant();
 
-    FlightQueryBuilder hasEconomySeatsAvailable();
-
-    FlightQueryBuilder hasRegularSeatsAvailable();
-
-    FlightQueryBuilder hasBusinessSeatsAvailable();
+    FlightQueryBuilder hasSeatsAvailable(boolean economySeats, boolean regularSeats, boolean businessSeats);
 
     FlightQueryBuilder hasAirlineCompany(String flightNumber);
 
