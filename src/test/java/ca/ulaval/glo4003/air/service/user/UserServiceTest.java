@@ -126,10 +126,10 @@ public class UserServiceTest {
     }
 
     @Test
-    public void givenAUser_whenUpdatingAuthenticatedUserWithFalseShowingFilteredAlert_thenShouldStopShowingFilteredAlert() throws InvalidTokenException {
+    public void givenAUser_whenUpdatingAuthenticatedUserWithTrueHidingFilteredAlert_thenShouldStopShowingFilteredAlert() throws InvalidTokenException {
         givenAValidTokenAndUser();
         UserSettingsDto userPreferences = new UserSettingsDto();
-        userPreferences.hideWeightFilteredAlert = false;
+        userPreferences.hideWeightFilteredAlert = true;
 
         userService.updateAuthenticatedUser(A_TOKEN, userPreferences);
 

@@ -23,7 +23,6 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
     if ($rootScope.user) {
         $scope.isLoading = true;
         userSearchPreferencesResource.get({}, function onSuccess(data) {
-            console.dir(data);
             $scope.formData.onlyAirVivant = data.hasMostlySearchedForAirVivantFlights;
             $scope.formData.economic = data.hasMostlySearchedForEconomyClassFlights;
             $scope.formData.regular = data.hasMostlySearchedForRegularClassFlights;

@@ -1,6 +1,7 @@
 package ca.ulaval.glo4003.air.api.user;
 
 import ca.ulaval.glo4003.air.api.user.dto.UserDto;
+import ca.ulaval.glo4003.air.api.user.dto.UserSearchPreferencesDto;
 import ca.ulaval.glo4003.air.api.user.dto.UserSettingsDto;
 import ca.ulaval.glo4003.air.domain.user.InvalidTokenException;
 import ca.ulaval.glo4003.air.service.user.UserService;
@@ -32,6 +33,9 @@ public class UserResourceTest {
     @Mock
     private UserDto user;
 
+    @Mock
+    private UserSearchPreferencesDto searchPreferencesDto;
+
     private UserResource userResource;
 
     @Before
@@ -55,6 +59,28 @@ public class UserResourceTest {
         UserDto result = null;
         try {
             userResource.update(userPreferences, TOKEN);
+            fail("Exception not thrown");
+        } catch (WebApplicationException e) {
+            assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.UNAUTHORIZED_401)));
+        }
+    }
+
+    @Test
+    public void givenAValidToken_whenGettingSearchPreferences_thenItsDelegatedToTheService() throws InvalidTokenException {
+        given(userService.getUserSearchPreferences(TOKEN)).willReturn(searchPreferencesDto);
+
+        UserSearchPreferencesDto result = userResource.getSearchPreferences(TOKEN);
+
+        assertEquals(result, searchPreferencesDto);
+    }
+
+    @Test
+    public void givenAnInvalidToken_whenGettingSearchPreferences_thenItsDelegatedToTheService() throws InvalidTokenException {
+        given(userService.getUserSearchPreferences(TOKEN)).willThrow(new InvalidTokenException());
+
+        UserSearchPreferencesDto result = null;
+        try {
+            userResource.getSearchPreferences(TOKEN);
             fail("Exception not thrown");
         } catch (WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.UNAUTHORIZED_401)));
