@@ -14,6 +14,17 @@ homeApp.factory('weightDetectionResource', ["$resource", function ($resource) {
     });
 }]);
 
+homeApp.factory('geolocationResource', ["$resource", function ($resource) {
+    return $resource("http://localhost:8081/api/geolocation/:path", {}, {
+        get: {
+            method: 'GET',
+            params:{
+                path:"findNearestAirport"
+            }
+        }
+    });
+}]);
+
 homeApp.factory('userResource',  ["$resource", "$rootScope", function ($resource, $rootScope) {
     return $resource("http://localhost:8081/api/users/me", {}, {
         put: {
