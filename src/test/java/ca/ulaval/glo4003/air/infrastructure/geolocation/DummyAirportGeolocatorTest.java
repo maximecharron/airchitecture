@@ -10,7 +10,7 @@ public class DummyAirportGeolocatorTest {
 
     @Before
     public void setup() {
-        this.dummyAirportGeolocator = new DummyAirportGeolocator();
+        dummyAirportGeolocator = new DummyAirportGeolocator();
     }
 
     @Test
