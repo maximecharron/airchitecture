@@ -31,7 +31,7 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
     $scope.findNearestAirport = function () {
         geolocationResource.get({}, function onSuccess(data) {
             $scope.airports.forEach(function (airport, index) {
-                if (airport.code == data.nearestAirportIATA) {
+                if (airport.code == data.nearestAirport) {
                     $scope.formData.from = airport;
                 }
             });

@@ -1,7 +1,6 @@
 package ca.ulaval.glo4003.air.service.geolocation;
 
-import ca.ulaval.glo4003.air.api.geolocation.dto.GeolocationDto;
-import ca.ulaval.glo4003.air.api.geolocation.dto.NearestAirportDTO;
+import ca.ulaval.glo4003.air.api.geolocation.dto.NearestAirportDto;
 import ca.ulaval.glo4003.air.domain.geolocation.Geolocator;
 import ca.ulaval.glo4003.air.transfer.geolocation.NearestAirportAssembler;
 import org.junit.Assert;
@@ -35,11 +34,9 @@ public class GeolocationServiceTest {
     @Test
     public void givenAnIPAddressToGeolocate_whenGeolocalizing_thenTheNearestAirportIsReturned() {
         given(geolocator.findNearestAirport(anyString())).willReturn(NEAREST_AIRPORT_IATA);
-        GeolocationDto geolocationDto = new GeolocationDto();
-        geolocationDto.ipAddress = AN_IP_ADDRESS;
 
-        NearestAirportDTO result = geolocationService.findNearestAirport(geolocationDto);
+        NearestAirportDto result = geolocationService.findNearestAirport(AN_IP_ADDRESS);
 
-        Assert.assertEquals(result.nearestAirportIATA, NEAREST_AIRPORT_IATA);
+        Assert.assertEquals(result.nearestAirport, NEAREST_AIRPORT_IATA);
     }
 }

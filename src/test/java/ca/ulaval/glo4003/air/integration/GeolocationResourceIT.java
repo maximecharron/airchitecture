@@ -12,7 +12,7 @@ public class GeolocationResourceIT {
     public void givenARequestForNearestAirport_whenGeolocalizingIPAddress_thenAnAirportIATAIsReturned() {
         get("/api/geolocation/findNearestAirport")
             .then()
-            .body("nearestAirportIATA",
+            .body("nearestAirport",
                 anyOf(
                     equalTo("YQB"),
                     equalTo("SNN"),

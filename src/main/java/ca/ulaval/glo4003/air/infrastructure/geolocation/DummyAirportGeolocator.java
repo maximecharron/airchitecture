@@ -6,16 +6,16 @@ import java.util.Random;
 
 public class DummyAirportGeolocator implements Geolocator {
 
-    private static final String STAB_CITY_AIRPORT = "SNN";
-    private static final String SAINT_SAUVEUR_AIRPORT = "YQB";
-    private static final String KNIFE_WIELDING_TENTACLE_AIRPORT = "DUB";
+    private static final String SHANNON_AIRPORT = "SNN";
+    private static final String QUEBEC_AIRPORT = "YQB";
+    private static final String DUBLIN_AIRPORT = "DUB";
 
-    private static final String[] DANGEROUS_AIRPORTS = {STAB_CITY_AIRPORT, SAINT_SAUVEUR_AIRPORT, KNIFE_WIELDING_TENTACLE_AIRPORT};
+    private static final String[] SOME_AIRPORTS = {SHANNON_AIRPORT, QUEBEC_AIRPORT, DUBLIN_AIRPORT};
 
 
     @Override
     public String findNearestAirport(String ipAddress) {
-        int randomAirport = new Random().nextInt(DANGEROUS_AIRPORTS.length);
-        return DANGEROUS_AIRPORTS[randomAirport];
+        int randomAirport = new Random().nextInt(SOME_AIRPORTS.length);
+        return SOME_AIRPORTS[randomAirport];
     }
 }

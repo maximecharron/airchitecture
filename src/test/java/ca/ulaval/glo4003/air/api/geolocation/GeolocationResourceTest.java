@@ -1,7 +1,6 @@
 package ca.ulaval.glo4003.air.api.geolocation;
 
-import ca.ulaval.glo4003.air.api.geolocation.dto.GeolocationDto;
-import ca.ulaval.glo4003.air.api.geolocation.dto.NearestAirportDTO;
+import ca.ulaval.glo4003.air.api.geolocation.dto.NearestAirportDto;
 import ca.ulaval.glo4003.air.service.geolocation.GeolocationService;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,12 +10,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GeolocationResourceTest {
 
-    private static final NearestAirportDTO NEAREST_AIRPORT_DTO = new NearestAirportDTO();
+    private static final NearestAirportDto NEAREST_AIRPORT_DTO = new NearestAirportDto();
     private static final String NEAREST_AIRPORT_IATA = "YQB";
 
     @Mock
@@ -31,11 +30,11 @@ public class GeolocationResourceTest {
 
     @Test
     public void givenAnIPAddressToGeolocalize_whenGeolocalizing_thenNearestAirportIsFound() {
-        given(geolocationService.findNearestAirport(any(GeolocationDto.class))).willReturn(NEAREST_AIRPORT_DTO);
-        NEAREST_AIRPORT_DTO.nearestAirportIATA = NEAREST_AIRPORT_IATA;
+        given(geolocationService.findNearestAirport(anyString())).willReturn(NEAREST_AIRPORT_DTO);
+        NEAREST_AIRPORT_DTO.nearestAirport = NEAREST_AIRPORT_IATA;
 
-        NearestAirportDTO result = geolocationResourceImpl.findNearestAirport();
+        NearestAirportDto result = geolocationResourceImpl.findNearestAirport();
 
-        assertEquals(result.nearestAirportIATA, NEAREST_AIRPORT_IATA);
+        assertEquals(result.nearestAirport, NEAREST_AIRPORT_IATA);
     }
 }
