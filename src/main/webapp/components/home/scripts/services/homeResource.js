@@ -15,12 +15,9 @@ homeApp.factory('weightDetectionResource', ["$resource", function ($resource) {
 }]);
 
 homeApp.factory('geolocationResource', ["$resource", function ($resource) {
-    return $resource("http://localhost:8081/api/geolocation/:path", {}, {
+    return $resource("http://localhost:8081/api/geolocation", {}, {
         get: {
-            method: 'GET',
-            params:{
-                path:"findNearestAirport"
-            }
+            method: 'GET'
         }
     });
 }]);

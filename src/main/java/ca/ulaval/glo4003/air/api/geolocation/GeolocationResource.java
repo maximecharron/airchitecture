@@ -1,9 +1,7 @@
 package ca.ulaval.glo4003.air.api.geolocation;
 
-import ca.ulaval.glo4003.air.api.geolocation.dto.GeolocationDto;
 import ca.ulaval.glo4003.air.api.geolocation.dto.NearestAirportDto;
 import ca.ulaval.glo4003.air.service.geolocation.GeolocationService;
-import ca.ulaval.glo4003.air.transfer.geolocation.GeolocationAssembler;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -21,7 +19,6 @@ public class GeolocationResource {
     }
 
     @GET
-    @Path("findNearestAirport")
     @Produces(MediaType.APPLICATION_JSON)
     public NearestAirportDto findNearestAirport() {
         return geolocationService.findNearestAirport(DUMMY_IP);

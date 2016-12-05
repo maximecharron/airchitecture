@@ -10,7 +10,7 @@ public class GeolocationResourceIT {
 
     @Test
     public void givenARequestForNearestAirport_whenGeolocalizingIPAddress_thenAnAirportIATAIsReturned() {
-        get("/api/geolocation/findNearestAirport")
+        get("/api/geolocation")
             .then()
             .body("nearestAirport",
                 anyOf(
