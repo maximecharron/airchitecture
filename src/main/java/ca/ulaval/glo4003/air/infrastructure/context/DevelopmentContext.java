@@ -2,6 +2,7 @@ package ca.ulaval.glo4003.air.infrastructure.context;
 
 import ca.ulaval.glo4003.air.api.airplane.AirplaneResource;
 import ca.ulaval.glo4003.air.api.flight.FlightResource;
+import ca.ulaval.glo4003.air.api.geolocation.GeolocationResource;
 import ca.ulaval.glo4003.air.api.transaction.CartItemResource;
 import ca.ulaval.glo4003.air.api.transaction.TransactionResource;
 import ca.ulaval.glo4003.air.api.user.AuthenticationResource;
@@ -12,6 +13,7 @@ import ca.ulaval.glo4003.air.domain.airplane.Airplane;
 import ca.ulaval.glo4003.air.domain.flight.AvailableSeatsFactory;
 import ca.ulaval.glo4003.air.domain.flight.Flight;
 import ca.ulaval.glo4003.air.domain.flight.WeightFilterVerifier;
+import ca.ulaval.glo4003.air.domain.geolocation.Geolocator;
 import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifier;
 import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifierConfiguration;
 import ca.ulaval.glo4003.air.domain.notification.TransactionNotifier;
@@ -25,6 +27,7 @@ import ca.ulaval.glo4003.air.infrastructure.airplane.AirplaneDevDataFactory;
 import ca.ulaval.glo4003.air.infrastructure.airplane.AirplaneRepositoryInMemory;
 import ca.ulaval.glo4003.air.infrastructure.flight.FlightDevDataFactory;
 import ca.ulaval.glo4003.air.infrastructure.flight.FlightRepositoryInMemory;
+import ca.ulaval.glo4003.air.infrastructure.geolocation.DummyAirportGeolocator;
 import ca.ulaval.glo4003.air.infrastructure.notification.ResourcesWithDefaultsEmailTransactionNotifierConfiguration;
 import ca.ulaval.glo4003.air.infrastructure.notification.SmtpEmailSender;
 import ca.ulaval.glo4003.air.infrastructure.transaction.TransactionRepositoryInMemory;
@@ -35,15 +38,17 @@ import ca.ulaval.glo4003.air.infrastructure.user.hashing.HashingStrategyBCrypt;
 import ca.ulaval.glo4003.air.infrastructure.weightdetection.DummyWeightDetector;
 import ca.ulaval.glo4003.air.service.airplane.AirplaneService;
 import ca.ulaval.glo4003.air.service.flight.FlightService;
+import ca.ulaval.glo4003.air.service.geolocation.GeolocationService;
 import ca.ulaval.glo4003.air.service.transaction.TransactionService;
 import ca.ulaval.glo4003.air.service.transaction.cart.CartItemService;
 import ca.ulaval.glo4003.air.service.user.UserService;
 import ca.ulaval.glo4003.air.service.weightdetection.WeightDetectionService;
 import ca.ulaval.glo4003.air.transfer.airplane.AirplaneAssembler;
 import ca.ulaval.glo4003.air.transfer.airplane.SeatMapAssembler;
-import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 import ca.ulaval.glo4003.air.transfer.flight.AvailableSeatsAssembler;
+import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 import ca.ulaval.glo4003.air.transfer.flight.SeatsPricingAssembler;
+import ca.ulaval.glo4003.air.transfer.geolocation.NearestAirportAssembler;
 import ca.ulaval.glo4003.air.transfer.transaction.CartItemAssembler;
 import ca.ulaval.glo4003.air.transfer.transaction.TransactionAssembler;
 import ca.ulaval.glo4003.air.transfer.user.UserAssembler;
@@ -80,6 +85,7 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
         AuthenticationResource authenticationResource = new AuthenticationResource(userService);
 
         WeightDetectionResource weightDetectionResource = createWeightDetectionResource();
+        GeolocationResource geolocationResource = createGeolocationResource();
 
         resources.add(airplaneResource);
         resources.add(flightResource);
@@ -88,6 +94,7 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
         resources.add(cartItemResource);
         resources.add(transactionResource);
         resources.add(weightDetectionResource);
+        resources.add(geolocationResource);
 
         return resources;
     }
@@ -141,6 +148,14 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
         WeightDetectionService weightDetectionService = new WeightDetectionService(weightDetector, weightDetectionAssembler);
 
         return new WeightDetectionResource(weightDetectionService);
+    }
+
+    private static GeolocationResource createGeolocationResource() {
+        Geolocator geolocator = new DummyAirportGeolocator();
+        NearestAirportAssembler nearestAirportAssembler = new NearestAirportAssembler();
+        GeolocationService geolocationService = new GeolocationService(geolocator, nearestAirportAssembler);
+
+        return new GeolocationResource(geolocationService);
     }
 
     private static UserService createUserService(UserAssembler userAssembler) {
