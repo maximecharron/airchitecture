@@ -1,7 +1,7 @@
 package ca.ulaval.glo4003.air.domain.airplane;
 
-import ca.ulaval.glo4003.air.api.airplane.dto.AirplaneDto;
-import ca.ulaval.glo4003.air.api.airplane.dto.AirplaneSearchResultDto;
+import ca.ulaval.glo4003.air.transfer.airplane.dto.AirplaneDto;
+import ca.ulaval.glo4003.air.transfer.airplane.dto.AirplaneSearchResultDto;
 import ca.ulaval.glo4003.air.transfer.airplane.AirplaneAssembler;
 import ca.ulaval.glo4003.air.transfer.airplane.SeatMapAssembler;
 import org.junit.Before;

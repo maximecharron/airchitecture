@@ -1,6 +1,6 @@
 package ca.ulaval.glo4003.air.transfer.airplane;
 
-import ca.ulaval.glo4003.air.api.airplane.dto.SeatMapDto;
+import ca.ulaval.glo4003.air.transfer.airplane.dto.SeatMapDto;
 import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 
 public class SeatMapAssembler {

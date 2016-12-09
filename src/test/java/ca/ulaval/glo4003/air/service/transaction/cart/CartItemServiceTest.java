@@ -1,7 +1,7 @@
 package ca.ulaval.glo4003.air.service.transaction.cart;
 
-import ca.ulaval.glo4003.air.api.airplane.dto.SeatMapDto;
-import ca.ulaval.glo4003.air.api.transaction.dto.CartItemDto;
+import ca.ulaval.glo4003.air.transfer.airplane.dto.SeatMapDto;
+import ca.ulaval.glo4003.air.transfer.transaction.dto.CartItemDto;
 import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 import ca.ulaval.glo4003.air.domain.flight.FlightNotFoundException;
 import ca.ulaval.glo4003.air.service.flight.FlightService;

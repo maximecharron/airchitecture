@@ -1,8 +1,8 @@
 package ca.ulaval.glo4003.air.service.airplane;
 
-import ca.ulaval.glo4003.air.api.airplane.dto.AirplaneUpdateDto;
-import ca.ulaval.glo4003.air.api.airplane.dto.AirplaneDto;
-import ca.ulaval.glo4003.air.api.airplane.dto.AirplaneSearchResultDto;
+import ca.ulaval.glo4003.air.transfer.airplane.dto.AirplaneUpdateDto;
+import ca.ulaval.glo4003.air.transfer.airplane.dto.AirplaneDto;
+import ca.ulaval.glo4003.air.transfer.airplane.dto.AirplaneSearchResultDto;
 import ca.ulaval.glo4003.air.domain.airplane.*;
 import ca.ulaval.glo4003.air.domain.user.InvalidTokenException;
 import ca.ulaval.glo4003.air.domain.user.UnauthorizedException;

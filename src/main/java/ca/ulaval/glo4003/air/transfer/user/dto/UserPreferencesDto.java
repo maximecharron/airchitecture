@@ -1,4 +1,4 @@
-package ca.ulaval.glo4003.air.api.user.dto;
+package ca.ulaval.glo4003.air.transfer.user.dto;
 
 public class UserPreferencesDto {
 
