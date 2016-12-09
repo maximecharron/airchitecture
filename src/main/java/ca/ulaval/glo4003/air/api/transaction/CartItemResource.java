@@ -1,10 +1,8 @@
 package ca.ulaval.glo4003.air.api.transaction;
 
-import ca.ulaval.glo4003.air.api.transaction.dto.CartItemDto;
+import ca.ulaval.glo4003.air.transfer.transaction.dto.CartItemDto;
 import ca.ulaval.glo4003.air.domain.flight.FlightNotFoundException;
-import ca.ulaval.glo4003.air.domain.transaction.cart.CartItem;
 import ca.ulaval.glo4003.air.service.transaction.cart.CartItemService;
-import ca.ulaval.glo4003.air.transfer.transaction.CartItemAssembler;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

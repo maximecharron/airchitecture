@@ -1,4 +1,4 @@
-package ca.ulaval.glo4003.air.api.airplane.dto;
+package ca.ulaval.glo4003.air.transfer.airplane.dto;
 
 public class AirplaneDto {
 

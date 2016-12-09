@@ -1,4 +1,4 @@
-package ca.ulaval.glo4003.air.api.transaction.dto;
+package ca.ulaval.glo4003.air.transfer.transaction.dto;
 
 import java.util.List;
 

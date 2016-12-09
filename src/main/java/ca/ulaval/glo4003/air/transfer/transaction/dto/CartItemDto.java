@@ -1,7 +1,6 @@
-package ca.ulaval.glo4003.air.api.transaction.dto;
+package ca.ulaval.glo4003.air.transfer.transaction.dto;
 
-import ca.ulaval.glo4003.air.api.airplane.dto.SeatMapDto;
-import ca.ulaval.glo4003.air.api.flight.dto.AirCargoFlightDto;
+import ca.ulaval.glo4003.air.transfer.airplane.dto.SeatMapDto;
 
 public class CartItemDto {
 

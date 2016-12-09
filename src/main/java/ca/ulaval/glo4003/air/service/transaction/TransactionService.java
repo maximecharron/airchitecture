@@ -1,6 +1,6 @@
 package ca.ulaval.glo4003.air.service.transaction;
 
-import ca.ulaval.glo4003.air.api.transaction.dto.TransactionDto;
+import ca.ulaval.glo4003.air.transfer.transaction.dto.TransactionDto;
 import ca.ulaval.glo4003.air.domain.notification.TransactionNotifier;
 import ca.ulaval.glo4003.air.domain.transaction.Transaction;
 import ca.ulaval.glo4003.air.domain.transaction.TransactionRepository;

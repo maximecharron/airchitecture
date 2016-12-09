@@ -1,8 +1,8 @@
 package ca.ulaval.glo4003.air.transfer.flight;
 
-import ca.ulaval.glo4003.air.api.flight.dto.AirCargoFlightDto;
-import ca.ulaval.glo4003.air.api.flight.dto.PassengerFlightDto;
-import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
+import ca.ulaval.glo4003.air.transfer.flight.dto.AirCargoFlightDto;
+import ca.ulaval.glo4003.air.transfer.flight.dto.PassengerFlightDto;
+import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.domain.flight.AirCargoFlight;
 import ca.ulaval.glo4003.air.domain.flight.FlightSearchResult;
 import ca.ulaval.glo4003.air.domain.flight.PassengerFlight;

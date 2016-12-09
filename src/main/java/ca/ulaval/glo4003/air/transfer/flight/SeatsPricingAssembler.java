@@ -1,6 +1,6 @@
 package ca.ulaval.glo4003.air.transfer.flight;
 
-import ca.ulaval.glo4003.air.api.flight.dto.SeatsPricingDto;
+import ca.ulaval.glo4003.air.transfer.flight.dto.SeatsPricingDto;
 import ca.ulaval.glo4003.air.domain.flight.SeatsPricing;
 
 public class SeatsPricingAssembler {
