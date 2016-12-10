@@ -65,7 +65,14 @@ public class FlightDevDataFactory {
             .availableSeatsFactory(availableSeatsFactory)
             .build();
 
-        Flight quebecToDublinAirCargo = new AirCargoFlight("YQB", "DUB", LocalDateTime.of(2017, 4, 24, 20, 15), AIR_NORMAL, airplanes.get(0), 30);
+        Flight quebecToDublinAirCargo = new AirCargoFlight.AirCargoFlightBuilder()
+            .departureAirport("YQB")
+            .arrivalAirport("DUB")
+            .departureDate(LocalDateTime.of(2017, 4, 24, 20, 15))
+            .airlineCompany(AIR_NORMAL)
+            .airplane(airplanes.get(0))
+            .price(30)
+            .build();
 
         flights.addAll(Arrays.asList(quebecToDublin, torontoToLondon, montrealToOslo, montrealToOslo2, osloToMontreal, quebecToDublinAirCargo));
         return flights;

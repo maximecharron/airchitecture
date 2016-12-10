@@ -10,9 +10,53 @@ public class AirCargoFlight extends Flight {
     private double price;
     private double totalWeight = 0;
 
-    public AirCargoFlight(String departureAirport, String arrivalAirport, LocalDateTime departureDate, String airlineCompany, Airplane airplane, double price) {
-        super(departureAirport, arrivalAirport, departureDate, airlineCompany, airplane);
-        this.price = price;
+    public static class AirCargoFlightBuilder {
+
+        private String departureAirport;
+        private String arrivalAirport;
+        private LocalDateTime departureDate;
+        private String airlineCompany;
+        private Airplane airplane;
+        private double price;
+
+        public AirCargoFlightBuilder departureAirport(String departureAirport) {
+            this.departureAirport = departureAirport;
+            return this;
+        }
+
+        public AirCargoFlightBuilder arrivalAirport(String arrivalAirport) {
+            this.arrivalAirport = arrivalAirport;
+            return this;
+        }
+
+        public AirCargoFlightBuilder departureDate(LocalDateTime departureDate) {
+            this.departureDate = departureDate;
+            return this;
+        }
+
+        public AirCargoFlightBuilder airlineCompany(String airlineCompany) {
+            this.airlineCompany = airlineCompany;
+            return this;
+        }
+
+        public AirCargoFlightBuilder airplane(Airplane airplane) {
+            this.airplane = airplane;
+            return this;
+        }
+
+        public AirCargoFlightBuilder price(double price) {
+            this.price = price;
+            return this;
+        }
+
+        public AirCargoFlight build() {
+            return new AirCargoFlight(this);
+        }
+    }
+
+    private AirCargoFlight(AirCargoFlightBuilder builder) {
+        super(builder.departureAirport, builder.arrivalAirport, builder.departureDate, builder.airlineCompany, builder.airplane);
+        this.price = builder.price;
     }
 
     @Override
