@@ -11,10 +11,60 @@ public class PassengerFlight extends Flight {
     private final AvailableSeats availableSeats;
     private final SeatsPricing seatsPricing;
 
-    public PassengerFlight(String departureAirport, String arrivalAirport, LocalDateTime departureDate, String airlineCompany, Airplane airplane, SeatsPricing seatsPricing, AvailableSeatsFactory availableSeatsFactory) {
-        super(departureAirport, arrivalAirport, departureDate, airlineCompany, airplane);
-        this.seatsPricing = seatsPricing;
-        this.availableSeats = availableSeatsFactory.createFromSeatMap(airplane.getSeatMap());
+    public static class PassengerFlightBuilder {
+
+        private String departureAirport;
+        private String arrivalAirport;
+        private LocalDateTime departureDate;
+        private String airlineCompany;
+        private Airplane airplane;
+        private SeatsPricing seatsPricing;
+        private AvailableSeatsFactory availableSeatsFactory;
+
+        public PassengerFlightBuilder departureAirport(String departureAirport) {
+            this.departureAirport = departureAirport;
+            return this;
+        }
+
+        public PassengerFlightBuilder arrivalAirport(String arrivalAirport) {
+            this.arrivalAirport = arrivalAirport;
+            return this;
+        }
+
+        public PassengerFlightBuilder departureDate(LocalDateTime departureDate) {
+            this.departureDate = departureDate;
+            return this;
+        }
+
+        public PassengerFlightBuilder airlineCompany(String airlineCompany) {
+            this.airlineCompany = airlineCompany;
+            return this;
+        }
+
+        public PassengerFlightBuilder airplane(Airplane airplane) {
+            this.airplane = airplane;
+            return this;
+        }
+
+        public PassengerFlightBuilder seatsPricing(SeatsPricing seatsPricing) {
+            this.seatsPricing = seatsPricing;
+            return this;
+        }
+
+        public PassengerFlightBuilder availableSeatsFactory(AvailableSeatsFactory availableSeatsFactory) {
+            this.availableSeatsFactory = availableSeatsFactory;
+            return this;
+        }
+
+        public PassengerFlight build() {
+            return new PassengerFlight(this);
+        }
+    }
+
+    private PassengerFlight(PassengerFlightBuilder builder) {
+        super(builder.departureAirport, builder.arrivalAirport, builder.departureDate, builder.airlineCompany, builder.airplane);
+        this.seatsPricing = builder.seatsPricing;
+        this.availableSeats = builder.availableSeatsFactory.createFromSeatMap(builder.airplane.getSeatMap());
     }
 
     public boolean hasAvailableEconomySeats() {

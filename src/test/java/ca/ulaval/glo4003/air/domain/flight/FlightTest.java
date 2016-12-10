@@ -50,7 +50,7 @@ public class FlightTest {
 
     @Test
     public void givenAFlight_whenCheckingIfItsLeavingAfterADateFollowingItsDepartureDate_thenItsNot() {
-        Flight flight = new PassengerFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
+        Flight flight = givenAPassengerFlight();
 
         boolean result = flight.isLeavingAfter(A_DEPARTURE_DATE.plusDays(1));
 
@@ -59,7 +59,7 @@ public class FlightTest {
 
     @Test
     public void givenAFlight_whenCheckingIfItsLeavingAfterADatePriorToItsDepartureDate_thenItIs() {
-        Flight flight = new PassengerFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
+        Flight flight = givenAPassengerFlight();
 
         boolean result = flight.isLeavingAfter(A_DEPARTURE_DATE.minusDays(1));
 
@@ -68,7 +68,7 @@ public class FlightTest {
 
     @Test
     public void givenAFlight_whenCheckingIfItsLeavingAfterItsDepartureDate_thenItsNot() {
-        Flight flight = new PassengerFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
+        Flight flight = givenAPassengerFlight();
 
         boolean result = flight.isLeavingAfter(A_DEPARTURE_DATE);
 
@@ -77,42 +77,42 @@ public class FlightTest {
 
     @Test
     public void givenAFlightDepartingFromA_whenCheckingIfItsLeavingFromA_thenItIs() {
-        Flight flight = new PassengerFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
+        Flight flight = givenAPassengerFlight();
 
         assertTrue(flight.isDepartingFrom(AIRPORT_A));
     }
 
     @Test
     public void givenAFlightLeavingToB_whenCheckingIfItsGoingToB_thenItIs() {
-        Flight flight = new PassengerFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
+        Flight flight = givenAPassengerFlight();
 
         assertTrue(flight.isGoingTo(AIRPORT_B));
     }
 
     @Test
     public void givenAFlightDepartingFromA_whenCheckingIfItsLeavingFromB_thenItIsNot() {
-        Flight flight = new PassengerFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
+        Flight flight = givenAPassengerFlight();
 
         assertFalse(flight.isDepartingFrom(AIRPORT_B));
     }
 
     @Test
     public void givenAFlightLeavingToB_whenCheckingIfItsGoingToA_thenItIsNot() {
-        Flight flight = new PassengerFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
+        Flight flight = givenAPassengerFlight();
 
         assertFalse(flight.isGoingTo(AIRPORT_A));
     }
 
     @Test
     public void givenAFlightLeavingOnADate_whenCheckingIfItsLeavingOnThisDate_thenItIs() {
-        Flight flight = new PassengerFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
+        Flight flight = givenAPassengerFlight();
 
         assertTrue(flight.isLeavingOn(A_DEPARTURE_DATE));
     }
 
     @Test
     public void givenAFlightLeavingOnDateA_whenCheckingIfItsLeavingOnDateB_thenItsNot() {
-        Flight flight = new PassengerFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
+        Flight flight = givenAPassengerFlight();
 
         assertFalse(flight.isLeavingOn(ANOTHER_DEPARTURE_DATE));
     }
@@ -172,6 +172,10 @@ public class FlightTest {
     }
 
     private PassengerFlight givenAPassengerFlight() {
-        return new PassengerFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, seatsPricing, availableSeatsFactory);
+        return new PassengerFlight.PassengerFlightBuilder()
+            .departureAirport(AIRPORT_A).arrivalAirport(AIRPORT_B).departureDate(A_DEPARTURE_DATE)
+            .airlineCompany(AN_AIRLINE_COMPANY).airplane(airplane)
+            .seatsPricing(seatsPricing).availableSeatsFactory(availableSeatsFactory)
+            .build();
     }
 }
