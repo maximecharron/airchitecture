@@ -1,4 +1,4 @@
-package ca.ulaval.glo4003.air.domain.user;
+package ca.ulaval.glo4003.air.domain.user.Exceptions;
 
 public class UserNotFoundException extends Exception {
 

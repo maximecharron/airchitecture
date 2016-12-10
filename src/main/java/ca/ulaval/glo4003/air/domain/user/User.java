@@ -52,5 +52,4 @@ public class User {
     public void stopShowingFilteredAlert() {
         this.showWeightFilteredAlert = false;
     }
-
 }

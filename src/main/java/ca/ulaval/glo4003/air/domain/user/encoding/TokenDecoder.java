@@ -1,6 +1,6 @@
 package ca.ulaval.glo4003.air.domain.user.encoding;
 
-import ca.ulaval.glo4003.air.domain.user.InvalidTokenException;
+import ca.ulaval.glo4003.air.domain.user.Exceptions.InvalidTokenException;
 
 public interface TokenDecoder {
 

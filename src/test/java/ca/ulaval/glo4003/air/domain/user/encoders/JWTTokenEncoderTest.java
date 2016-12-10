@@ -1,6 +1,6 @@
 package ca.ulaval.glo4003.air.domain.user.encoders;
 
-import ca.ulaval.glo4003.air.domain.user.InvalidTokenException;
+import ca.ulaval.glo4003.air.domain.user.Exceptions.InvalidTokenException;
 import ca.ulaval.glo4003.air.infrastructure.user.encoding.JWTTokenEncoder;
 import com.auth0.jwt.JWTSigner;
 import com.auth0.jwt.JWTVerifier;

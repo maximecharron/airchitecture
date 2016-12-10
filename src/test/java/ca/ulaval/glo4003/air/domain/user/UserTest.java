@@ -32,13 +32,13 @@ public class UserTest {
     @Before
     public void setup() {
         given(hashingStrategy.hashPassword(anyString())).willReturn(A_HASHED_PASSWORD);
-        user = new User(EMAIL, PASSWORD, tokenEncoder, hashingStrategy, IS_NOT_ADMIN);
+        user = new UserBuilder().setEmailAddress(EMAIL).setPassword(PASSWORD).setTokenEncoder(tokenEncoder).setHashingStrategy(hashingStrategy).setIsAdmin(IS_NOT_ADMIN).build();
     }
 
     @Test
     public void whenConstructingNewUser_thenPasswordIsHash() {
 
-        User newUser = new User(EMAIL, PASSWORD, tokenEncoder, hashingStrategy, IS_NOT_ADMIN);
+        User newUser = new UserBuilder().setEmailAddress(EMAIL).setPassword(PASSWORD).setTokenEncoder(tokenEncoder).setHashingStrategy(hashingStrategy).setIsAdmin(IS_NOT_ADMIN).build();
 
         assertEquals(A_HASHED_PASSWORD, newUser.getPassword());
     }

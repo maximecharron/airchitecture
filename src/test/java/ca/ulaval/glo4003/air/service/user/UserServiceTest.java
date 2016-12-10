@@ -1,5 +1,7 @@
 package ca.ulaval.glo4003.air.service.user;
 
+import ca.ulaval.glo4003.air.domain.user.Exceptions.InvalidTokenException;
+import ca.ulaval.glo4003.air.domain.user.Exceptions.UserAlreadyExistException;
 import ca.ulaval.glo4003.air.transfer.user.dto.UserDto;
 import ca.ulaval.glo4003.air.transfer.user.dto.UserPreferencesDto;
 import ca.ulaval.glo4003.air.domain.user.*;

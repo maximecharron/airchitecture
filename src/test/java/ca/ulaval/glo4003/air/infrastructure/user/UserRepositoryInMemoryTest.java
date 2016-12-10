@@ -1,7 +1,7 @@
 package ca.ulaval.glo4003.air.infrastructure.user;
 
 import ca.ulaval.glo4003.air.domain.user.User;
-import ca.ulaval.glo4003.air.domain.user.UserAlreadyExistException;
+import ca.ulaval.glo4003.air.domain.user.Exceptions.UserAlreadyExistException;
 import ca.ulaval.glo4003.air.domain.user.UserRepository;
 import org.junit.Before;
 import org.junit.Test;

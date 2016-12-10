@@ -4,6 +4,7 @@ import ca.ulaval.glo4003.air.domain.user.User;
 import ca.ulaval.glo4003.air.domain.user.UserFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class UserDevDataFactory {
@@ -16,10 +17,11 @@ public class UserDevDataFactory {
 
     public List<User> createMockData() {
         List<User> users = new ArrayList<>();
+
         User user = userFactory.createUser("bob@test.com", "1234", false);
-        users.add(user);
         User admin = userFactory.createUser("admin@airchitecture.com", "admin", true);
-        users.add(admin);
+
+        users.addAll(Arrays.asList(user, admin));
         return users;
     }
 }
