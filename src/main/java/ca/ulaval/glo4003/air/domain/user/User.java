@@ -13,12 +13,50 @@ public class User {
     private TokenEncoder tokenEncoder;
     private boolean showWeightFilteredAlert = true;
 
-    public User(String emailAddress, String password, TokenEncoder tokenEncoder, HashingStrategy hashingStrategy, boolean isAdmin) {
-        this.emailAddress = emailAddress;
-        this.tokenEncoder = tokenEncoder;
-        this.hashingStrategy = hashingStrategy;
-        this.isAdmin = isAdmin;
-        this.password = hashingStrategy.hashPassword(password);
+    public static class UserBuilder {
+
+        private String emailAddress;
+        private String password;
+        private TokenEncoder tokenEncoder;
+        private HashingStrategy hashingStrategy;
+        private boolean isAdmin;
+
+        public UserBuilder setEmailAddress(String emailAddress) {
+            this.emailAddress = emailAddress;
+            return this;
+        }
+
+        public UserBuilder setPassword(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public UserBuilder setTokenEncoder(TokenEncoder tokenEncoder) {
+            this.tokenEncoder = tokenEncoder;
+            return this;
+        }
+
+        public UserBuilder setHashingStrategy(HashingStrategy hashingStrategy) {
+            this.hashingStrategy = hashingStrategy;
+            return this;
+        }
+
+        public UserBuilder setIsAdmin(boolean isAdmin) {
+            this.isAdmin = isAdmin;
+            return this;
+        }
+
+        public User build() {
+            return new User(this);
+        }
+    }
+
+    private User(UserBuilder userBuilder) {
+        this.emailAddress = userBuilder.emailAddress;
+        this.tokenEncoder = userBuilder.tokenEncoder;
+        this.hashingStrategy = userBuilder.hashingStrategy;
+        this.isAdmin = userBuilder.isAdmin;
+        this.password = hashingStrategy.hashPassword(userBuilder.password);
     }
 
     public String getEmailAddress() {
