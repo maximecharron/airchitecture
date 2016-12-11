@@ -34,14 +34,7 @@ public class FlightService {
         validateAirportsArePresent(flightSearchQueryDto.departureAirport, flightSearchQueryDto.arrivalAirport);
 
         validateWeightIsPresent(flightSearchQueryDto.weight);
-        logRequest(flightSearchQueryDto.departureAirport,
-            flightSearchQueryDto.arrivalAirport,
-            flightSearchQueryDto.departureDate,
-            flightSearchQueryDto.weight,
-            flightSearchQueryDto.onlyAirVivant,
-            flightSearchQueryDto.hasEconomySeats,
-            flightSearchQueryDto.hasRegularSeats,
-            flightSearchQueryDto.hasBusinessSeats);
+        logRequest(flightSearchQueryDto);
 
         FlightQueryBuilder query = flightRepository.query()
                                                    .isDepartingFrom(flightSearchQueryDto.departureAirport)
@@ -99,10 +92,10 @@ public class FlightService {
         return flightsWithAirCargo;
     }
 
-    private void logRequest(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant, boolean onlyEconomicFlights, boolean onlyRegularFlights, boolean onlyBusinessFlights) {
-        String query = "Finding all flights from " + departureAirport + " to " + arrivalAirport + " with a luggage weight of " + weight + " lbs with a boolean value for being airVivant is " + isOnlyAirVivant + " and show Economic Flights is " + onlyEconomicFlights + " and Regular Flights is " + onlyRegularFlights + " and Business flights is " + onlyBusinessFlights;
-        if (departureDate != null) {
-            query = query.concat(" on " + departureDate.toString());
+    private void logRequest(FlightSearchQueryDto flightSearchQueryDto) {
+        String query = "Finding all flights from " + flightSearchQueryDto.departureAirport + " to " + flightSearchQueryDto.arrivalAirport + " with a luggage weight of " + flightSearchQueryDto.weight + " lbs with a boolean value for being airVivant is " + flightSearchQueryDto.onlyAirVivant + " and show Economic Flights is " + flightSearchQueryDto.hasEconomySeats + " and Regular Flights is " + flightSearchQueryDto.hasRegularSeats + " and Business flights is " + flightSearchQueryDto.hasBusinessSeats;
+        if (flightSearchQueryDto.departureDate != null) {
+            query = query.concat(" on " + flightSearchQueryDto.departureDate.toString());
         }
         logger.info(query);
     }
