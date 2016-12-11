@@ -1,7 +1,5 @@
 package ca.ulaval.glo4003.air.domain.user;
 
-import ca.ulaval.glo4003.air.domain.user.Exceptions.UserAlreadyExistException;
-
 import java.util.Optional;
 
 public interface UserRepository {

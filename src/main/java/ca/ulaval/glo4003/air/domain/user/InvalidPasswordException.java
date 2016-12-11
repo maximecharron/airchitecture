@@ -1,4 +1,4 @@
-package ca.ulaval.glo4003.air.domain.user.Exceptions;
+package ca.ulaval.glo4003.air.domain.user;
 
 public class InvalidPasswordException extends Exception {
 

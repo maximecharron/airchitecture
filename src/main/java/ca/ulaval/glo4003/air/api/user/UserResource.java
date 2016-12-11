@@ -2,7 +2,7 @@ package ca.ulaval.glo4003.air.api.user;
 
 import ca.ulaval.glo4003.air.transfer.user.dto.UserDto;
 import ca.ulaval.glo4003.air.transfer.user.dto.UserPreferencesDto;
-import ca.ulaval.glo4003.air.domain.user.Exceptions.InvalidTokenException;
+import ca.ulaval.glo4003.air.domain.user.InvalidTokenException;
 import ca.ulaval.glo4003.air.service.user.UserService;
 
 import javax.ws.rs.*;
