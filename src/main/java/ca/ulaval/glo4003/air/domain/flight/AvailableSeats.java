@@ -14,6 +14,10 @@ public class AvailableSeats {
         this.businessSeats = seatMap.getBusinessSeats();
     }
 
+    public int totalSeatsLeft() {
+        return economicSeats + regularSeats + businessSeats;
+    }
+
     public void reserve(SeatMap seatMap) {
         this.economicSeats -= seatMap.getEconomicSeats();
         this.regularSeats -= seatMap.getRegularSeats();

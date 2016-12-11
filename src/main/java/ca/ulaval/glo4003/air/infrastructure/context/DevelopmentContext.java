@@ -12,6 +12,7 @@ import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.airplane.Airplane;
 import ca.ulaval.glo4003.air.domain.flight.AvailableSeatsFactory;
 import ca.ulaval.glo4003.air.domain.flight.Flight;
+import ca.ulaval.glo4003.air.domain.flight.FlightSortingStrategy;
 import ca.ulaval.glo4003.air.domain.flight.WeightFilterVerifier;
 import ca.ulaval.glo4003.air.domain.geolocation.Geolocator;
 import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifier;
@@ -27,6 +28,7 @@ import ca.ulaval.glo4003.air.infrastructure.airplane.AirplaneDevDataFactory;
 import ca.ulaval.glo4003.air.infrastructure.airplane.AirplaneRepositoryInMemory;
 import ca.ulaval.glo4003.air.infrastructure.flight.FlightDevDataFactory;
 import ca.ulaval.glo4003.air.infrastructure.flight.FlightRepositoryInMemory;
+import ca.ulaval.glo4003.air.infrastructure.flight.SeatsAndPriceSortingStrategy;
 import ca.ulaval.glo4003.air.infrastructure.geolocation.DummyAirportGeolocator;
 import ca.ulaval.glo4003.air.infrastructure.notification.ResourcesWithDefaultsEmailTransactionNotifierConfiguration;
 import ca.ulaval.glo4003.air.infrastructure.notification.SmtpEmailSender;
@@ -138,7 +140,8 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
 
         WeightFilterVerifier weightFilterVerifier = new WeightFilterVerifier();
         DateTimeFactory dateTimeFactory = new DateTimeFactory();
-        return new FlightService(flightRepository, weightFilterVerifier, dateTimeFactory, flightAssembler);
+        FlightSortingStrategy flightSortingStrategy = new SeatsAndPriceSortingStrategy();
+        return new FlightService(flightRepository, weightFilterVerifier, dateTimeFactory, flightSortingStrategy, flightAssembler);
     }
 
 

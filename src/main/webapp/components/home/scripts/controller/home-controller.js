@@ -134,7 +134,6 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
         }).then(function (modal) {
             modal.element.modal();
             modal.close.then(function (result) {
-                console.log(result);
                 $scope.formData.date = result.departureDate;
                 $scope.find();
             });

@@ -33,8 +33,24 @@ public class PassengerFlight extends Flight {
         return this.availableSeats;
     }
 
+    public int totalSeatsLeft() {
+        return availableSeats.totalSeatsLeft();
+    }
+
     public SeatsPricing getSeatsPricing() {
         return seatsPricing;
+    }
+
+    public double getEconomicSeatsPrice() {
+        return seatsPricing.getEconomicSeatsPrice();
+    }
+
+    public double getRegularSeatsPrice() {
+        return seatsPricing.getRegularSeatsPrice();
+    }
+
+    public double getBusinessSeatsPrice() {
+        return seatsPricing.getBusinessSeatsPrice();
     }
 
     public void reserveSeats(SeatMap seatMap) {

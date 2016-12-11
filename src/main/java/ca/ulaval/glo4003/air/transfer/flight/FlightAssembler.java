@@ -34,6 +34,19 @@ public class FlightAssembler {
         return passengerFlightDto;
     }
 
+    public FlightSearchResultDto create(FlightSearchResult flightSearchResult) {
+        FlightSearchResultDto flightSearchResultDto = new FlightSearchResultDto();
+        flightSearchResultDto.flights = this.create(flightSearchResult.getFlightsFilteredByWeight(), flightSearchResult.getWeight(), flightSearchResult.getFlightsWithAirCargo());
+        flightSearchResultDto.flightsWereFilteredByWeight = flightSearchResult.isFlightsWereFilteredByWeight();
+        return flightSearchResultDto;
+    }
+
+    private List<PassengerFlightDto> create(List<PassengerFlight> flights, double weight, Map<PassengerFlight, AirCargoFlight> flightsWithAirCargo) {
+        List<PassengerFlightDto> flightDtos =  flights.stream().map(flight -> create(flight, weight)).collect(Collectors.toList());
+        flightsWithAirCargo.entrySet().forEach(entry -> flightDtos.add(create(entry.getKey(), weight, entry.getValue())));
+        return flightDtos;
+    }
+
     public PassengerFlightDto create(PassengerFlight flight, double weight, AirCargoFlight airCargoFlight) {
         PassengerFlightDto passengerFlightDto = create(flight, weight);
         passengerFlightDto.airCargoFlight = create(airCargoFlight);
@@ -48,20 +61,5 @@ public class FlightAssembler {
         airCargoFlightDto.arrivalAirport = airCargoFlight.getArrivalAirport();
         airCargoFlightDto.price = airCargoFlight.getPrice();
         return airCargoFlightDto;
-    }
-
-    public FlightSearchResultDto create(FlightSearchResult flightSearchResult) {
-        FlightSearchResultDto flightSearchResultDto = new FlightSearchResultDto();
-        flightSearchResultDto.flights = this.create(flightSearchResult.getFlightsFilteredByWeight(), flightSearchResult.getWeight(), flightSearchResult.getFlightsWithAirCargo());
-        flightSearchResultDto.flightsWereFilteredByWeight = flightSearchResult.isFlightsWereFilteredByWeight();
-        return flightSearchResultDto;
-    }
-
-    private List<PassengerFlightDto> create(List<PassengerFlight> flights, double weight, Map<PassengerFlight, AirCargoFlight> flightsWithAirCargo) {
-        List<PassengerFlightDto> flightDtos =  flights.stream().map(flight -> create(flight, weight)).collect(Collectors.toList());
-        flightsWithAirCargo.entrySet().forEach(entry -> {
-            flightDtos.add(create(entry.getKey(), weight, entry.getValue()));
-        });
-        return flightDtos;
     }
 }
