@@ -43,12 +43,6 @@ public class FlightRepositoryInMemory implements FlightRepository {
         }
 
         @Override
-        public FlightQueryBuilder isLeavingOn(LocalDateTime date) {
-            predicates.add(flight -> flight.isLeavingOn(date));
-            return this;
-        }
-
-        @Override
         public FlightQueryBuilder isLeavingAfter(LocalDateTime date) {
             predicates.add(flight -> flight.isLeavingAfter(date));
             return this;
@@ -62,25 +56,15 @@ public class FlightRepositoryInMemory implements FlightRepository {
 
         @Override
         public FlightQueryBuilder isAirVivant() {
-            predicates.add(flight -> flight.isAirVivant());
+            predicates.add(Flight::isAirVivant);
             return this;
         }
 
         @Override
-        public FlightQueryBuilder hasEconomySeatsAvailable() {
-            predicates.add(flight -> flight.isPassengerFlight() && ((PassengerFlight)flight).hasAvailableEconomySeats());
-            return this;
-        }
-
-        @Override
-        public FlightQueryBuilder hasRegularSeatsAvailable() {
-            predicates.add(flight -> flight.isPassengerFlight() && ((PassengerFlight)flight).hasAvailableRegularSeats());
-            return this;
-        }
-
-        @Override
-        public FlightQueryBuilder hasBusinessSeatsAvailable() {
-            predicates.add(flight -> flight.isPassengerFlight() && ((PassengerFlight)flight).hasAvailableBusinessSeats());
+        public FlightQueryBuilder hasSeatsAvailable(boolean economySeats, boolean regularSeats, boolean businessSeats){
+            predicates.add(flight -> flight.isPassengerFlight() && (((PassengerFlight)flight).hasAvailableEconomySeats() == economySeats
+                    || ((PassengerFlight)flight).hasAvailableRegularSeats() == regularSeats
+                    || ((PassengerFlight)flight).hasAvailableBusinessSeats() == businessSeats));
             return this;
         }
 
@@ -115,11 +99,13 @@ public class FlightRepositoryInMemory implements FlightRepository {
         }
 
         private Stream<PassengerFlight> filterPassengerFlights(Stream<Flight> flights) {
-            return flights.filter(flight -> flight.isPassengerFlight()).map(flight -> (PassengerFlight) flight);
+            return flights.filter(Flight::isPassengerFlight)
+                          .map(flight -> (PassengerFlight) flight);
         }
 
         private Stream<AirCargoFlight> filterAirCargoFlights(Stream<Flight> flights) {
-            return flights.filter(flight -> flight.isAirCargo()).map(flight -> (AirCargoFlight) flight);
+            return flights.filter(Flight::isAirCargo)
+                          .map(flight -> (AirCargoFlight) flight);
         }
 
         private Stream<Flight> filterFlights() {

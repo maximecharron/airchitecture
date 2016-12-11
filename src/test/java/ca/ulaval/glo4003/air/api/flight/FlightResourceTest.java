@@ -1,6 +1,6 @@
 package ca.ulaval.glo4003.air.api.flight;
 
-import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
+import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.service.flight.FlightService;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;

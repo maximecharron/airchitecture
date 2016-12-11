@@ -1,8 +1,7 @@
 package ca.ulaval.glo4003.air.service.user;
 
-import ca.ulaval.glo4003.air.api.user.dto.UserDto;
-import ca.ulaval.glo4003.air.api.user.dto.UserSearchPreferencesDto;
-import ca.ulaval.glo4003.air.api.user.dto.UserSettingsDto;
+import ca.ulaval.glo4003.air.transfer.user.dto.UserDto;
+import ca.ulaval.glo4003.air.transfer.user.dto.UserPreferencesDto;
 import ca.ulaval.glo4003.air.domain.user.*;
 import ca.ulaval.glo4003.air.domain.user.encoding.TokenDecoder;
 import ca.ulaval.glo4003.air.transfer.user.UserAssembler;

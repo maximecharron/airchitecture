@@ -32,8 +32,8 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
     }
 
     $http.get('./airports.json')
-        .success(function(data) {
-            $scope.airports=data;
+        .success(function (data) {
+            $scope.airports = data;
         });
 
     $scope.detectWeight = function () {
@@ -42,15 +42,25 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
         })
     };
 
+    $scope.findNearestAirport = function () {
+        geolocationResource.get({}, function onSuccess(data) {
+            $scope.airports.forEach(function (airport, index) {
+                if (airport.code == data.nearestAirport) {
+                    $scope.formData.from = airport;
+                }
+            });
+        });
+    }
+
     $scope.closeWeightFilteredAlert = function () {
-        $scope.hideWeightFilteredAlert = true;
-        if ($rootScope.user){
-            userResource.put({hideWeightFilteredAlert: true}, function onSuccess(data) {
+        $scope.showWeightFilteredAlert = false;
+        if ($rootScope.user) {
+            userResource.put({showWeightFilteredAlert: false}, function onSuccess(data) {
                 $rootScope.user = data;
                 $cookies.putObject("user", $rootScope.user);
             });
-        } else{
-            $window.localStorage.setItem("hideWeightFilteredAlert", false);
+        } else {
+            $window.localStorage.setItem("showWeightFilteredAlert", false);
         }
     };
 
@@ -97,13 +107,17 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
                 flight.humanArrivalAirport = $scope.formData.to.name;
                 flight.humanDepartureAirport = $scope.formData.from.name;
                 flight.luggageWeight = $scope.formData.luggageWeight;
-                flight.nameEconomic = flight.airlineCompany + " from " + flight.humanDepartureAirport + " to "+ flight.humanArrivalAirport + " - Economic Seat";
-                flight.nameBusiness = flight.airlineCompany + " from " + flight.humanDepartureAirport + " to "+ flight.humanArrivalAirport + " - Business Seat";
-                flight.nameRegular = flight.airlineCompany + " from " + flight.humanDepartureAirport + " to "+ flight.humanArrivalAirport + " - Regular Seat";
+                flight.nameEconomic = flight.airlineCompany + " from " + flight.humanDepartureAirport + " to " + flight.humanArrivalAirport + " - Economic Seat";
+                flight.nameBusiness = flight.airlineCompany + " from " + flight.humanDepartureAirport + " to " + flight.humanArrivalAirport + " - Business Seat";
+                flight.nameRegular = flight.airlineCompany + " from " + flight.humanDepartureAirport + " to " + flight.humanArrivalAirport + " - Regular Seat";
                 flights.push(flight);
             }
-            if ($rootScope.user) {$scope.hideWeightFilteredAlert = $rootScope.user.hidesWeightFilteredAlert}
-            else {$scope.hideWeightFilteredAlert = $window.localStorage.getItem("hideWeightFilteredAlert") === null}
+            if ($rootScope.user) {
+                $scope.showWeightFilteredAlert = $rootScope.user.showsWeightFilteredAlert
+            }
+            else {
+                $scope.showWeightFilteredAlert = $window.localStorage.getItem("showWeightFilteredAlert") === null
+            }
 
             $scope.flightsResults = flights;
             $scope.flightsWereFilteredByWeight = data.flightsWereFilteredByWeight;
@@ -134,18 +148,17 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
         }).then(function (modal) {
             modal.element.modal();
             modal.close.then(function (result) {
-                console.log(result);
                 $scope.formData.date = result.departureDate;
                 $scope.find();
             });
         });
     };
 
-    $scope.today = function() {
+    $scope.today = function () {
         $scope.formData.date = new Date();
     };
 
-    $scope.clear = function() {
+    $scope.clear = function () {
         $scope.formData.date = null;
     };
 
@@ -161,18 +174,18 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
         startingDay: 1
     };
 
-    $scope.toggleMin = function() {
+    $scope.toggleMin = function () {
         $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
         $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
     };
 
     $scope.toggleMin();
 
-    $scope.open1 = function() {
+    $scope.open1 = function () {
         $scope.popup1.opened = true;
     };
 
-    $scope.setDate = function(year, month, day) {
+    $scope.setDate = function (year, month, day) {
         $scope.formData.date = new Date(year, month, day);
     };
 
@@ -203,10 +216,10 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
         var date = data.date,
             mode = data.mode;
         if (mode === 'day') {
-            var dayToCheck = new Date(date).setHours(0,0,0,0);
+            var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
 
             for (var i = 0; i < $scope.events.length; i++) {
-                var currentDay = new Date($scope.events[i].date).setHours(0,0,0,0);
+                var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
 
                 if (dayToCheck === currentDay) {
                     return $scope.events[i].status;

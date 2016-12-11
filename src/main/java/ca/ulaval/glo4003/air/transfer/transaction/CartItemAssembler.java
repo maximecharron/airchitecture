@@ -1,12 +1,9 @@
 package ca.ulaval.glo4003.air.transfer.transaction;
 
-import ca.ulaval.glo4003.air.api.transaction.dto.CartItemDto;
+import ca.ulaval.glo4003.air.transfer.transaction.dto.CartItemDto;
 import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
-import ca.ulaval.glo4003.air.domain.flight.AvailableSeats;
 import ca.ulaval.glo4003.air.domain.transaction.cart.CartItem;
 import ca.ulaval.glo4003.air.transfer.airplane.SeatMapAssembler;
-import ca.ulaval.glo4003.air.transfer.flight.AvailableSeatsAssembler;
-import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 
 import java.time.LocalDateTime;
 import java.util.List;

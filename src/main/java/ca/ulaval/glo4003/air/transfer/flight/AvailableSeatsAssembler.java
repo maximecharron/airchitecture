@@ -1,6 +1,6 @@
 package ca.ulaval.glo4003.air.transfer.flight;
 
-import ca.ulaval.glo4003.air.api.flight.dto.AvailableSeatsDto;
+import ca.ulaval.glo4003.air.transfer.flight.dto.AvailableSeatsDto;
 import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 import ca.ulaval.glo4003.air.domain.flight.AvailableSeats;
 

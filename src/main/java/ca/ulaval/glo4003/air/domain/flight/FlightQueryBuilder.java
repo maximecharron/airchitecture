@@ -10,19 +10,13 @@ public interface FlightQueryBuilder {
 
     FlightQueryBuilder isDepartingFrom(String airport);
 
-    FlightQueryBuilder isLeavingOn(LocalDateTime date);
-
     FlightQueryBuilder isLeavingAfter(LocalDateTime date);
 
     FlightQueryBuilder acceptsWeight(double weight);
 
     FlightQueryBuilder isAirVivant();
 
-    FlightQueryBuilder hasEconomySeatsAvailable();
-
-    FlightQueryBuilder hasRegularSeatsAvailable();
-
-    FlightQueryBuilder hasBusinessSeatsAvailable();
+    FlightQueryBuilder hasSeatsAvailable(boolean economySeats, boolean regularSeats, boolean businessSeats);
 
     FlightQueryBuilder hasAirlineCompany(String flightNumber);
 

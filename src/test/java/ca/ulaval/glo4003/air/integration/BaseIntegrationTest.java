@@ -8,7 +8,7 @@ import org.junit.runners.Suite;
 import static java.lang.Thread.sleep;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({FlightResourceIT.class, UserResourceIT.class})
+@Suite.SuiteClasses({FlightResourceIT.class, UserResourceIT.class, GeolocationResourceIT.class})
 public class BaseIntegrationTest {
 
     private static boolean isStarted = false;
