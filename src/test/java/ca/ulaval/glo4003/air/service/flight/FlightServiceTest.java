@@ -62,6 +62,9 @@ public class FlightServiceTest {
     private List<PassengerFlight> flightsFilteredByWeight;
 
     @Mock
+    private FlightSortingStrategy flightSortingStrategy;
+
+    @Mock
     private FlightAssembler flightAssembler;
 
     @Mock
@@ -75,18 +78,18 @@ public class FlightServiceTest {
         given(flightQueryBuilder.isDepartingFrom(any())).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.isGoingTo(any())).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.isLeavingAfter(any())).willReturn(flightQueryBuilder);
-        given(flightQueryBuilder.isLeavingOn(any())).willReturn(flightQueryBuilder);
+        given(flightQueryBuilder.isLeavingAfter(any())).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.acceptsWeight(anyDouble())).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.isAirVivant()).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.hasAirlineCompany(anyString())).willReturn(flightQueryBuilder);
-        flightService = new FlightService(flightRepository, weightFilterVerifier, dateTimeFactory, flightAssembler);
+        flightService = new FlightService(flightRepository, weightFilterVerifier, dateTimeFactory, flightSortingStrategy, flightAssembler);
     }
 
     @Test
     public void givenSearchFiltersWithADepartureDate_whenFindingAllMatchingFlights_thenTheRepositoryFindsCorrespondingFlights() {
         flightService.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
 
-        verify(flightQueryBuilder).isLeavingOn(DATE);
+        verify(flightQueryBuilder).isLeavingAfter(DATE);
     }
 
     @Test
@@ -164,7 +167,7 @@ public class FlightServiceTest {
         flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
 
         verify(flightQueryBuilder).hasAirlineCompany(AIRLINE_COMPANY);
-        verify(flightQueryBuilder).isLeavingOn(DATE);
+        verify(flightQueryBuilder).isLeavingAfter(DATE);
         verify(flightQueryBuilder).findOnePassengerFlight();
     }
 
@@ -200,7 +203,7 @@ public class FlightServiceTest {
         flightService.releasePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
 
         verify(flightQueryBuilder).hasAirlineCompany(AIRLINE_COMPANY);
-        verify(flightQueryBuilder).isLeavingOn(DATE);
+        verify(flightQueryBuilder).isLeavingAfter(DATE);
         verify(flightQueryBuilder).findOnePassengerFlight();
     }
 

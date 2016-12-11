@@ -28,10 +28,6 @@ public abstract class Flight {
         return this.arrivalAirport.equals(arrivalAirport);
     }
 
-    public boolean isLeavingOn(LocalDateTime date) {
-        return isOnSameDay(date, departureDate);
-    }
-
     public boolean isFromCompany(String airlineCompany) {
         return this.airlineCompany.equals(airlineCompany);
     }
@@ -58,10 +54,6 @@ public abstract class Flight {
 
     public boolean isAirVivant() {
         return airplane.isAirVivant();
-    }
-
-    private boolean isOnSameDay(LocalDateTime date1, LocalDateTime date2) {
-        return date1.getDayOfYear() == date2.getDayOfYear() && date1.getYear() == date2.getYear();
     }
 
     public String getDepartureAirport() {
