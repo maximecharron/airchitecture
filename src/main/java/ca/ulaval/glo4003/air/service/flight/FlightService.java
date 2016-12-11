@@ -1,10 +1,11 @@
 package ca.ulaval.glo4003.air.service.flight;
 
-import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 import ca.ulaval.glo4003.air.domain.flight.*;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
+import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchQueryDto;
+import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchResultDto;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -29,43 +30,50 @@ public class FlightService {
         this.flightAssembler = flightAssembler;
     }
 
-    public FlightSearchResultDto findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant, boolean acceptsAirCargo, boolean hasEconomySeats, boolean hasRegularSeats, boolean hasBusinessSeats) {
+    public FlightSearchResultDto findAllWithFilters(FlightSearchQueryDto flightSearchQueryDto) {
+        validateAirportsArePresent(flightSearchQueryDto.departureAirport, flightSearchQueryDto.arrivalAirport);
 
-        validateAirportsArePresent(departureAirport, arrivalAirport);
-        validateWeightIsPresent(weight);
-        logRequest(departureAirport, arrivalAirport, departureDate, weight, isOnlyAirVivant, hasEconomySeats, hasRegularSeats, hasBusinessSeats);
+        validateWeightIsPresent(flightSearchQueryDto.weight);
+        logRequest(flightSearchQueryDto.departureAirport,
+            flightSearchQueryDto.arrivalAirport,
+            flightSearchQueryDto.departureDate,
+            flightSearchQueryDto.weight,
+            flightSearchQueryDto.onlyAirVivant,
+            flightSearchQueryDto.hasEconomySeats,
+            flightSearchQueryDto.hasRegularSeats,
+            flightSearchQueryDto.hasBusinessSeats);
 
         FlightQueryBuilder query = flightRepository.query()
-                                                   .isDepartingFrom(departureAirport)
-                                                   .isGoingTo(arrivalAirport);
+                                                   .isDepartingFrom(flightSearchQueryDto.departureAirport)
+                                                   .isGoingTo(flightSearchQueryDto.arrivalAirport);
 
-        if (departureDate != null) {
-            query.isLeavingOn(departureDate);
+        if (flightSearchQueryDto.departureDate != null) {
+            query.isLeavingOn(flightSearchQueryDto.departureDate);
         } else {
             query.isLeavingAfter(dateTimeFactory.now());
         }
 
-        if (isOnlyAirVivant) {
+        if (flightSearchQueryDto.onlyAirVivant) {
             query.isAirVivant();
         }
 
-        if (hasEconomySeats || hasBusinessSeats || hasRegularSeats){
-            query.hasSeatsAvailable(hasEconomySeats, hasRegularSeats, hasBusinessSeats);
+        if (flightSearchQueryDto.hasEconomySeats || flightSearchQueryDto.hasBusinessSeats || flightSearchQueryDto.hasRegularSeats){
+            query.hasSeatsAvailable(flightSearchQueryDto.hasEconomySeats, flightSearchQueryDto.hasRegularSeats, flightSearchQueryDto.hasBusinessSeats);
         }
 
         List<PassengerFlight> allPassengerFlights = query.getPassengerFlights();
-        query.acceptsWeight(weight);
+        query.acceptsWeight(flightSearchQueryDto.weight);
         List<PassengerFlight> flightsFilteredByWeight = query.getPassengerFlights();
 
         boolean flightsWereFilteredByWeight = weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, allPassengerFlights);
 
         Map<PassengerFlight, AirCargoFlight> flightsWithAirCargo = new HashMap<>();
-        if (flightsWereFilteredByWeight && acceptsAirCargo) {
+        if (flightsWereFilteredByWeight && flightSearchQueryDto.acceptsAirCargo) {
             allPassengerFlights.removeAll(flightsFilteredByWeight);
-            flightsWithAirCargo.putAll(searchForAirCargo(allPassengerFlights, departureAirport, arrivalAirport, isOnlyAirVivant));
+            flightsWithAirCargo.putAll(searchForAirCargo(allPassengerFlights, flightSearchQueryDto.departureAirport, flightSearchQueryDto.arrivalAirport, flightSearchQueryDto.onlyAirVivant));
         }
 
-        FlightSearchResult searchResult = new FlightSearchResult(flightsFilteredByWeight, weight, flightsWereFilteredByWeight, flightsWithAirCargo);
+        FlightSearchResult searchResult = new FlightSearchResult(flightsFilteredByWeight, flightSearchQueryDto.weight, flightsWereFilteredByWeight, flightsWithAirCargo);
         return flightAssembler.create(searchResult);
     }
 
