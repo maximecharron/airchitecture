@@ -1,6 +1,5 @@
 package ca.ulaval.glo4003.air.service.flight;
 
-import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 import ca.ulaval.glo4003.air.domain.flight.*;
@@ -82,8 +81,8 @@ public class FlightService {
 
     private Map<PassengerFlight, AirCargoFlight> searchForAirCargo(List<PassengerFlight> allFlights, String departureAirport, String arrivalAirport, boolean isOnlyAirVivant) {
         FlightQueryBuilder query = flightRepository.query()
-                .isDepartingFrom(departureAirport)
-                .isGoingTo(arrivalAirport);
+                                                   .isDepartingFrom(departureAirport)
+                                                   .isGoingTo(arrivalAirport);
 
         if (isOnlyAirVivant) {
             query.isAirVivant();

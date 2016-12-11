@@ -1,7 +1,9 @@
 package ca.ulaval.glo4003.air.domain.user;
 
-import ca.ulaval.glo4003.air.transfer.user.dto.UserDto;
 import ca.ulaval.glo4003.air.transfer.user.UserAssembler;
+import ca.ulaval.glo4003.air.transfer.user.dto.UserDto;
+import ca.ulaval.glo4003.air.transfer.user.dto.UserSearchPreferencesDto;
+import ca.ulaval.glo4003.air.transfer.user.dto.UserSettingsDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

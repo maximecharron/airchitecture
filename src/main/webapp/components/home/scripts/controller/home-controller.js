@@ -1,4 +1,4 @@
-homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cookies, $window, homeResource, weightDetectionResource, userResource, userSearchPreferencesResource, ModalService) {
+homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cookies, $window, homeResource, weightDetectionResource, userResource, userSearchPreferencesResource, geolocationResource, ModalService) {
 
     $scope.isLoading = false;
     $scope.doNotShow = false;
@@ -41,7 +41,6 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
             $scope.formData.luggageWeight = data.weight;
         })
     };
-
     $scope.findNearestAirport = function () {
         geolocationResource.get({}, function onSuccess(data) {
             $scope.airports.forEach(function (airport, index) {
