@@ -1,7 +1,7 @@
 package ca.ulaval.glo4003.air.api.user;
 
-import ca.ulaval.glo4003.air.api.user.dto.UserSearchPreferencesDto;
 import ca.ulaval.glo4003.air.api.user.dto.UserDto;
+import ca.ulaval.glo4003.air.api.user.dto.UserSearchPreferencesDto;
 import ca.ulaval.glo4003.air.api.user.dto.UserSettingsDto;
 import ca.ulaval.glo4003.air.domain.user.InvalidTokenException;
 import ca.ulaval.glo4003.air.service.user.UserService;
@@ -29,7 +29,7 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public UserDto update(UserSettingsDto userSettingsDto, @HeaderParam("X-Access-Token") String token) {
         try {
-            return this.userService.updateAuthenticatedUser(token, userSettingsDto);
+            return userService.updateAuthenticatedUser(token, userSettingsDto);
         } catch (InvalidTokenException e) {
             logger.info("Update user failed because: " + e.getMessage());
             throw new WebApplicationException(Response.status(Status.UNAUTHORIZED)
@@ -40,18 +40,15 @@ public class UserResource {
 
     @GET
     @Path("/me/searchPreferences")
-
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public UserSearchPreferencesDto getSearchPreferences(@HeaderParam("X-Access-Token") String token) {
         try {
-            UserSearchPreferencesDto userSearchPreferences = this.userService.getUserSearchPreferences(token);
-            return userSearchPreferences;
+            return userService.getUserSearchPreferences(token);
         } catch (InvalidTokenException e) {
             logger.info("Get user failed: " + e.getMessage());
             throw new WebApplicationException(Response.status(Status.UNAUTHORIZED)
-                    .entity("Token is invalid.")
-                    .build());
+                                                      .entity("Token is invalid.")
+                                                      .build());
         }
     }
 }

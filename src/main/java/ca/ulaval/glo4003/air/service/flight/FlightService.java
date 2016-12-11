@@ -4,7 +4,6 @@ import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 import ca.ulaval.glo4003.air.domain.flight.*;
-import ca.ulaval.glo4003.air.domain.user.InvalidTokenException;
 import ca.ulaval.glo4003.air.service.user.UserService;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 
@@ -33,7 +32,7 @@ public class FlightService {
         this.userService = userService;
     }
 
-    public FlightSearchResultDto findAllWithFilters(String accessToken, String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant, boolean acceptsAirCargo, boolean hasEconomySeats, boolean hasRegularSeats, boolean hasBusinessSeats) throws InvalidTokenException {
+    public FlightSearchResultDto findAllWithFilters(String accessToken, String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant, boolean acceptsAirCargo, boolean hasEconomySeats, boolean hasRegularSeats, boolean hasBusinessSeats) {
         validateAirportsArePresent(departureAirport, arrivalAirport);
         validateWeightIsPresent(weight);
         logRequest(departureAirport, arrivalAirport, departureDate, weight, isOnlyAirVivant, hasEconomySeats, hasRegularSeats, hasBusinessSeats);
@@ -43,8 +42,8 @@ public class FlightService {
         }
 
         FlightQueryBuilder query = flightRepository.query()
-                .isDepartingFrom(departureAirport)
-                .isGoingTo(arrivalAirport);
+                                                   .isDepartingFrom(departureAirport)
+                                                   .isGoingTo(arrivalAirport);
 
         if (departureDate != null) {
             query.isLeavingOn(departureDate);
@@ -84,8 +83,8 @@ public class FlightService {
 
     private Map<PassengerFlight, AirCargoFlight> searchForAirCargo(List<PassengerFlight> allFlights, String departureAirport, String arrivalAirport, boolean isOnlyAirVivant) {
         FlightQueryBuilder query = flightRepository.query()
-                .isDepartingFrom(departureAirport)
-                .isGoingTo(arrivalAirport);
+                                                   .isDepartingFrom(departureAirport)
+                                                   .isGoingTo(arrivalAirport);
 
         if (isOnlyAirVivant) {
             query.isAirVivant();
@@ -138,20 +137,20 @@ public class FlightService {
 
     private AirCargoFlight findAirCargoFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate) throws FlightNotFoundException {
         return flightRepository.query()
-                .hasAirlineCompany(airlineCompany)
-                .isGoingTo(arrivalAirport)
-                .isLeavingOn(departureDate)
-                .findOneAirCargoFlight()
-                .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
+                               .hasAirlineCompany(airlineCompany)
+                               .isGoingTo(arrivalAirport)
+                               .isLeavingOn(departureDate)
+                               .findOneAirCargoFlight()
+                               .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
     }
 
     private PassengerFlight findPassengerFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate) throws FlightNotFoundException {
         return flightRepository.query()
-                .hasAirlineCompany(airlineCompany)
-                .isGoingTo(arrivalAirport)
-                .isLeavingOn(departureDate)
-                .findOnePassengerFlight()
-                .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
+                               .hasAirlineCompany(airlineCompany)
+                               .isGoingTo(arrivalAirport)
+                               .isLeavingOn(departureDate)
+                               .findOnePassengerFlight()
+                               .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
     }
 
     private void validateAirportsArePresent(String departureAirport, String arrivalAirport) {

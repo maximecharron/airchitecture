@@ -67,7 +67,7 @@ public class UserService {
 
     public UserDto updateAuthenticatedUser(String token, UserSettingsDto userSettingsDto) throws InvalidTokenException {
         UserSettings userSettings = userAssembler.createUserSettings(userSettingsDto);
-        return this.updateAuthenticatedUser(token, userSettings);
+        return updateAuthenticatedUser(token, userSettings);
     }
 
     private UserDto updateAuthenticatedUser(String token, UserSettings userSettings) throws InvalidTokenException {
@@ -79,10 +79,15 @@ public class UserService {
         return userAssembler.create(user);
     }
 
-    public void incrementAuthenticatedUserSearchPreferences(String token, boolean hasSearchedForAirVivantFlights, boolean hasSearchedForEconomyClassFlights, boolean hasSearchedForRegularClassFlights, boolean hasSearchedForBusinessClassFlights) throws InvalidTokenException {
-        User user = authenticateUser(token);
-        user.incrementSearchesPreferences(hasSearchedForAirVivantFlights, hasSearchedForEconomyClassFlights, hasSearchedForRegularClassFlights, hasSearchedForBusinessClassFlights);
-        userRepository.update(user);
+    public void incrementAuthenticatedUserSearchPreferences(String token, boolean hasSearchedForAirVivantFlights, boolean hasSearchedForEconomyClassFlights, boolean hasSearchedForRegularClassFlights, boolean hasSearchedForBusinessClassFlights) {
+        User user;
+        try {
+            user = authenticateUser(token);
+            user.incrementSearchPreferences(hasSearchedForAirVivantFlights, hasSearchedForEconomyClassFlights, hasSearchedForRegularClassFlights, hasSearchedForBusinessClassFlights);
+            userRepository.update(user);
+        } catch (InvalidTokenException e) {
+            e.printStackTrace();
+        }
     }
 
     private User findUser(String email) throws UserNotFoundException {

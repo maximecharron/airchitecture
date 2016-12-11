@@ -1,7 +1,6 @@
 package ca.ulaval.glo4003.air.api.flight;
 
 import ca.ulaval.glo4003.air.api.flight.dto.FlightSearchResultDto;
-import ca.ulaval.glo4003.air.domain.user.InvalidTokenException;
 import ca.ulaval.glo4003.air.service.flight.FlightService;
 import ca.ulaval.glo4003.air.service.flight.InvalidParameterException;
 
@@ -52,10 +51,6 @@ public class FlightResource {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
                                                       .entity(e.getMessage())
                                                       .build());
-        } catch (InvalidTokenException e) {
-            throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED)
-                    .entity(e.getMessage())
-                    .build());
         }
     }
 

@@ -10,18 +10,10 @@ public class UserSearchPreferences {
 
     void incrementSearchesPreferences(boolean hasSearchedForAirVivantFlights, boolean hasSearchedForEconomyClassFlights, boolean hasSearchedForRegularClassFlights, boolean hasSearchedForBusinessClassFlights) {
         totalNumberOfFlightSearches++;
-        if (hasSearchedForAirVivantFlights) {
-            numberOfFlightSearchesWithAirVivantFilter++;
-        }
-        if (hasSearchedForEconomyClassFlights) {
-            numberOfFlightSearchesWithEconomyClassFilter++;
-        }
-        if (hasSearchedForRegularClassFlights) {
-            numberOfFlightSearchesWithRegularClassFilter++;
-        }
-        if (hasSearchedForBusinessClassFlights) {
-            numberOfFlightSearchesWithBusinessClassFilter++;
-        }
+        numberOfFlightSearchesWithAirVivantFilter += getCount(hasSearchedForAirVivantFlights);
+        numberOfFlightSearchesWithEconomyClassFilter += getCount(hasSearchedForEconomyClassFlights);
+        numberOfFlightSearchesWithRegularClassFilter += getCount(hasSearchedForRegularClassFlights);
+        numberOfFlightSearchesWithBusinessClassFilter += getCount(hasSearchedForBusinessClassFlights);
     }
 
     public boolean hasMostlySearchedForAirVivantFlights() {
@@ -38,5 +30,9 @@ public class UserSearchPreferences {
 
     public boolean hasMostlySearchedForBusinessClassFlights() {
         return numberOfFlightSearchesWithBusinessClassFilter > totalNumberOfFlightSearches / 2;
+    }
+
+    private int getCount(Boolean b) {
+        return b.compareTo(false);
     }
 }

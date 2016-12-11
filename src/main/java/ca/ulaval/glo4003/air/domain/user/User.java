@@ -13,7 +13,7 @@ public class User {
     private TokenEncoder tokenEncoder;
     private boolean showWeightFilteredAlert = true;
 
-    private UserSearchPreferences userSearchPreferences;
+    private final UserSearchPreferences userSearchPreferences;
 
     public User(String emailAddress, String password, TokenEncoder tokenEncoder, HashingStrategy hashingStrategy, UserSearchPreferences userSearchPreferences, boolean isAdmin) {
         this.emailAddress = emailAddress;
@@ -56,7 +56,7 @@ public class User {
         this.showWeightFilteredAlert = false;
     }
 
-    public void incrementSearchesPreferences(boolean hasSearchedForAirVivantFlights, boolean hasSearchedForEconomyClassFlights, boolean hasSearchedForRegularClassFlights, boolean hasSearchedForBusinessClassFlights) {
+    public void incrementSearchPreferences(boolean hasSearchedForAirVivantFlights, boolean hasSearchedForEconomyClassFlights, boolean hasSearchedForRegularClassFlights, boolean hasSearchedForBusinessClassFlights) {
         userSearchPreferences.incrementSearchesPreferences(hasSearchedForAirVivantFlights, hasSearchedForEconomyClassFlights, hasSearchedForRegularClassFlights, hasSearchedForBusinessClassFlights);
     }
 

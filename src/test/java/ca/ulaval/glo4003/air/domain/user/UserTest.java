@@ -79,7 +79,7 @@ public class UserTest {
 
     @Test
     public void givenAUser_whenIncrementingSearchesPreferences_thenIncrementsTheSearchPreferences() throws Exception {
-        user.incrementSearchesPreferences(HAS_SEARCHED_FOR_AIR_VIVANT, HAS_SEARCHED_FOR_ECONOMY_CLASS, HAS_SEARCHED_FOR_REGULAR_CLASS, HAS_SEARCHED_FOR_BUSINESS_CLASS);
+        user.incrementSearchPreferences(HAS_SEARCHED_FOR_AIR_VIVANT, HAS_SEARCHED_FOR_ECONOMY_CLASS, HAS_SEARCHED_FOR_REGULAR_CLASS, HAS_SEARCHED_FOR_BUSINESS_CLASS);
 
         verify(userSearchPreferences).incrementSearchesPreferences(HAS_SEARCHED_FOR_AIR_VIVANT, HAS_SEARCHED_FOR_ECONOMY_CLASS, HAS_SEARCHED_FOR_REGULAR_CLASS, HAS_SEARCHED_FOR_BUSINESS_CLASS);
     }
