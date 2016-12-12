@@ -3,6 +3,7 @@ package ca.ulaval.glo4003.air.service.flight;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 import ca.ulaval.glo4003.air.domain.flight.*;
+import ca.ulaval.glo4003.air.service.user.UserService;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchResultDto;
 
@@ -22,20 +23,25 @@ public class FlightService {
     private final DateTimeFactory dateTimeFactory;
     private final FlightSortingStrategy flightSortingStrategy;
     private final FlightAssembler flightAssembler;
+    private final UserService userService;
 
-    public FlightService(FlightRepository flightRepository, WeightFilterVerifier weightFilterVerifier, DateTimeFactory dateTimeFactory, FlightSortingStrategy flightSortingStrategy, FlightAssembler flightAssembler) {
+    public FlightService(FlightRepository flightRepository, WeightFilterVerifier weightFilterVerifier, DateTimeFactory dateTimeFactory, FlightSortingStrategy flightSortingStrategy, FlightAssembler flightAssembler, UserService userService) {
         this.flightRepository = flightRepository;
         this.weightFilterVerifier = weightFilterVerifier;
         this.dateTimeFactory = dateTimeFactory;
         this.flightSortingStrategy = flightSortingStrategy;
         this.flightAssembler = flightAssembler;
+        this.userService = userService;
     }
 
-    public FlightSearchResultDto findAllWithFilters(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant, boolean acceptsAirCargo, boolean hasEconomySeats, boolean hasRegularSeats, boolean hasBusinessSeats) {
-
+    public FlightSearchResultDto findAllWithFilters(String accessToken, String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant, boolean acceptsAirCargo, boolean hasEconomySeats, boolean hasRegularSeats, boolean hasBusinessSeats) {
         validateAirportsArePresent(departureAirport, arrivalAirport);
         validateWeightIsPresent(weight);
         logRequest(departureAirport, arrivalAirport, departureDate, weight, isOnlyAirVivant, hasEconomySeats, hasRegularSeats, hasBusinessSeats);
+
+        if (accessToken != null) {
+            userService.incrementAuthenticatedUserSearchPreferences(accessToken, isOnlyAirVivant, hasEconomySeats, hasRegularSeats, hasBusinessSeats);
+        }
 
         FlightQueryBuilder query = flightRepository.query()
                                                    .isDepartingFrom(departureAirport)

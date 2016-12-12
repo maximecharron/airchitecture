@@ -77,7 +77,7 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
 
         AirplaneService airplaneService = createAirplaneService(airplanes, userService, seatMapAssembler);
         AirplaneResource airplaneResource = new AirplaneResource(airplaneService);
-        FlightService flightService = createFlightService(airplanes, availableSeatsAssembler);
+        FlightService flightService = createFlightService(airplanes, availableSeatsAssembler, userService);
         FlightResource flightResource = new FlightResource(flightService);
 
         CartItemAssembler cartItemAssembler = new CartItemAssembler(seatMapAssembler);
@@ -130,7 +130,7 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
         return new AirplaneService(flightRepository, flightAssembler, userService);
     }
 
-    private static FlightService createFlightService(List<Airplane> airplanes, AvailableSeatsAssembler availableSeatsAssembler) {
+    private static FlightService createFlightService(List<Airplane> airplanes, AvailableSeatsAssembler availableSeatsAssembler, UserService userService) {
         FlightRepositoryInMemory flightRepository = new FlightRepositoryInMemory();
         FlightAssembler flightAssembler = new FlightAssembler(availableSeatsAssembler, new SeatsPricingAssembler());
 
@@ -141,7 +141,7 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
         WeightFilterVerifier weightFilterVerifier = new WeightFilterVerifier();
         DateTimeFactory dateTimeFactory = new DateTimeFactory();
         FlightSortingStrategy flightSortingStrategy = new SeatsAndPriceSortingStrategy();
-        return new FlightService(flightRepository, weightFilterVerifier, dateTimeFactory, flightSortingStrategy, flightAssembler);
+        return new FlightService(flightRepository, weightFilterVerifier, dateTimeFactory, flightSortingStrategy, flightAssembler, userService);
     }
 
 

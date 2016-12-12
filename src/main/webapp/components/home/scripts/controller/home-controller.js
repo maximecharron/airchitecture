@@ -1,4 +1,4 @@
-homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cookies, $window, homeResource, weightDetectionResource, geolocationResource, userResource, ModalService) {
+homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cookies, $window, homeResource, weightDetectionResource, userResource, userSearchPreferencesResource, geolocationResource, ModalService) {
 
     $scope.isLoading = false;
     $scope.doNotShow = false;
@@ -9,13 +9,27 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
         date: "",
         luggageWeight: 0.0,
         onlyAirVivant: false,
-        acceptsAirCargo: false
+        acceptsAirCargo: false,
+        economic: false,
+        regular: false,
+        business: false
     };
     $scope.haveResults = false;
     $scope.flightsResults = [];
 
     $scope.hasError = false;
     $scope.error = undefined;
+
+    if ($rootScope.user) {
+        $scope.isLoading = true;
+        userSearchPreferencesResource.get({}, function onSuccess(data) {
+            $scope.formData.onlyAirVivant = data.hasMostlySearchedForAirVivantFlights;
+            $scope.formData.economic = data.hasMostlySearchedForEconomyClassFlights;
+            $scope.formData.regular = data.hasMostlySearchedForRegularClassFlights;
+            $scope.formData.business = data.hasMostlySearchedForBusinessClassFlights;
+            $scope.isLoading = false;
+        });
+    }
 
     $http.get('./airports.json')
         .success(function (data) {
@@ -27,7 +41,6 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
             $scope.formData.luggageWeight = data.weight;
         })
     };
-
     $scope.findNearestAirport = function () {
         geolocationResource.get({}, function onSuccess(data) {
             $scope.airports.forEach(function (airport, index) {

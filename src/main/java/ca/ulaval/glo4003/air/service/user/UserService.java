@@ -1,10 +1,11 @@
 package ca.ulaval.glo4003.air.service.user;
 
-import ca.ulaval.glo4003.air.transfer.user.dto.UserDto;
-import ca.ulaval.glo4003.air.transfer.user.dto.UserPreferencesDto;
 import ca.ulaval.glo4003.air.domain.user.*;
 import ca.ulaval.glo4003.air.domain.user.encoding.TokenDecoder;
 import ca.ulaval.glo4003.air.transfer.user.UserAssembler;
+import ca.ulaval.glo4003.air.transfer.user.dto.UserDto;
+import ca.ulaval.glo4003.air.transfer.user.dto.UserSearchPreferencesDto;
+import ca.ulaval.glo4003.air.transfer.user.dto.UserSettingsDto;
 
 import javax.naming.AuthenticationException;
 import java.util.logging.Logger;
@@ -64,17 +65,37 @@ public class UserService {
         }
     }
 
-    public UserDto updateAuthenticatedUser(String token, UserPreferencesDto userPreferencesDto) throws InvalidTokenException {
-        UserPreferences userPreferences = userAssembler.createUserPreferences(userPreferencesDto);
+    public UserDto updateAuthenticatedUser(String token, UserSettingsDto userSettingsDto) throws InvalidTokenException {
+        UserSettings userSettings = userAssembler.createUserSettings(userSettingsDto);
+        return updateAuthenticatedUser(token, userSettings);
+    }
+
+    private UserDto updateAuthenticatedUser(String token, UserSettings userSettings) throws InvalidTokenException {
         User user = authenticateUser(token);
-        if (!userPreferences.userWantsToSeeWeightFilteredAlert()) {
+        if (userSettings.userWantsToHideWeightFilteredAlert()) {
             user.stopShowingFilteredAlert();
         }
         userRepository.update(user);
         return userAssembler.create(user);
     }
 
+    public void incrementAuthenticatedUserSearchPreferences(String token, boolean hasSearchedForAirVivantFlights, boolean hasSearchedForEconomyClassFlights, boolean hasSearchedForRegularClassFlights, boolean hasSearchedForBusinessClassFlights) {
+        User user;
+        try {
+            user = authenticateUser(token);
+            user.incrementSearchPreferences(hasSearchedForAirVivantFlights, hasSearchedForEconomyClassFlights, hasSearchedForRegularClassFlights, hasSearchedForBusinessClassFlights);
+            userRepository.update(user);
+        } catch (InvalidTokenException e) {
+            e.printStackTrace();
+        }
+    }
+
     private User findUser(String email) throws UserNotFoundException {
         return userRepository.findUserByEmail(email).orElseThrow(() -> new UserNotFoundException("User " + email + " does not exists."));
+    }
+
+    public UserSearchPreferencesDto getUserSearchPreferences(String token) throws InvalidTokenException {
+        User user = authenticateUser(token);
+        return userAssembler.createUserSearchPreferences(user.getUserSearchPreferences());
     }
 }
