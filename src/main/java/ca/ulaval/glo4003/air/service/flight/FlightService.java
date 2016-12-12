@@ -3,8 +3,8 @@ package ca.ulaval.glo4003.air.service.flight;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 import ca.ulaval.glo4003.air.domain.flight.*;
+import ca.ulaval.glo4003.air.service.user.UserService;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
-import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchQueryDto;
 import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchResultDto;
 
 import java.time.LocalDateTime;
@@ -21,59 +21,68 @@ public class FlightService {
     private final FlightRepository flightRepository;
     private final WeightFilterVerifier weightFilterVerifier;
     private final DateTimeFactory dateTimeFactory;
+    private final FlightSortingStrategy flightSortingStrategy;
     private final FlightAssembler flightAssembler;
+    private final UserService userService;
 
-    public FlightService(FlightRepository flightRepository, WeightFilterVerifier weightFilterVerifier, DateTimeFactory dateTimeFactory, FlightAssembler flightAssembler) {
+    public FlightService(FlightRepository flightRepository, WeightFilterVerifier weightFilterVerifier, DateTimeFactory dateTimeFactory, FlightSortingStrategy flightSortingStrategy, FlightAssembler flightAssembler, UserService userService) {
         this.flightRepository = flightRepository;
         this.weightFilterVerifier = weightFilterVerifier;
         this.dateTimeFactory = dateTimeFactory;
+        this.flightSortingStrategy = flightSortingStrategy;
         this.flightAssembler = flightAssembler;
+        this.userService = userService;
     }
 
-    public FlightSearchResultDto findAllWithFilters(FlightSearchQueryDto flightSearchQueryDto) {
-        validateAirportsArePresent(flightSearchQueryDto.departureAirport, flightSearchQueryDto.arrivalAirport);
+    public FlightSearchResultDto findAllWithFilters(String accessToken, String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant, boolean acceptsAirCargo, boolean hasEconomySeats, boolean hasRegularSeats, boolean hasBusinessSeats) {
+        validateAirportsArePresent(departureAirport, arrivalAirport);
+        validateWeightIsPresent(weight);
+        logRequest(departureAirport, arrivalAirport, departureDate, weight, isOnlyAirVivant, hasEconomySeats, hasRegularSeats, hasBusinessSeats);
 
-        validateWeightIsPresent(flightSearchQueryDto.weight);
-        logRequest(flightSearchQueryDto);
+        if (accessToken != null) {
+            userService.incrementAuthenticatedUserSearchPreferences(accessToken, isOnlyAirVivant, hasEconomySeats, hasRegularSeats, hasBusinessSeats);
+        }
 
         FlightQueryBuilder query = flightRepository.query()
-                                                   .isDepartingFrom(flightSearchQueryDto.departureAirport)
-                                                   .isGoingTo(flightSearchQueryDto.arrivalAirport);
+                                                   .isDepartingFrom(departureAirport)
+                                                   .isGoingTo(arrivalAirport);
 
-        if (flightSearchQueryDto.departureDate != null) {
-            query.isLeavingOn(flightSearchQueryDto.departureDate);
+        if (departureDate != null) {
+            query.isLeavingAfter(departureDate);
         } else {
             query.isLeavingAfter(dateTimeFactory.now());
         }
 
-        if (flightSearchQueryDto.onlyAirVivant) {
+        if (isOnlyAirVivant) {
             query.isAirVivant();
         }
 
-        if (flightSearchQueryDto.hasEconomySeats || flightSearchQueryDto.hasBusinessSeats || flightSearchQueryDto.hasRegularSeats){
-            query.hasSeatsAvailable(flightSearchQueryDto.hasEconomySeats, flightSearchQueryDto.hasRegularSeats, flightSearchQueryDto.hasBusinessSeats);
+        if (hasEconomySeats || hasBusinessSeats || hasRegularSeats) {
+            query.hasSeatsAvailable(hasEconomySeats, hasRegularSeats, hasBusinessSeats);
         }
 
         List<PassengerFlight> allPassengerFlights = query.getPassengerFlights();
-        query.acceptsWeight(flightSearchQueryDto.weight);
+        query.acceptsWeight(weight);
         List<PassengerFlight> flightsFilteredByWeight = query.getPassengerFlights();
 
         boolean flightsWereFilteredByWeight = weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, allPassengerFlights);
 
         Map<PassengerFlight, AirCargoFlight> flightsWithAirCargo = new HashMap<>();
-        if (flightsWereFilteredByWeight && flightSearchQueryDto.acceptsAirCargo) {
+        if (flightsWereFilteredByWeight && acceptsAirCargo) {
             allPassengerFlights.removeAll(flightsFilteredByWeight);
-            flightsWithAirCargo.putAll(searchForAirCargo(allPassengerFlights, flightSearchQueryDto.departureAirport, flightSearchQueryDto.arrivalAirport, flightSearchQueryDto.onlyAirVivant));
+            flightsWithAirCargo.putAll(searchForAirCargo(allPassengerFlights, departureAirport, arrivalAirport, isOnlyAirVivant));
         }
 
-        FlightSearchResult searchResult = new FlightSearchResult(flightsFilteredByWeight, flightSearchQueryDto.weight, flightsWereFilteredByWeight, flightsWithAirCargo);
+        List<PassengerFlight> sortedFlights = flightSortingStrategy.sort(allPassengerFlights);//todo : Ralex plz take these flights
+
+        FlightSearchResult searchResult = new FlightSearchResult(flightsFilteredByWeight, weight, flightsWereFilteredByWeight, flightsWithAirCargo);
         return flightAssembler.create(searchResult);
     }
 
     private Map<PassengerFlight, AirCargoFlight> searchForAirCargo(List<PassengerFlight> allFlights, String departureAirport, String arrivalAirport, boolean isOnlyAirVivant) {
         FlightQueryBuilder query = flightRepository.query()
-                .isDepartingFrom(departureAirport)
-                .isGoingTo(arrivalAirport);
+                                                   .isDepartingFrom(departureAirport)
+                                                   .isGoingTo(arrivalAirport);
 
         if (isOnlyAirVivant) {
             query.isAirVivant();
@@ -90,14 +99,6 @@ public class FlightService {
         });
 
         return flightsWithAirCargo;
-    }
-
-    private void logRequest(FlightSearchQueryDto flightSearchQueryDto) {
-        String query = "Finding all flights from " + flightSearchQueryDto.departureAirport + " to " + flightSearchQueryDto.arrivalAirport + " with a luggage weight of " + flightSearchQueryDto.weight + " lbs with a boolean value for being airVivant is " + flightSearchQueryDto.onlyAirVivant + " and show Economic Flights is " + flightSearchQueryDto.hasEconomySeats + " and Regular Flights is " + flightSearchQueryDto.hasRegularSeats + " and Business flights is " + flightSearchQueryDto.hasBusinessSeats;
-        if (flightSearchQueryDto.departureDate != null) {
-            query = query.concat(" on " + flightSearchQueryDto.departureDate.toString());
-        }
-        logger.info(query);
     }
 
     public void reservePlacesInFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate, SeatMap seatMap) throws FlightNotFoundException {
@@ -126,18 +127,18 @@ public class FlightService {
 
     private AirCargoFlight findAirCargoFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate) throws FlightNotFoundException {
         return flightRepository.query()
-                .hasAirlineCompany(airlineCompany)
-                .isGoingTo(arrivalAirport)
-                .isLeavingOn(departureDate)
-                .findOneAirCargoFlight()
-                .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
+                               .hasAirlineCompany(airlineCompany)
+                               .isGoingTo(arrivalAirport)
+                               .isLeavingAfter(departureDate)
+                               .findOneAirCargoFlight()
+                               .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
     }
 
     private PassengerFlight findPassengerFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate) throws FlightNotFoundException {
         return flightRepository.query()
                                .hasAirlineCompany(airlineCompany)
                                .isGoingTo(arrivalAirport)
-                               .isLeavingOn(departureDate)
+                               .isLeavingAfter(departureDate)
                                .findOnePassengerFlight()
                                .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
     }
@@ -152,5 +153,13 @@ public class FlightService {
         if (weight == 0) {
             throw new InvalidParameterException("Missing luggage weight.");
         }
+    }
+
+    private void logRequest(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant, boolean onlyEconomicFlights, boolean onlyRegularFlights, boolean onlyBusinessFlights) {
+        String query = "Finding all flights from " + departureAirport + " to " + arrivalAirport + " with a luggage weight of " + weight + " lbs with airVivant = " + isOnlyAirVivant + ", onlyEconomicFlights = " + onlyEconomicFlights + ", onlyRegularFlights = " + onlyRegularFlights + " and onlyBusinessFlights = " + onlyBusinessFlights;
+        if (departureDate != null) {
+            query = query.concat(" on " + departureDate.toString());
+        }
+        logger.info(query);
     }
 }

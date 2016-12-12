@@ -41,4 +41,11 @@ public class AvailableSeatsTest {
         assertEquals(availableSeats.getRegularSeats(), REGULAR_SEATS + 2);
         assertEquals(availableSeats.getBusinessSeats(), BUSINESS_SEATS + 3);
     }
+
+    @Test
+    public void givenAvailableSeats_whenQueryingTotalSeatsLeft_thenItsTheSumOfAllSeatsCategory() {
+        int totalSeatsLeft = availableSeats.totalSeatsLeft();
+
+        assertEquals(ECONOMIC_SEATS + REGULAR_SEATS + BUSINESS_SEATS, totalSeatsLeft);
+    }
 }

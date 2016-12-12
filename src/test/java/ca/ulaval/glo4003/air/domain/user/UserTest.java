@@ -21,7 +21,15 @@ public class UserTest {
     private static final String A_TOKEN = "A_TOKEN";
     private static final String A_HASHED_PASSWORD = "asdn89023e4nads982";
     private static final boolean IS_NOT_ADMIN = false;
+    private static final boolean HAS_SEARCHED_FOR_ECONOMY_CLASS = true;
+    private static final boolean HAS_SEARCHED_FOR_REGULAR_CLASS = true;
+    private static final boolean HAS_SEARCHED_FOR_BUSINESS_CLASS = true;
+    private static final boolean HAS_SEARCHED_FOR_AIR_VIVANT = true;
+
     private User user;
+
+    @Mock
+    private UserSearchPreferences userSearchPreferences;
 
     @Mock
     private TokenEncoder tokenEncoder;
@@ -32,24 +40,13 @@ public class UserTest {
     @Before
     public void setup() {
         given(hashingStrategy.hashPassword(anyString())).willReturn(A_HASHED_PASSWORD);
-        user = new User.UserBuilder()
-            .setEmailAddress(EMAIL)
-            .setPassword(PASSWORD)
-            .setTokenEncoder(tokenEncoder)
-            .setHashingStrategy(hashingStrategy)
-            .setIsAdmin(IS_NOT_ADMIN)
-            .build();
+        user = new User(EMAIL, PASSWORD, tokenEncoder, hashingStrategy, userSearchPreferences, IS_NOT_ADMIN);
     }
 
     @Test
     public void whenConstructingNewUser_thenPasswordIsHash() {
-        User newUser = new User.UserBuilder()
-            .setEmailAddress(EMAIL)
-            .setPassword(PASSWORD)
-            .setTokenEncoder(tokenEncoder)
-            .setHashingStrategy(hashingStrategy)
-            .setIsAdmin(IS_NOT_ADMIN)
-            .build();
+
+        User newUser = new User(EMAIL, PASSWORD, tokenEncoder, hashingStrategy, userSearchPreferences, IS_NOT_ADMIN);
 
         assertEquals(A_HASHED_PASSWORD, newUser.getPassword());
     }
@@ -78,5 +75,12 @@ public class UserTest {
         user.stopShowingFilteredAlert();
 
         assertFalse(user.showsWeightFilteredAlert());
+    }
+
+    @Test
+    public void givenAUser_whenIncrementingSearchesPreferences_thenIncrementsTheSearchPreferences() throws Exception {
+        user.incrementSearchPreferences(HAS_SEARCHED_FOR_AIR_VIVANT, HAS_SEARCHED_FOR_ECONOMY_CLASS, HAS_SEARCHED_FOR_REGULAR_CLASS, HAS_SEARCHED_FOR_BUSINESS_CLASS);
+
+        verify(userSearchPreferences).incrementSearchesPreferences(HAS_SEARCHED_FOR_AIR_VIVANT, HAS_SEARCHED_FOR_ECONOMY_CLASS, HAS_SEARCHED_FOR_REGULAR_CLASS, HAS_SEARCHED_FOR_BUSINESS_CLASS);
     }
 }

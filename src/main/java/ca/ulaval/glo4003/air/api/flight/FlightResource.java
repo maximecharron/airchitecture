@@ -32,7 +32,8 @@ public class FlightResource {
                                                     @QueryParam("acceptsAirCargo") boolean acceptsAirCargo,
                                                     @QueryParam("hasEconomySeats") boolean hasEconomySeats,
                                                     @QueryParam("hasRegularSeats") boolean hasRegularSeats,
-                                                    @QueryParam("hasBusinessSeats") boolean hasBusinessSeats) {
+                                                    @QueryParam("hasBusinessSeats") boolean hasBusinessSeats,
+                                                    @HeaderParam("X-Access-Token") String accessToken) {
         LocalDateTime parsedDate = null;
         if (departureDate != null) {
             parsedDate = parseDate(departureDate);

@@ -28,6 +28,7 @@ import static org.mockito.Matchers.argThat;
 @RunWith(MockitoJUnitRunner.class)
 public class FlightResourceTest {
 
+    private static final String TOKEN = "DARIUSBROWNBAND";
     private static final String DEPARTURE_AIRPORT = "YQB";
     private static final String ARRIVAL_AIRPORT = "DUB";
     private static final LocalDateTime DATE = LocalDateTime.of(2025, 12, 24, 22, 59);
@@ -53,15 +54,10 @@ public class FlightResourceTest {
     }
 
     @Test
-    public void givenAFlightResource_whenFindingAllFlightsWithFilters_thenItsDelegatedToTheService() {
-        FlightSearchQueryDto flightSearchQueryDto = new FlightSearchQueryAssembler().create(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE,
-            WEIGHT, IS_ONLY_AIRVIVANT, ACCEPTS_AIRCARGO,
-            HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
-        given(flightService.findAllWithFilters(argThat(new IsFlightSearchQueryDtoEqual(flightSearchQueryDto)))).willReturn(flightSearchResultDto);
+    public void givenAFlightResource_whenFindingAllFlightsWithFilters_thenItsDelegatedToTheService() throws Exception{
+        given(flightService.findAllWithFilters(TOKEN, DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, IS_ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS)).willReturn(flightSearchResultDto);
 
-        FlightSearchResultDto searchResult;
-
-        searchResult = flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING, WEIGHT, IS_ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+        FlightSearchResultDto searchResult = flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE_STRING, WEIGHT, IS_ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS, TOKEN);
 
         assertEquals(flightSearchResultDto, searchResult);
     }
@@ -71,7 +67,7 @@ public class FlightResourceTest {
         String badlyFormattedDatetime = "2016-06-bacon";
 
         try {
-            flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, badlyFormattedDatetime, WEIGHT, IS_ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+            flightResource.findAllWithFilters(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, badlyFormattedDatetime, WEIGHT, IS_ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS, TOKEN);
             fail("Exception not thrown");
         } catch (WebApplicationException e) {
             assertThat(e.getResponse().getStatus(), is(equalTo(HttpStatus.BAD_REQUEST_400)));

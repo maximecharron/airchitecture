@@ -14,13 +14,7 @@ public class UserFactory {
     }
 
     public User createUser(String email, String password, boolean isAdmin) {
-        return new User.UserBuilder()
-            .setEmailAddress(email)
-            .setPassword(password)
-            .setTokenEncoder(tokenEncoder)
-            .setHashingStrategy(hashingStrategy)
-            .setIsAdmin(isAdmin)
-            .build();
+        return new User(email, password, tokenEncoder, hashingStrategy, new UserSearchPreferences(), isAdmin);
     }
 
 }

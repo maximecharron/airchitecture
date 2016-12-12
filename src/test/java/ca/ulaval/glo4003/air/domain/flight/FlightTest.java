@@ -104,17 +104,10 @@ public class FlightTest {
     }
 
     @Test
-    public void givenAFlightLeavingOnADate_whenCheckingIfItsLeavingOnThisDate_thenItIs() {
-        Flight flight = givenAPassengerFlight();
-
-        assertTrue(flight.isLeavingOn(A_DEPARTURE_DATE));
-    }
-
-    @Test
     public void givenAFlightLeavingOnDateA_whenCheckingIfItsLeavingOnDateB_thenItsNot() {
         Flight flight = givenAPassengerFlight();
 
-        assertFalse(flight.isLeavingOn(ANOTHER_DEPARTURE_DATE));
+        assertFalse(flight.isLeavingAfter(ANOTHER_DEPARTURE_DATE));
     }
 
     @Test
