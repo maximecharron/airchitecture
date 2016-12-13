@@ -48,9 +48,9 @@ public class FlightService {
                                                    .isGoingTo(arrivalAirport);
 
         if (departureDate != null) {
-            query.isLeavingAfter(departureDate);
+            query.isLeavingAfterOrOn(departureDate);
         } else {
-            query.isLeavingAfter(dateTimeFactory.now());
+            query.isLeavingAfterOrOn(dateTimeFactory.now());
         }
 
         if (isOnlyAirVivant) {
@@ -129,7 +129,7 @@ public class FlightService {
         return flightRepository.query()
                                .hasAirlineCompany(airlineCompany)
                                .isGoingTo(arrivalAirport)
-                               .isLeavingAfter(departureDate)
+                               .isLeavingAfterOrOn(departureDate)
                                .findOneAirCargoFlight()
                                .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
     }
@@ -138,7 +138,7 @@ public class FlightService {
         return flightRepository.query()
                                .hasAirlineCompany(airlineCompany)
                                .isGoingTo(arrivalAirport)
-                               .isLeavingAfter(departureDate)
+                               .isLeavingAfterOrOn(departureDate)
                                .findOnePassengerFlight()
                                .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
     }

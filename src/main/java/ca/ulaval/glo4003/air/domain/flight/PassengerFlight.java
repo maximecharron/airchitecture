@@ -53,6 +53,14 @@ public class PassengerFlight extends Flight {
         return seatsPricing.getBusinessSeatsPrice();
     }
 
+    public boolean hasAdditionalWeightOption() {
+        return this.airplane.hasAdditionalWeightOption();
+    }
+
+    public boolean acceptsAdditionalWeight(double weight) {
+        return airplane.acceptsAdditionalWeight(weight);
+    }
+
     public void reserveSeats(SeatMap seatMap) {
         availableSeats.reserve(seatMap);
     }

@@ -82,8 +82,8 @@ public class FlightServiceTest {
         given(flightRepository.query()).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.isDepartingFrom(any())).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.isGoingTo(any())).willReturn(flightQueryBuilder);
-        given(flightQueryBuilder.isLeavingAfter(any())).willReturn(flightQueryBuilder);
-        given(flightQueryBuilder.isLeavingAfter(any())).willReturn(flightQueryBuilder);
+        given(flightQueryBuilder.isLeavingAfterOrOn(any())).willReturn(flightQueryBuilder);
+        given(flightQueryBuilder.isLeavingAfterOrOn(any())).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.acceptsWeight(anyDouble())).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.isAirVivant()).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.hasAirlineCompany(anyString())).willReturn(flightQueryBuilder);
@@ -101,7 +101,7 @@ public class FlightServiceTest {
     public void givenSearchFiltersWithADepartureDate_whenFindingAllMatchingFlights_thenTheRepositoryFindsCorrespondingFlights() throws Exception {
         flightService.findAllWithFilters(ACCESS_TOKEN, DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
 
-        verify(flightQueryBuilder).isLeavingAfter(DATE);
+        verify(flightQueryBuilder).isLeavingAfterOrOn(DATE);
     }
 
     @Test
@@ -110,7 +110,7 @@ public class FlightServiceTest {
 
         flightService.findAllWithFilters(ACCESS_TOKEN, DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, null, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
 
-        verify(flightQueryBuilder).isLeavingAfter(NOW_DATE);
+        verify(flightQueryBuilder).isLeavingAfterOrOn(NOW_DATE);
     }
 
     @Test
@@ -149,7 +149,7 @@ public class FlightServiceTest {
 
         flightService.findAllWithFilters(ACCESS_TOKEN, DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
 
-        verify(weightFilterVerifier).verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, passengerFlights);
+        verify(weightFilterVerifier).verifyFlightsFilteredByWeightWithFilters(any(), eq(passengerFlights));
     }
 
     @Test
@@ -179,7 +179,7 @@ public class FlightServiceTest {
         flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
 
         verify(flightQueryBuilder).hasAirlineCompany(AIRLINE_COMPANY);
-        verify(flightQueryBuilder).isLeavingAfter(DATE);
+        verify(flightQueryBuilder).isLeavingAfterOrOn(DATE);
         verify(flightQueryBuilder).findOnePassengerFlight();
     }
 
@@ -215,7 +215,7 @@ public class FlightServiceTest {
         flightService.releasePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
 
         verify(flightQueryBuilder).hasAirlineCompany(AIRLINE_COMPANY);
-        verify(flightQueryBuilder).isLeavingAfter(DATE);
+        verify(flightQueryBuilder).isLeavingAfterOrOn(DATE);
         verify(flightQueryBuilder).findOnePassengerFlight();
     }
 

@@ -96,7 +96,7 @@ public class SeatsAndPriceSortingStrategyTest {
     }
 
     public void mockFlight(PassengerFlight mockedFlight, boolean isInTheSame24hSlice, LocalDateTime departureDate, int totalSeatsLeft, SeatsPricing seatsPricing) {
-        willReturn(isInTheSame24hSlice).given(mockedFlight).isLeavingAfter(FIRST_DEPARTURE.plusHours(24));
+        willReturn(isInTheSame24hSlice).given(mockedFlight).isLeavingAfterOrOn(FIRST_DEPARTURE.plusHours(24));
         willReturn(departureDate).given(mockedFlight).getDepartureDate();
         willReturn(totalSeatsLeft).given(mockedFlight).totalSeatsLeft();
         willReturn(seatsPricing.getEconomicSeatsPrice()).given(mockedFlight).getEconomicSeatsPrice();
