@@ -5,8 +5,10 @@ import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 import ca.ulaval.glo4003.air.domain.flight.*;
 import ca.ulaval.glo4003.air.service.user.UserService;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
+import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchQueryDto;
 import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchResultDto;
 
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -34,48 +36,52 @@ public class FlightService {
         this.userService = userService;
     }
 
-    public FlightSearchResultDto findAllWithFilters(String accessToken, String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant, boolean acceptsAirCargo, boolean hasEconomySeats, boolean hasRegularSeats, boolean hasBusinessSeats) {
-        validateAirportsArePresent(departureAirport, arrivalAirport);
-        validateWeightIsPresent(weight);
-        logRequest(departureAirport, arrivalAirport, departureDate, weight, isOnlyAirVivant, hasEconomySeats, hasRegularSeats, hasBusinessSeats);
+    public FlightSearchResultDto findAllWithFilters(String accessToken, FlightSearchQueryDto searchDto) {
+        validateAirportsArePresent(searchDto.departureAirport, searchDto.arrivalAirport);
+        validateWeightIsPresent(searchDto.weight);
+        logRequest(searchDto);
 
         if (accessToken != null) {
-            userService.incrementAuthenticatedUserSearchPreferences(accessToken, isOnlyAirVivant, hasEconomySeats, hasRegularSeats, hasBusinessSeats);
+            userService.incrementAuthenticatedUserSearchPreferences(accessToken,
+                searchDto.onlyAirVivant,
+                searchDto.hasEconomySeats,
+                searchDto.hasRegularSeats,
+                searchDto.hasBusinessSeats);
         }
 
         FlightQueryBuilder query = flightRepository.query()
-                                                   .isDepartingFrom(departureAirport)
-                                                   .isGoingTo(arrivalAirport);
+                                                   .isDepartingFrom(searchDto.departureAirport)
+                                                   .isGoingTo(searchDto.arrivalAirport);
 
-        if (departureDate != null) {
-            query.isLeavingAfter(departureDate);
+        if (searchDto.departureDate != null) {
+            query.isLeavingAfter(searchDto.departureDate);
         } else {
             query.isLeavingAfter(dateTimeFactory.now());
         }
 
-        if (isOnlyAirVivant) {
+        if (searchDto.onlyAirVivant) {
             query.isAirVivant();
         }
 
-        if (hasEconomySeats || hasBusinessSeats || hasRegularSeats) {
-            query.hasSeatsAvailable(hasEconomySeats, hasRegularSeats, hasBusinessSeats);
+        if (searchDto.hasEconomySeats || searchDto.hasBusinessSeats || searchDto.hasRegularSeats) {
+            query.hasSeatsAvailable(searchDto.hasEconomySeats, searchDto.hasRegularSeats, searchDto.hasBusinessSeats);
         }
 
         List<PassengerFlight> allPassengerFlights = query.getPassengerFlights();
-        query.acceptsWeight(weight);
+        query.acceptsWeight(searchDto.weight);
         List<PassengerFlight> flightsFilteredByWeight = query.getPassengerFlights();
 
         boolean flightsWereFilteredByWeight = weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, allPassengerFlights);
 
         Map<PassengerFlight, AirCargoFlight> flightsWithAirCargo = new HashMap<>();
-        if (flightsWereFilteredByWeight && acceptsAirCargo) {
+        if (flightsWereFilteredByWeight && searchDto.acceptsAirCargo) {
             allPassengerFlights.removeAll(flightsFilteredByWeight);
-            flightsWithAirCargo.putAll(searchForAirCargo(allPassengerFlights, departureAirport, arrivalAirport, isOnlyAirVivant));
+            flightsWithAirCargo.putAll(searchForAirCargo(allPassengerFlights, searchDto.departureAirport, searchDto.arrivalAirport, searchDto.onlyAirVivant));
         }
 
         List<PassengerFlight> sortedFlights = flightSortingStrategy.sort(allPassengerFlights);//todo : Ralex plz take these flights
 
-        FlightSearchResult searchResult = new FlightSearchResult(flightsFilteredByWeight, weight, flightsWereFilteredByWeight, flightsWithAirCargo);
+        FlightSearchResult searchResult = new FlightSearchResult(flightsFilteredByWeight, searchDto.weight, flightsWereFilteredByWeight, flightsWithAirCargo);
         return flightAssembler.create(searchResult);
     }
 
@@ -155,11 +161,31 @@ public class FlightService {
         }
     }
 
-    private void logRequest(String departureAirport, String arrivalAirport, LocalDateTime departureDate, double weight, boolean isOnlyAirVivant, boolean onlyEconomicFlights, boolean onlyRegularFlights, boolean onlyBusinessFlights) {
-        String query = "Finding all flights from " + departureAirport + " to " + arrivalAirport + " with a luggage weight of " + weight + " lbs with airVivant = " + isOnlyAirVivant + ", onlyEconomicFlights = " + onlyEconomicFlights + ", onlyRegularFlights = " + onlyRegularFlights + " and onlyBusinessFlights = " + onlyBusinessFlights;
-        if (departureDate != null) {
-            query = query.concat(" on " + departureDate.toString());
+    private void logRequest(FlightSearchQueryDto flightSearchQueryDto) {
+        StringBuilder builder = new StringBuilder();
+        Object[] messageArguments = {
+            flightSearchQueryDto.departureAirport,
+            flightSearchQueryDto.arrivalAirport,
+            flightSearchQueryDto.weight,
+            flightSearchQueryDto.onlyAirVivant,
+            flightSearchQueryDto.hasEconomySeats,
+            flightSearchQueryDto.hasRegularSeats,
+            flightSearchQueryDto.hasBusinessSeats,
+            flightSearchQueryDto.departureDate
+        };
+
+        builder.append("Finding all flights from {0} to {1}");
+        builder.append(" with a luggage weight of {2} lbs");
+        builder.append(" with airVivant = {3}");
+        builder.append(" with: Economic Flight = {4}");
+        builder.append(" with: Regular Flight = {5}");
+        builder.append(" with: Business Flight = {6}");
+        if (flightSearchQueryDto.departureDate != null) {
+            builder.append(" on {7}");
         }
-        logger.info(query);
+
+        MessageFormat messageFormat = new MessageFormat(builder.toString());
+        logger.info(messageFormat.format(messageArguments));
+
     }
 }

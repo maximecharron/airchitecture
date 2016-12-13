@@ -1,11 +1,13 @@
 package ca.ulaval.glo4003.air.service.flight;
 
-import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 import ca.ulaval.glo4003.air.domain.flight.*;
 import ca.ulaval.glo4003.air.service.user.UserService;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
+import ca.ulaval.glo4003.air.transfer.flight.FlightSearchQueryAssembler;
+import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchQueryDto;
+import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchResultDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -92,14 +94,18 @@ public class FlightServiceTest {
 
     @Test
     public void givenAValidAccessToken_whenFindingFlights_userSearchPreferencesAreUpdated() throws Exception {
-        flightService.findAllWithFilters(ACCESS_TOKEN, DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+        FlightSearchQueryDto flightSearchQueryDto = new FlightSearchQueryAssembler().create(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+
+        flightService.findAllWithFilters(ACCESS_TOKEN, flightSearchQueryDto);
 
         verify(userService).incrementAuthenticatedUserSearchPreferences(ACCESS_TOKEN, ONLY_AIRVIVANT, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
     }
 
     @Test
     public void givenSearchFiltersWithADepartureDate_whenFindingAllMatchingFlights_thenTheRepositoryFindsCorrespondingFlights() throws Exception {
-        flightService.findAllWithFilters(ACCESS_TOKEN, DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+        FlightSearchQueryDto flightSearchQueryDto = new FlightSearchQueryAssembler().create(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+
+        flightService.findAllWithFilters(ACCESS_TOKEN, flightSearchQueryDto);
 
         verify(flightQueryBuilder).isLeavingAfter(DATE);
     }
@@ -108,35 +114,45 @@ public class FlightServiceTest {
     public void givenSearchFiltersWithNoDepartureDate_whenFindingAllMatchingFlights_thenTheRepositoryFindsFutureFlights() throws Exception {
         given(dateTimeFactory.now()).willReturn(NOW_DATE);
 
-        flightService.findAllWithFilters(ACCESS_TOKEN, DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, null, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+        FlightSearchQueryDto flightSearchQueryDto = new FlightSearchQueryAssembler().create(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, null, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+
+        flightService.findAllWithFilters(ACCESS_TOKEN, flightSearchQueryDto);
 
         verify(flightQueryBuilder).isLeavingAfter(NOW_DATE);
     }
 
     @Test
     public void givenSearchFiltersWithADepartingAirport_whenFindingAllMatchingFlights_thenTheRepositoryFindsCorrespondingFlights() throws Exception {
-        flightService.findAllWithFilters(ACCESS_TOKEN, DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+        FlightSearchQueryDto flightSearchQueryDto = new FlightSearchQueryAssembler().create(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+
+        flightService.findAllWithFilters(ACCESS_TOKEN, flightSearchQueryDto);
 
         verify(flightQueryBuilder).isDepartingFrom(DEPARTURE_AIRPORT);
     }
 
     @Test
     public void givenSearchFiltersWithAnArrivalAirport_whenFindingAllMatchingFlights_thenTheRepositoryFindsCorrespondingFlights() throws Exception {
-        flightService.findAllWithFilters(ACCESS_TOKEN, DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+        FlightSearchQueryDto flightSearchQueryDto = new FlightSearchQueryAssembler().create(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+
+        flightService.findAllWithFilters(ACCESS_TOKEN, flightSearchQueryDto);
 
         verify(flightQueryBuilder).isGoingTo(ARRIVAL_AIRPORT);
     }
 
     @Test
     public void givenSearchFiltersWithAWeight_whenFindingAllMatchingFlights_thenTheRepositoryFindsCorrespondingFlights() throws Exception {
-        flightService.findAllWithFilters(ACCESS_TOKEN, DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+        FlightSearchQueryDto flightSearchQueryDto = new FlightSearchQueryAssembler().create(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+
+        flightService.findAllWithFilters(ACCESS_TOKEN, flightSearchQueryDto);
 
         verify(flightQueryBuilder).acceptsWeight(WEIGHT);
     }
 
     @Test
     public void givenSearchFiltersWithAOnlyAirVivantFilter_whenFindingAllMatchingFlights_thenTheRepositoryFindsCorrespondingFlights() throws Exception {
-        flightService.findAllWithFilters(ACCESS_TOKEN, DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+        FlightSearchQueryDto flightSearchQueryDto = new FlightSearchQueryAssembler().create(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+
+        flightService.findAllWithFilters(ACCESS_TOKEN, flightSearchQueryDto);
 
         verify(flightQueryBuilder).isAirVivant();
     }
@@ -147,14 +163,18 @@ public class FlightServiceTest {
         given(weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, passengerFlights))
             .willReturn(FLIGHT_WERE_FILTERED_BY_WEIGHT_RESULT);
 
-        flightService.findAllWithFilters(ACCESS_TOKEN, DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+        FlightSearchQueryDto flightSearchQueryDto = new FlightSearchQueryAssembler().create(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+
+        flightService.findAllWithFilters(ACCESS_TOKEN, flightSearchQueryDto);
 
         verify(weightFilterVerifier).verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, passengerFlights);
     }
 
     @Test
-    public void givenPersistedFlights_whenFindingAllFlightsWithFilters_thenFiltersWithoutWeightBeforeFilteringByWeight() throws Exception {
-        flightService.findAllWithFilters(ACCESS_TOKEN, DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+    public void givenPersistedFlights_whenFindingAllFlightsWithFilters_thenFiltersWithoutWeightBeforeFilteringByWeight() {
+        FlightSearchQueryDto flightSearchQueryDto = new FlightSearchQueryAssembler().create(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+
+        flightService.findAllWithFilters(ACCESS_TOKEN, flightSearchQueryDto);
 
         InOrder inOrder = inOrder(flightQueryBuilder);
         inOrder.verify(flightQueryBuilder).getPassengerFlights();
@@ -168,7 +188,9 @@ public class FlightServiceTest {
         given(weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, passengerFlights)).willReturn(FLIGHT_WERE_FILTERED_BY_WEIGHT_RESULT);
         willReturn(flightSearchResultDto).given(flightAssembler).create(any(FlightSearchResult.class));
 
-        FlightSearchResultDto result = flightService.findAllWithFilters(ACCESS_TOKEN, DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+        FlightSearchQueryDto flightSearchQueryDto = new FlightSearchQueryAssembler().create(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+
+        FlightSearchResultDto result = flightService.findAllWithFilters(ACCESS_TOKEN, flightSearchQueryDto);
 
         assertEquals(result, flightSearchResultDto);
     }
@@ -248,20 +270,26 @@ public class FlightServiceTest {
     public void givenAMissingDepartureAirport_whenFindingAllFlightsWithFilters_then400IsThrown() throws Exception {
         String departureAirport = null;
 
-        flightService.findAllWithFilters(ACCESS_TOKEN, departureAirport, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+        FlightSearchQueryDto flightSearchQueryDto = new FlightSearchQueryAssembler().create(departureAirport, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+
+        flightService.findAllWithFilters(ACCESS_TOKEN, flightSearchQueryDto);
     }
 
     @Test(expected = InvalidParameterException.class)
     public void givenAMissingArrivalAirport_whenFindingAllFlightsWithFilters_then400IsThrown() throws Exception {
         String arrivalAirport = null;
 
-        flightService.findAllWithFilters(ACCESS_TOKEN, DEPARTURE_AIRPORT, arrivalAirport, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+        FlightSearchQueryDto flightSearchQueryDto = new FlightSearchQueryAssembler().create(DEPARTURE_AIRPORT, arrivalAirport, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+
+        flightService.findAllWithFilters(ACCESS_TOKEN, flightSearchQueryDto);
     }
 
     @Test(expected = InvalidParameterException.class)
     public void givenAMissingWeight_whenFindingAllFlightsWithFilters_then400IsThrown() throws Exception {
         double weight = 0;
 
-        flightService.findAllWithFilters(ACCESS_TOKEN, DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, weight, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+        FlightSearchQueryDto flightSearchQueryDto = new FlightSearchQueryAssembler().create(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, weight, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
+
+        flightService.findAllWithFilters(ACCESS_TOKEN, flightSearchQueryDto);
     }
 }

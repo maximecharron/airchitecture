@@ -40,13 +40,26 @@ public class UserTest {
     @Before
     public void setup() {
         given(hashingStrategy.hashPassword(anyString())).willReturn(A_HASHED_PASSWORD);
-        user = new User(EMAIL, PASSWORD, tokenEncoder, hashingStrategy, userSearchPreferences, IS_NOT_ADMIN);
+        user = new User.UserBuilder()
+            .emailAddress(EMAIL)
+            .password(PASSWORD)
+            .tokenEncoder(tokenEncoder)
+            .hashingStrategy(hashingStrategy)
+            .userSearchPreferences(userSearchPreferences)
+            .isAdmin(IS_NOT_ADMIN)
+            .build();
     }
 
     @Test
     public void whenConstructingNewUser_thenPasswordIsHash() {
-
-        User newUser = new User(EMAIL, PASSWORD, tokenEncoder, hashingStrategy, userSearchPreferences, IS_NOT_ADMIN);
+        User newUser = new User.UserBuilder()
+            .emailAddress(EMAIL)
+            .password(PASSWORD)
+            .tokenEncoder(tokenEncoder)
+            .hashingStrategy(hashingStrategy)
+            .userSearchPreferences(userSearchPreferences)
+            .isAdmin(IS_NOT_ADMIN)
+            .build();
 
         assertEquals(A_HASHED_PASSWORD, newUser.getPassword());
     }
