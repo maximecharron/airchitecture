@@ -2,8 +2,6 @@ package ca.ulaval.glo4003.air.domain.flight;
 
 
 import ca.ulaval.glo4003.air.domain.airplane.Airplane;
-import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -11,9 +9,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -42,7 +40,7 @@ public class AirCargoFlightTest {
 
     @Test
     public void givenAAirCargoFlight_whenCheckingIfItsLeavingAfterOrOnADateFollowingItsDepartureDate_thenItsNot() {
-        AirCargoFlight airCargoFlight = new AirCargoFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, A_PRICE);
+        AirCargoFlight airCargoFlight = givenAAirCargoFlight();
 
         boolean result = airCargoFlight.isLeavingAfterOrOn(A_DEPARTURE_DATE.plusDays(1));
 
@@ -51,7 +49,7 @@ public class AirCargoFlightTest {
 
     @Test
     public void givenAAirCargoFlight_whenCheckingIfItsLeavingAfterOrOnADatePriorToItsDepartureDate_thenItIs() {
-        AirCargoFlight airCargoFlight = new AirCargoFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, A_PRICE);
+        AirCargoFlight airCargoFlight = givenAAirCargoFlight();
 
         boolean result = airCargoFlight.isLeavingAfterOrOn(A_DEPARTURE_DATE.minusDays(1));
 
@@ -60,7 +58,7 @@ public class AirCargoFlightTest {
 
     @Test
     public void givenAAirCargoFlight_whenCheckingIfItsLeavingAfterOrOnItsDepartureDate_thenItIs() {
-        AirCargoFlight airCargoFlight = new AirCargoFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, A_PRICE);
+        AirCargoFlight airCargoFlight = givenAAirCargoFlight();
 
         boolean result = airCargoFlight.isLeavingAfterOrOn(A_DEPARTURE_DATE);
 
@@ -69,35 +67,35 @@ public class AirCargoFlightTest {
 
     @Test
     public void givenAAirCargoFlightDepartingFromA_whenCheckingIfItsLeavingFromA_thenItIs() {
-        AirCargoFlight airCargoFlight = new AirCargoFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, A_PRICE);
+        AirCargoFlight airCargoFlight = givenAAirCargoFlight();
 
         assertTrue(airCargoFlight.isDepartingFrom(AIRPORT_A));
     }
 
     @Test
     public void givenAAirCargoFlightLeavingToB_whenCheckingIfItsGoingToB_thenItIs() {
-        AirCargoFlight airCargoFlight = new AirCargoFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, A_PRICE);
+        AirCargoFlight airCargoFlight = givenAAirCargoFlight();
 
         assertTrue(airCargoFlight.isGoingTo(AIRPORT_B));
     }
 
     @Test
     public void givenAAirCargoFlightDepartingFromA_whenCheckingIfItsLeavingFromB_thenItIsNot() {
-        AirCargoFlight airCargoFlight = new AirCargoFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, A_PRICE);
+        AirCargoFlight airCargoFlight = givenAAirCargoFlight();
 
         assertFalse(airCargoFlight.isDepartingFrom(AIRPORT_B));
     }
 
     @Test
     public void givenAAirCargoFlightLeavingToB_whenCheckingIfItsGoingToA_thenItIsNot() {
-        AirCargoFlight airCargoFlight = new AirCargoFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, A_PRICE);
+        AirCargoFlight airCargoFlight = givenAAirCargoFlight();
 
         assertFalse(airCargoFlight.isGoingTo(AIRPORT_A));
     }
 
     @Test
     public void givenAAirCargoFlightLeavingOnDateA_whenCheckingIfItsLeavingOnDateB_thenItsNot() {
-        AirCargoFlight airCargoFlight = new AirCargoFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, A_PRICE);
+        AirCargoFlight airCargoFlight = givenAAirCargoFlight();
 
         assertFalse(airCargoFlight.isLeavingAfterOrOn(ANOTHER_DEPARTURE_DATE));
     }
@@ -108,7 +106,7 @@ public class AirCargoFlightTest {
 
         airCargoFlight.acceptsWeight(A_WEIGHT);
 
-        verify(airplane).acceptsWeight(A_WEIGHT);
+        verify(airplane).acceptsTotalWeight(airCargoFlight.getTotalWeight() + A_WEIGHT);
     }
     
     @Test
@@ -121,20 +119,33 @@ public class AirCargoFlightTest {
     }
 
     @Test
-    public void givenAAirCargoFlight_whenReservingSpace_thenAvailableSpaceDecreases() {
+    public void givenAAirCargoFlight_whenReservingSpace_thenTotalWeightOnFlightIncreases() {
         AirCargoFlight airCargoFlight = givenAAirCargoFlight();
+        double previousTotalWeight = airCargoFlight.getTotalWeight();
 
         airCargoFlight.reserveSpace(A_WEIGHT);
+
+        assertEquals(previousTotalWeight + A_WEIGHT, airCargoFlight.getTotalWeight(), 0.0001);
     }
 
     @Test
-    public void givenAAirCargoFlight_whenReleasingSpace_thenAvailableSeatsIncreases() {
+    public void givenAAirCargoFlight_whenReleasingSpace_thenTotalWeightOnFlightDecreases() {
         AirCargoFlight airCargoFlight = givenAAirCargoFlight();
+        double previousTotalWeight = airCargoFlight.getTotalWeight();
 
         airCargoFlight.releaseSpace(A_WEIGHT);
+
+        assertEquals(previousTotalWeight - A_WEIGHT, airCargoFlight.getTotalWeight(), 0.0001);
     }
 
     private AirCargoFlight givenAAirCargoFlight() {
-        return new AirCargoFlight(AIRPORT_A, AIRPORT_B, A_DEPARTURE_DATE, AN_AIRLINE_COMPANY, airplane, A_PRICE);
+        return new AirCargoFlight.AirCargoFlightBuilder()
+                .departureAirport(AIRPORT_A)
+                .arrivalAirport(AIRPORT_B)
+                .departureDate(A_DEPARTURE_DATE)
+                .airlineCompany(AN_AIRLINE_COMPANY)
+                .airplane(airplane)
+                .price(A_PRICE)
+                .build();
     }
 }

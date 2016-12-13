@@ -111,12 +111,19 @@ public class PassengerFlight extends Flight {
         return airplane.acceptsAdditionalWeight(weight);
     }
 
+
+
     public void reserveSeats(SeatMap seatMap) {
         availableSeats.reserve(seatMap);
     }
 
     public void releaseSeats(SeatMap seatMap) {
         availableSeats.release(seatMap);
+    }
+
+    @Override
+    public boolean acceptsWeight(double weight) {
+        return airplane.acceptsWeight(weight);
     }
 
     @Override

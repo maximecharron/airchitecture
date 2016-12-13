@@ -40,9 +40,7 @@ public abstract class Flight {
         return departureDate.isBefore(date.plusDays(numberOfDays));
     }
 
-    public boolean acceptsWeight(double weight) {
-        return airplane.acceptsWeight(weight);
-    }
+    abstract public boolean acceptsWeight(double weight);
 
     public boolean isAirVivant() {
         return airplane.isAirVivant();
