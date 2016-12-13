@@ -73,7 +73,7 @@ public class UserService {
     private UserDto updateAuthenticatedUser(String token, UserSettings userSettings) throws InvalidTokenException {
         User user = authenticateUser(token);
         if (userSettings.userWantsToHideWeightFilteredAlert()) {
-            user.stopShowingFilteredAlert();
+            user.turnOffShowingFilteredAlertPreference();
         }
         userRepository.update(user);
         return userAssembler.create(user);

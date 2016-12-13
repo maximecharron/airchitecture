@@ -133,7 +133,7 @@ public class UserServiceTest {
 
         userService.updateAuthenticatedUser(A_TOKEN, userPreferences);
 
-        verify(user).stopShowingFilteredAlert();
+        verify(user).turnOffShowingFilteredAlertPreference();
     }
 
     @Test
