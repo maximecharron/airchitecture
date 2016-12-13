@@ -85,7 +85,7 @@ public class UserTest {
 
     @Test
     public void givenAUser_whenStopShowingFilteredAlert_thenShowingFilteredAlertIsFalse() {
-        user.stopShowingFilteredAlert();
+        user.turnOffShowingFilteredAlertPreference();
 
         assertFalse(user.showsWeightFilteredAlert());
     }
