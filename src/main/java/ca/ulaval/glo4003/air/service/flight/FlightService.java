@@ -54,9 +54,9 @@ public class FlightService {
                                                    .isGoingTo(searchDto.arrivalAirport);
 
         if (searchDto.departureDate != null) {
-            query.isLeavingAfter(searchDto.departureDate);
+            query.isLeavingAfterOrOn(searchDto.departureDate);
         } else {
-            query.isLeavingAfter(dateTimeFactory.now());
+            query.isLeavingAfterOrOn(dateTimeFactory.now());
         }
 
         if (searchDto.onlyAirVivant) {
@@ -76,19 +76,23 @@ public class FlightService {
         Map<PassengerFlight, AirCargoFlight> flightsWithAirCargo = new HashMap<>();
         if (flightsWereFilteredByWeight && searchDto.acceptsAirCargo) {
             allPassengerFlights.removeAll(flightsFilteredByWeight);
-            flightsWithAirCargo.putAll(searchForAirCargo(allPassengerFlights, searchDto.departureAirport, searchDto.arrivalAirport, searchDto.onlyAirVivant));
+            flightsWithAirCargo.putAll(searchForAirCargo(allPassengerFlights, searchDto.departureAirport, searchDto.arrivalAirport, searchDto.onlyAirVivant, searchDto.weight));
+
+            flightsFilteredByWeight.addAll(flightsWithAirCargo.keySet());
+            flightsWereFilteredByWeight = weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, allPassengerFlights);
         }
 
-        List<PassengerFlight> sortedFlights = flightSortingStrategy.sort(allPassengerFlights);//todo : Ralex plz take these flights
+        List<PassengerFlight> sortedFlights = flightSortingStrategy.sort(flightsFilteredByWeight);//todo : Ralex plz take these flights
 
-        FlightSearchResult searchResult = new FlightSearchResult(flightsFilteredByWeight, searchDto.weight, flightsWereFilteredByWeight, flightsWithAirCargo);
+        FlightSearchResult searchResult = new FlightSearchResult(sortedFlights, searchDto.weight, flightsWereFilteredByWeight, flightsWithAirCargo);
         return flightAssembler.create(searchResult);
     }
 
-    private Map<PassengerFlight, AirCargoFlight> searchForAirCargo(List<PassengerFlight> allFlights, String departureAirport, String arrivalAirport, boolean isOnlyAirVivant) {
+    private Map<PassengerFlight, AirCargoFlight> searchForAirCargo(List<PassengerFlight> allFlights, String departureAirport, String arrivalAirport, boolean isOnlyAirVivant, double weight) {
         FlightQueryBuilder query = flightRepository.query()
                                                    .isDepartingFrom(departureAirport)
-                                                   .isGoingTo(arrivalAirport);
+                                                   .isGoingTo(arrivalAirport)
+                                                   .acceptsWeight(weight);
 
         if (isOnlyAirVivant) {
             query.isAirVivant();
@@ -135,7 +139,7 @@ public class FlightService {
         return flightRepository.query()
                                .hasAirlineCompany(airlineCompany)
                                .isGoingTo(arrivalAirport)
-                               .isLeavingAfter(departureDate)
+                               .isLeavingAfterOrOn(departureDate)
                                .findOneAirCargoFlight()
                                .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
     }
@@ -144,7 +148,7 @@ public class FlightService {
         return flightRepository.query()
                                .hasAirlineCompany(airlineCompany)
                                .isGoingTo(arrivalAirport)
-                               .isLeavingAfter(departureDate)
+                               .isLeavingAfterOrOn(departureDate)
                                .findOnePassengerFlight()
                                .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
     }

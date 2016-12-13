@@ -6,12 +6,14 @@ public abstract class Airplane {
     private final boolean isAirVivant;
     private final SeatMap seatMap;
     private final double maximumWeight;
+    private final double totalMaximumWeight;
 
-    public Airplane(SeatMap seatMap, double maximumWeight, boolean isAirVivant, String serialNumber) {
+    public Airplane(SeatMap seatMap, double maximumWeight, boolean isAirVivant, String serialNumber, double totalMaximumWeight) {
         this.seatMap = seatMap;
         this.maximumWeight = maximumWeight;
         this.serialNumber = serialNumber;
         this.isAirVivant = isAirVivant;
+        this.totalMaximumWeight = totalMaximumWeight;
     }
 
     public boolean isAirVivant() {
@@ -44,5 +46,9 @@ public abstract class Airplane {
 
     public String getSerialNumber() {
         return serialNumber;
+    }
+
+    public boolean acceptsTotalWeight(double weight) {
+        return weight <= totalMaximumWeight;
     }
 }
