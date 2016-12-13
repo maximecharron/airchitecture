@@ -1,10 +1,10 @@
 package ca.ulaval.glo4003.air.api.flight;
 
+import ca.ulaval.glo4003.air.service.flight.FlightService;
+import ca.ulaval.glo4003.air.service.flight.InvalidParameterException;
 import ca.ulaval.glo4003.air.transfer.flight.FlightSearchQueryAssembler;
 import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchQueryDto;
 import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchResultDto;
-import ca.ulaval.glo4003.air.service.flight.FlightService;
-import ca.ulaval.glo4003.air.service.flight.InvalidParameterException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -39,9 +39,12 @@ public class FlightResource {
             parsedDate = parseDate(departureDate);
         }
         try {
-            FlightSearchQueryDto flightSearchQueryDto = new FlightSearchQueryAssembler().create(departureAirport, arrivalAirport, parsedDate, weight, onlyAirVivant, acceptsAirCargo, hasEconomySeats, hasRegularSeats, hasBusinessSeats);
+            FlightSearchQueryDto flightSearchQueryDto = new FlightSearchQueryAssembler().create(departureAirport,
+                arrivalAirport, parsedDate,
+                weight, onlyAirVivant, acceptsAirCargo,
+                hasEconomySeats, hasRegularSeats, hasBusinessSeats);
 
-            return flightService.findAllWithFilters(flightSearchQueryDto);
+            return flightService.findAllWithFilters(accessToken, flightSearchQueryDto);
         } catch (InvalidParameterException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
                                                       .entity(e.getMessage())

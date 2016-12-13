@@ -15,42 +15,41 @@ public class User {
 
     private final UserSearchPreferences userSearchPreferences;
 
-    public User(String emailAddress, String password, TokenEncoder tokenEncoder, HashingStrategy hashingStrategy, UserSearchPreferences userSearchPreferences, boolean isAdmin) {
-        this.emailAddress = emailAddress;
-        this.tokenEncoder = tokenEncoder;
-        this.hashingStrategy = hashingStrategy;
-        this.isAdmin = isAdmin;
-        this.password = hashingStrategy.hashPassword(password);
-        this.userSearchPreferences = userSearchPreferences;
     public static class UserBuilder {
 
         private String emailAddress;
         private String password;
         private TokenEncoder tokenEncoder;
         private HashingStrategy hashingStrategy;
+        private UserSearchPreferences userSearchPreferences;
         private boolean isAdmin;
 
-        public UserBuilder setEmailAddress(String emailAddress) {
+        public UserBuilder emailAddress(String emailAddress) {
             this.emailAddress = emailAddress;
             return this;
         }
 
-        public UserBuilder setPassword(String password) {
+        public UserBuilder password(String password) {
             this.password = password;
             return this;
         }
 
-        public UserBuilder setTokenEncoder(TokenEncoder tokenEncoder) {
+        public UserBuilder tokenEncoder(TokenEncoder tokenEncoder) {
             this.tokenEncoder = tokenEncoder;
             return this;
         }
 
-        public UserBuilder setHashingStrategy(HashingStrategy hashingStrategy) {
+        public UserBuilder hashingStrategy(HashingStrategy hashingStrategy) {
             this.hashingStrategy = hashingStrategy;
             return this;
         }
 
-        public UserBuilder setIsAdmin(boolean isAdmin) {
+        public UserBuilder userSearchPreferences(UserSearchPreferences userSearchPreferences) {
+            this.userSearchPreferences = userSearchPreferences;
+            return this;
+        }
+
+        public UserBuilder isAdmin(boolean isAdmin) {
             this.isAdmin = isAdmin;
             return this;
         }
@@ -64,6 +63,7 @@ public class User {
         this.emailAddress = userBuilder.emailAddress;
         this.tokenEncoder = userBuilder.tokenEncoder;
         this.hashingStrategy = userBuilder.hashingStrategy;
+        this.userSearchPreferences = userBuilder.userSearchPreferences;
         this.isAdmin = userBuilder.isAdmin;
         this.password = hashingStrategy.hashPassword(userBuilder.password);
     }
