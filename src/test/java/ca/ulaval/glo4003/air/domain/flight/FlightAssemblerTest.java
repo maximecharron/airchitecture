@@ -1,12 +1,12 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
-import ca.ulaval.glo4003.air.transfer.flight.dto.PassengerFlightDto;
-import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.domain.airplane.Airplane;
 import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 import ca.ulaval.glo4003.air.transfer.flight.AvailableSeatsAssembler;
 import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
 import ca.ulaval.glo4003.air.transfer.flight.SeatsPricingAssembler;
+import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchResultDto;
+import ca.ulaval.glo4003.air.transfer.flight.dto.PassengerFlightDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -92,7 +92,11 @@ public class FlightAssemblerTest {
     }
 
     private PassengerFlight givenAPassengerFlight() {
-        return new PassengerFlight(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, AIRLINE_COMPANY, airplane, SEATS_PRICING, availableSeatsFactory);
+        return new PassengerFlight.PassengerFlightBuilder()
+            .departureAirport(DEPARTURE_AIRPORT).arrivalAirport(ARRIVAL_AIRPORT).departureDate(DATE)
+            .airlineCompany(AIRLINE_COMPANY).airplane(airplane)
+            .seatsPricing(SEATS_PRICING).availableSeatsFactory(availableSeatsFactory)
+            .build();
     }
 
     private void assertHasAllTheRelevantProperties(PassengerFlight flight, PassengerFlightDto passengerFlightDto) {
