@@ -47,13 +47,13 @@ public class SeatsAndPriceSortingStrategy implements FlightSortingStrategy {
 
     private List<PassengerFlight> filterFlightsDepartingBeforeDate(List<PassengerFlight> passengerFlights, LocalDateTime departureDate) {
         return passengerFlights.stream()
-                               .filter(flight -> !flight.isLeavingAfter(departureDate))
+                               .filter(flight -> !flight.isLeavingAfterOrOn(departureDate))
                                .collect(Collectors.toList());
     }
 
     private List<PassengerFlight> filterFlightsDepartingAfterDate(List<PassengerFlight> passengerFlights, LocalDateTime departureDate) {
         return passengerFlights.stream()
-                               .filter(flight -> flight.isLeavingAfter(departureDate))
+                               .filter(flight -> flight.isLeavingAfterOrOn(departureDate))
                                .collect(Collectors.toList());
     }
 }

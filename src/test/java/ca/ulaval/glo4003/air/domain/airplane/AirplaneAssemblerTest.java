@@ -25,6 +25,8 @@ public class AirplaneAssemblerTest {
     private static final double ACCEPTED_ADDITIONNAL_WEIGHT = 100;
     private static final boolean IS_AIR_VIVANT = true;
     private static final SeatMap SEAT_MAP = new SeatMap(100, 60, 20);
+    private static final double A_TOTAL_MAXIMUM_WEIGHT = 10000;
+
 
     private AirplaneAssembler airplaneAssembler;
 
@@ -57,7 +59,7 @@ public class AirplaneAssemblerTest {
     }
 
     private AirLourdAirplane givenAnAirplane() {
-        return new AirLourdAirplane(SEAT_MAP, ACCEPTED_ADDITIONNAL_WEIGHT, IS_AIR_VIVANT, SERIAL_NUMBER);
+        return new AirLourdAirplane(SEAT_MAP, ACCEPTED_ADDITIONNAL_WEIGHT, IS_AIR_VIVANT, SERIAL_NUMBER, A_TOTAL_MAXIMUM_WEIGHT);
     }
 
     private void assertHasAllTheRelevantProperties(AirLourdAirplane airplane, AirplaneDto airplaneDto) {

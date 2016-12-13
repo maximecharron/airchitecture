@@ -43,8 +43,8 @@ public class FlightRepositoryInMemory implements FlightRepository {
         }
 
         @Override
-        public FlightQueryBuilder isLeavingAfter(LocalDateTime date) {
-            predicates.add(flight -> flight.isLeavingAfter(date));
+        public FlightQueryBuilder isLeavingAfterOrOn(LocalDateTime date) {
+            predicates.add(flight -> flight.isLeavingAfterOrOn(date));
             return this;
         }
 

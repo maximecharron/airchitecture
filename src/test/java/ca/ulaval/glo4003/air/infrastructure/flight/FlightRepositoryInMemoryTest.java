@@ -85,16 +85,16 @@ public class FlightRepositoryInMemoryTest {
 
     @Test
     public void givenPersistedFlights_whenFindingAllFlightsWithIsLeavingOnFilter_thenOnlyMatchingFlightsAreReturned() {
-        List<PassengerFlight> matchingFlights = flightRepository.query().isLeavingAfter(DATE).getPassengerFlights();
+        List<PassengerFlight> matchingFlights = flightRepository.query().isLeavingAfterOrOn(DATE).getPassengerFlights();
 
-        assertTrue(matchingFlights.stream().allMatch(flight -> flight.isLeavingAfter(DATE)));
+        assertTrue(matchingFlights.stream().allMatch(flight -> flight.isLeavingAfterOrOn(DATE)));
     }
 
     @Test
-    public void givenPersistedFlights_whenFindingAllFlightsWithIsLeavingAfterFilter_thenOnlyMatchingFlightsAreReturned() {
-        List<PassengerFlight> matchingFlights = flightRepository.query().isLeavingAfter(DATE).getPassengerFlights();
+    public void givenPersistedFlights_whenFindingAllFlightsWithIsLeavingAfterOrOnFilter_thenOnlyMatchingFlightsAreReturned() {
+        List<PassengerFlight> matchingFlights = flightRepository.query().isLeavingAfterOrOn(DATE).getPassengerFlights();
 
-        assertTrue(matchingFlights.stream().allMatch(flight -> flight.isLeavingAfter(DATE)));
+        assertTrue(matchingFlights.stream().allMatch(flight -> flight.isLeavingAfterOrOn(DATE)));
     }
 
     @Test
@@ -122,7 +122,7 @@ public class FlightRepositoryInMemoryTest {
     public void givenPersistedFlights_whenFindingExistingFlight_thenMatchingFlightIsReturned() {
         givenPersistedFlights();
 
-        Optional<PassengerFlight> flight = flightRepository.query().hasAirlineCompany(AIRLINE_COMPANY).isLeavingAfter(DATE).findOnePassengerFlight();
+        Optional<PassengerFlight> flight = flightRepository.query().hasAirlineCompany(AIRLINE_COMPANY).isLeavingAfterOrOn(DATE).findOnePassengerFlight();
 
         assertEquals(matchingFlight, flight.get());
     }
@@ -131,7 +131,7 @@ public class FlightRepositoryInMemoryTest {
     public void givenPersistedFlights_whenFindingNonExistingFlight_thenNullIsReturned() {
         givenPersistedFlights();
 
-        Optional<PassengerFlight> flight = flightRepository.query().hasAirlineCompany(INVALID_AIRLINE_COMPANY).isLeavingAfter(DATE).findOnePassengerFlight();
+        Optional<PassengerFlight> flight = flightRepository.query().hasAirlineCompany(INVALID_AIRLINE_COMPANY).isLeavingAfterOrOn(DATE).findOnePassengerFlight();
 
         assertFalse(flight.isPresent());
     }
@@ -139,8 +139,8 @@ public class FlightRepositoryInMemoryTest {
     private void givenPersistedFlights() {
         given(matchingFlight.isDepartingFrom(DEPARTURE_AIRPORT)).willReturn(true);
         given(matchingFlight.isGoingTo(ARRIVAL_AIRPORT)).willReturn(true);
-        given(matchingFlight.isLeavingAfter(DATE)).willReturn(true);
-        given(matchingFlight.isLeavingAfter(DATE)).willReturn(true);
+        given(matchingFlight.isLeavingAfterOrOn(DATE)).willReturn(true);
+        given(matchingFlight.isLeavingAfterOrOn(DATE)).willReturn(true);
         given(matchingFlight.isFromCompany(AIRLINE_COMPANY)).willReturn(true);
         given(matchingFlight.acceptsWeight(A_WEIGHT)).willReturn(true);
         given(matchingFlight.isAirVivant()).willReturn(true);
@@ -148,8 +148,8 @@ public class FlightRepositoryInMemoryTest {
 
         given(notMatchingFlight.isDepartingFrom(DEPARTURE_AIRPORT)).willReturn(false);
         given(notMatchingFlight.isGoingTo(ARRIVAL_AIRPORT)).willReturn(false);
-        given(notMatchingFlight.isLeavingAfter(DATE)).willReturn(false);
-        given(notMatchingFlight.isLeavingAfter(DATE)).willReturn(false);
+        given(notMatchingFlight.isLeavingAfterOrOn(DATE)).willReturn(false);
+        given(notMatchingFlight.isLeavingAfterOrOn(DATE)).willReturn(false);
         given(notMatchingFlight.isFromCompany(AIRLINE_COMPANY)).willReturn(false);
         given(notMatchingFlight.acceptsWeight(A_WEIGHT)).willReturn(false);
         given(notMatchingFlight.isAirVivant()).willReturn(false);

@@ -10,7 +10,7 @@ public abstract class Flight {
     private final String arrivalAirport;
     private final LocalDateTime departureDate;
     private final String airlineCompany;
-    private final Airplane airplane;
+    protected final Airplane airplane;
 
     public Flight(String departureAirport, String arrivalAirport, LocalDateTime departureDate, String airlineCompany, Airplane airplane) {
         this.departureAirport = departureAirport;
@@ -32,25 +32,15 @@ public abstract class Flight {
         return this.airlineCompany.equals(airlineCompany);
     }
 
-    public boolean isLeavingAfter(LocalDateTime date) {
-        return departureDate.isAfter(date);
+    public boolean isLeavingAfterOrOn(LocalDateTime date) {
+        return departureDate.isAfter(date) || departureDate.isEqual(date);
     }
 
     public boolean isLeavingWithinXDaysOf(LocalDateTime date, int numberOfDays) {
         return departureDate.isBefore(date.plusDays(numberOfDays));
     }
 
-    public boolean acceptsWeight(double weight) {
-        return airplane.acceptsWeight(weight);
-    }
-
-    public boolean hasAdditionalWeightOption() {
-        return this.airplane.hasAdditionalWeightOption();
-    }
-
-    public boolean acceptsAdditionalWeight(double weight) {
-        return airplane.acceptsAdditionalWeight(weight);
-    }
+    abstract public boolean acceptsWeight(double weight);
 
     public boolean isAirVivant() {
         return airplane.isAirVivant();

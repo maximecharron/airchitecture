@@ -19,13 +19,14 @@ public class AirMoyenAirplaneTest {
     private static final int ECONOMIC_SEATS = 20;
     private static final int REGULAR_SEATS = 10;
     private static final int BUSINESS_SEATS = 5;
+    private static final double A_TOTAL_MAXIMUM_WEIGHT = 10000;
 
     private AirMoyenAirplane airplane;
 
     @Before
     public void setUp() throws Exception {
         SeatMap seatMap = new SeatMap(ECONOMIC_SEATS, REGULAR_SEATS, BUSINESS_SEATS);
-        airplane = new AirMoyenAirplane(seatMap, A_IS_AIRVIVANT_VALUE, A_SERIAL_NUMBER);
+        airplane = new AirMoyenAirplane(seatMap, A_IS_AIRVIVANT_VALUE, A_SERIAL_NUMBER, A_TOTAL_MAXIMUM_WEIGHT);
     }
 
     @Test

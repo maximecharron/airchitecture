@@ -10,7 +10,7 @@ public interface FlightQueryBuilder {
 
     FlightQueryBuilder isDepartingFrom(String airport);
 
-    FlightQueryBuilder isLeavingAfter(LocalDateTime date);
+    FlightQueryBuilder isLeavingAfterOrOn(LocalDateTime date);
 
     FlightQueryBuilder acceptsWeight(double weight);
 

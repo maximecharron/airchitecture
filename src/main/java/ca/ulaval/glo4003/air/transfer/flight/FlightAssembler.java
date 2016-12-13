@@ -42,9 +42,10 @@ public class FlightAssembler {
     }
 
     private List<PassengerFlightDto> create(List<PassengerFlight> flights, double weight, Map<PassengerFlight, AirCargoFlight> flightsWithAirCargo) {
-        List<PassengerFlightDto> flightDtos =  flights.stream().map(flight -> create(flight, weight)).collect(Collectors.toList());
-        flightsWithAirCargo.entrySet().forEach(entry -> flightDtos.add(create(entry.getKey(), weight, entry.getValue())));
-        return flightDtos;
+        return flights.stream().map(flight -> {
+            if (flightsWithAirCargo.containsKey(flight)) return create(flight, weight, flightsWithAirCargo.get(flight));
+            else return create(flight, weight);
+        }).collect(Collectors.toList());
     }
 
     public PassengerFlightDto create(PassengerFlight flight, double weight, AirCargoFlight airCargoFlight) {
