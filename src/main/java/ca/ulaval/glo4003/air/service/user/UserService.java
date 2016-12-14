@@ -70,6 +70,17 @@ public class UserService {
         return updateAuthenticatedUser(token, userSettings);
     }
 
+    public void addNewDestinationToUser(String token, String destination) throws InvalidTokenException {
+        User user;
+        try {
+            user = authenticateUser(token);
+            user.addPreferredDestination(destination);
+            userRepository.update(user);
+        } catch (InvalidTokenException e) {
+            e.printStackTrace();
+        }
+    }
+
     private UserDto updateAuthenticatedUser(String token, UserSettings userSettings) throws InvalidTokenException {
         User user = authenticateUser(token);
         if (userSettings.userWantsToHideWeightFilteredAlert()) {

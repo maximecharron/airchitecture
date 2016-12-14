@@ -82,7 +82,7 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
 
         CartItemAssembler cartItemAssembler = new CartItemAssembler(seatMapAssembler);
         CartItemResource cartItemResource = createCartItemResource(flightService, cartItemAssembler);
-        TransactionResource transactionResource = createTransactionResource(cartItemAssembler);
+        TransactionResource transactionResource = createTransactionResource(cartItemAssembler, userService);
 
         AuthenticationResource authenticationResource = new AuthenticationResource(userService);
 
@@ -106,14 +106,14 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
         return new CartItemResource(cartItemService);
     }
 
-    private static TransactionResource createTransactionResource(CartItemAssembler cartItemAssembler) {
+    private static TransactionResource createTransactionResource(CartItemAssembler cartItemAssembler, UserService userService) {
         TransactionRepository transactionRepository = new TransactionRepositoryInMemory();
         SmtpEmailSender smtpEmailSender = new SmtpEmailSender();
         EmailTransactionNotifierConfiguration emailConfiguration = new ResourcesWithDefaultsEmailTransactionNotifierConfiguration();
         TransactionNotifier transactionNotifier = new EmailTransactionNotifier(smtpEmailSender, emailConfiguration);
 
         TransactionAssembler transactionAssembler = new TransactionAssembler(cartItemAssembler);
-        TransactionService transactionService = new TransactionService(transactionRepository, transactionNotifier, transactionAssembler);
+        TransactionService transactionService = new TransactionService(transactionRepository, transactionNotifier, transactionAssembler, userService);
         return new TransactionResource(transactionService);
     }
 

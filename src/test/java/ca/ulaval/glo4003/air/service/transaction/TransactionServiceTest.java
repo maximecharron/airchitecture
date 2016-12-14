@@ -1,5 +1,6 @@
 package ca.ulaval.glo4003.air.service.transaction;
 
+import ca.ulaval.glo4003.air.service.user.UserService;
 import ca.ulaval.glo4003.air.transfer.transaction.dto.TransactionDto;
 import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifier;
 import ca.ulaval.glo4003.air.domain.transaction.Transaction;
@@ -31,24 +32,27 @@ public class TransactionServiceTest {
 
     @Mock
     private TransactionAssembler transactionAssembler;
+
+    @Mock
+    private UserService userService;
     private TransactionService transactionService;
 
     @Before
     public void setup() {
         willReturn(transaction).given(transactionAssembler).create(transactionDto);
-        transactionService = new TransactionService(transactionRepository, emailSender, transactionAssembler);
+        transactionService = new TransactionService(transactionRepository, emailSender, transactionAssembler, userService);
     }
 
     @Test
     public void givenATransaction_whenTheServiceProceedsWithTheTransaction_thenTheTransactionIsPersisted() {
-        transactionService.buyTickets(transactionDto);
+        transactionService.buyTickets(transactionDto, "");
 
         verify(transactionRepository).save(transaction);
     }
 
     @Test
     public void givenATransaction_whenTheServiceProceedsWithTheTransaction_thenAnEmailIsSentToTheCustomer() {
-        transactionService.buyTickets(transactionDto);
+        transactionService.buyTickets(transactionDto, "");
 
         verify(emailSender).notifyOnNewCompletedTransaction(transaction);
     }
