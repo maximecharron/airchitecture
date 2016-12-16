@@ -32,15 +32,8 @@ public class TransactionService {
         Transaction transaction = transactionAssembler.create(transactionDto);
         logTransaction(transaction);
 
-        for (CartItem cartItem : transaction.getCartItems()){
-            if (token != null && !token.isEmpty()){
-                try {
-                    userService.addNewDestinationToUser(token, cartItem.getArrivalAirport());
-                } catch(InvalidTokenException e){
-                    e.printStackTrace();
-                    break;
-                }
-            }
+        for (CartItem cartItem : transaction.getCartItems()) {
+            userService.addNewDestinationToUser(token, cartItem.getArrivalAirport());
         }
 
         transactionRepository.save(transaction);

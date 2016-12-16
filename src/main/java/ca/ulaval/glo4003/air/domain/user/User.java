@@ -3,6 +3,7 @@ package ca.ulaval.glo4003.air.domain.user;
 import ca.ulaval.glo4003.air.domain.user.encoding.TokenEncoder;
 import ca.ulaval.glo4003.air.domain.user.hashing.HashingStrategy;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -120,9 +121,10 @@ public class User {
     }
 
     public Map<String, Integer> getPreferredDestination(){
+        //Some Java8 lambda to reverseSort the map before returning it.
         Map<String, Integer> sortedMap =
                 preferredDestinations.entrySet().stream()
-                        .sorted(Map.Entry.comparingByValue())
+                        .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                                 (e1, e2) -> e1, LinkedHashMap::new));
         return sortedMap;

@@ -9,8 +9,9 @@ public class DummyAirportGeolocator implements Geolocator {
     private static final String SHANNON_AIRPORT = "SNN";
     private static final String QUEBEC_AIRPORT = "YQB";
     private static final String DUBLIN_AIRPORT = "DUB";
-
-    private static final String[] SOME_AIRPORTS = {SHANNON_AIRPORT, QUEBEC_AIRPORT, DUBLIN_AIRPORT};
+    private static final String MONTREAL_AIRPORT = "YUL";
+    // We want montreal more often to facilitate test data for My Flights
+    private static final String[] SOME_AIRPORTS = {SHANNON_AIRPORT, QUEBEC_AIRPORT, DUBLIN_AIRPORT, MONTREAL_AIRPORT, MONTREAL_AIRPORT, MONTREAL_AIRPORT};
 
 
     @Override

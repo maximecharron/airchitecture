@@ -70,8 +70,11 @@ public class UserService {
         return updateAuthenticatedUser(token, userSettings);
     }
 
-    public void addNewDestinationToUser(String token, String destination) throws InvalidTokenException {
+    public void addNewDestinationToUser(String token, String destination){
         User user;
+        if (token == null || token.isEmpty()){
+            return;
+        }
         try {
             user = authenticateUser(token);
             user.addPreferredDestination(destination);
