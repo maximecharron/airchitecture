@@ -140,7 +140,7 @@ public class FlightService {
                                .hasAirlineCompany(airlineCompany)
                                .isGoingTo(arrivalAirport)
                                .isLeavingAfterOrOn(departureDate)
-                               .findOneAirCargoFlight()
+                               .getOneAirCargoFlight()
                                .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
     }
 
@@ -149,7 +149,7 @@ public class FlightService {
                                .hasAirlineCompany(airlineCompany)
                                .isGoingTo(arrivalAirport)
                                .isLeavingAfterOrOn(departureDate)
-                               .findOnePassengerFlight()
+                               .getOnePassengerFlight()
                                .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
     }
 
