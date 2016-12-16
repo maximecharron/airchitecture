@@ -11,14 +11,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class FlightAssembler {
+public class PassengerFlightAssembler {
 
     private final AvailableSeatsAssembler availableSeatsAssembler;
     private final SeatsPricingAssembler seatsPricingAssembler;
+    private final AirCargoFlightAssembler airCargoFlightAssembler;
 
-    public FlightAssembler(AvailableSeatsAssembler availableSeatsAssembler, SeatsPricingAssembler seatsPricingAssembler) {
+    public PassengerFlightAssembler(AvailableSeatsAssembler availableSeatsAssembler, SeatsPricingAssembler seatsPricingAssembler, AirCargoFlightAssembler airCargoFlightAssembler) {
         this.availableSeatsAssembler = availableSeatsAssembler;
         this.seatsPricingAssembler = seatsPricingAssembler;
+        this.airCargoFlightAssembler = airCargoFlightAssembler;
     }
 
     public PassengerFlightDto create(PassengerFlight flight, double weight) {
@@ -50,17 +52,7 @@ public class FlightAssembler {
 
     public PassengerFlightDto create(PassengerFlight flight, double weight, AirCargoFlight airCargoFlight) {
         PassengerFlightDto passengerFlightDto = create(flight, weight);
-        passengerFlightDto.airCargoFlight = create(airCargoFlight);
+        passengerFlightDto.airCargoFlight = airCargoFlightAssembler.create(airCargoFlight);
         return passengerFlightDto;
-    }
-
-    private AirCargoFlightDto create(AirCargoFlight airCargoFlight) {
-        AirCargoFlightDto airCargoFlightDto = new AirCargoFlightDto();
-        airCargoFlightDto.airlineCompany = airCargoFlight.getAirlineCompany();
-        airCargoFlightDto.departureDate = airCargoFlight.getDepartureDate();
-        airCargoFlightDto.departureAirport = airCargoFlight.getDepartureAirport();
-        airCargoFlightDto.arrivalAirport = airCargoFlight.getArrivalAirport();
-        airCargoFlightDto.price = airCargoFlight.getPrice();
-        return airCargoFlightDto;
     }
 }

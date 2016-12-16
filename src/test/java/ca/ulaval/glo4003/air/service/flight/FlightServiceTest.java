@@ -4,7 +4,7 @@ import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 import ca.ulaval.glo4003.air.domain.flight.*;
 import ca.ulaval.glo4003.air.service.user.UserService;
-import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
+import ca.ulaval.glo4003.air.transfer.flight.PassengerFlightAssembler;
 import ca.ulaval.glo4003.air.transfer.flight.FlightSearchQueryAssembler;
 import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchQueryDto;
 import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchResultDto;
@@ -72,10 +72,13 @@ public class FlightServiceTest {
     private FlightSortingStrategy flightSortingStrategy;
 
     @Mock
-    private FlightAssembler flightAssembler;
+    private PassengerFlightAssembler passengerFlightAssembler;
 
     @Mock
     private FlightSearchResultDto flightSearchResultDto;
+
+    @Mock
+    private AirCargoFlightMatcher airCargoFlightMatcher;
 
     private FlightService flightService;
 
@@ -89,7 +92,7 @@ public class FlightServiceTest {
         given(flightQueryBuilder.acceptsWeight(anyDouble())).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.isAirVivant()).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.hasAirlineCompany(anyString())).willReturn(flightQueryBuilder);
-        flightService = new FlightService(flightRepository, weightFilterVerifier, dateTimeFactory, flightSortingStrategy, flightAssembler, userService);
+        flightService = new FlightService(flightRepository, weightFilterVerifier, dateTimeFactory, flightSortingStrategy, passengerFlightAssembler, userService, airCargoFlightMatcher);
     }
 
     @Test
@@ -186,7 +189,7 @@ public class FlightServiceTest {
     public void givenPersistedFlights_whenFindingAllFlightsWithFilters_thenReturnFlightSearchResult() throws Exception {
         given(flightQueryBuilder.getPassengerFlights()).willReturn(passengerFlights).willReturn(flightsFilteredByWeight);
         given(weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, passengerFlights)).willReturn(FLIGHT_WERE_FILTERED_BY_WEIGHT_RESULT);
-        willReturn(flightSearchResultDto).given(flightAssembler).create(any(FlightSearchResult.class));
+        willReturn(flightSearchResultDto).given(passengerFlightAssembler).create(any(FlightSearchResult.class));
 
         FlightSearchQueryDto flightSearchQueryDto = new FlightSearchQueryAssembler().create(DEPARTURE_AIRPORT, ARRIVAL_AIRPORT, DATE, WEIGHT, ONLY_AIRVIVANT, ACCEPTS_AIRCARGO, HAS_ECONOMIC_FLIGHTS, HAS_REGULAR_FLIGHTS, HAS_BUSINESS_FLIGHTS);
 
