@@ -17,6 +17,7 @@ import java.util.Optional;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
@@ -108,6 +109,33 @@ public class UserServiceTest {
         userService.updateAuthenticatedUser(A_TOKEN, new UserSettingsDto());
 
         verify(userRepository).findUserByEmail(EMAIL);
+    }
+
+
+    @Test
+    public void givenAValidToken_whenAddingNewDestinationToUser_thenUserIsUpdated() throws InvalidTokenException {
+        given(tokenDecoder.decode(A_TOKEN)).willReturn(EMAIL);
+        given(userRepository.findUserByEmail(EMAIL)).willReturn(Optional.of(user));
+
+        userService.addNewDestinationToUser(A_TOKEN, "A destination");
+
+        verify(userRepository).update(user);
+    }
+
+    @Test
+    public void givenAnInvalidToken_whenAddingNewDestinationToUser_thenUserIsNotUpdated() throws InvalidTokenException {
+        given(tokenDecoder.decode(A_TOKEN)).willThrow(new InvalidTokenException());
+
+        userService.addNewDestinationToUser(A_TOKEN, "A destination");
+
+        verify(userRepository, never()).update(user);
+    }
+
+    @Test
+    public void givenNoToken_whenAddingNewDestinationToUser_thenUserIsNotUpdated() throws InvalidTokenException {
+        userService.addNewDestinationToUser(null, "A destination");
+
+        verify(userRepository, never()).update(user);
     }
 
     @Test(expected = InvalidTokenException.class)

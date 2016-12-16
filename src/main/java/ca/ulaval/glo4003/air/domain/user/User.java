@@ -114,7 +114,7 @@ public class User {
 
     public void addPreferredDestination(String destination){
         if (preferredDestinations.containsKey(destination)){
-            preferredDestinations.put(destination, preferredDestinations.get(destination) +1);
+            preferredDestinations.put(destination, preferredDestinations.get(destination) + 1);
         } else {
             preferredDestinations.put(destination, 1);
         }
