@@ -16,6 +16,7 @@ public class GeolocationResourceIT {
                 anyOf(
                     equalTo("YQB"),
                     equalTo("SNN"),
-                    equalTo("DUB")));
+                    equalTo("DUB"),
+                    equalTo("YUL")));
     }
 }

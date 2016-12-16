@@ -15,6 +15,7 @@ public class UserAssembler {
         userDto.emailAddress = user.getEmailAddress();
         userDto.hidesWeightFilteredAlert = user.showsWeightFilteredAlert();
         userDto.isAdmin = user.isAdmin();
+        userDto.preferredDestinations = user.getPreferredDestination();
         return userDto;
     }
 

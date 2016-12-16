@@ -5,163 +5,257 @@
     <h3 class="welcome-message">
         Welcome to our AirChitecture, your reference for flying needs!
     </h3>
-    <h3>Search for flights:</h3>
-    <form name="form" ng-submit="find()" role="form">
-        <div class="form-group">
-            <label>From</label>
-            <input type="text" autocomplete="off" name="from" id="from" class="form-control" ng-model="formData.from"
-                   placeholder="From"
-                   uib-typeahead="airport as airport.name for airport in airports | filter:$viewValue | limitTo:8"
-                   typeahead-show-hint="true"/>
+    <div>
+        <div ng-if="haveMyResults">
+            <h3>My Flights</h3>
+            <div class="results-container">
+                <table class="table-hover">
+                    <tr class="table-header">
+                        <th>Airline company</th>
+                        <th>Available seats</th>
+                        <th>Departure date</th>
+                    </tr>
+                    <tr ng-attr-data-toggle="{{myFlight.hasAdditionalWeightOption && !myFlight.acceptsAdditionalWeight ? undefined : 'modal'}}"
+                        class="result"
+                        ng-class="{'disabled': myFlight.hasAdditionalWeightOption && !myFlight.acceptsAdditionalWeight}"
+                        data-target="#{{$index}}_1" ng-repeat="myFlight in myFlightResults">
+                        <td>{{myFlight.airlineCompany}}</td>
+                        <td>{{myFlight.availableSeats}}</td>
+                        <td>{{myFlight.departureDate}}</td>
+                    </tr>
+                </table>
+            </div>
         </div>
-        <div class="form-group">
-            <input type="button" class="btn btn-primary" ng-click="findNearestAirport()"
-                   value="Find nearest airport automagically"/>
+
+        <div class="modal fade" id="{{$index}}_1" ng-repeat="myFlight in myFlightResults" tabindex="-1"
+             role="dialog" aria-labelledby="myModalLabel_1">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel_1">{{myFlight.airlineCompany}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <label>Airline company</label>
+                        <p>{{myFlight.airlineCompany}}</p>
+                        <label>Departure airport</label>
+                        <p>{{myFlight.humanDepartureAirport}}</p>
+                        <label>Arrival airport</label>
+                        <p>{{myFlight.humanArrivalAirport}}</p>
+                        <label>Departure date</label>
+                        <p>{{myFlight.departureDate}}</p>
+                        <label>Available seats</label>
+                        <p>Economic : {{myFlight.availableSeatsDto.economicSeats}}</p>
+                        <p>Regular : {{myFlight.availableSeatsDto.regularSeats}}</p>
+                        <p>Business : {{myFlight.availableSeatsDto.businessSeats}}</p>
+                        <label>Seats pricing</label>
+                        <div ng-show="!myFlight.airCargoFlight">
+                            <p>Economic : {{myFlight.seatsPricingDto.economicSeatsPrice | currency}}</p>
+                            <p>Regular : {{myFlight.seatsPricingDto.regularSeatsPrice | currency}}</p>
+                            <p>Business : {{myFlight.seatsPricingDto.businessSeatsPrice | currency}}</p>
+                        </div>
+                        <div ng-show="myFlight.airCargoFlight">
+                            <p>Economic : {{myFlight.seatsPricingDto.economicSeatsPrice + myFlight.airCargoFlight.price |
+                                currency}}</p>
+                            <p>Regular : {{myFlight.seatsPricingDto.regularSeatsPrice + myFlight.airCargoFlight.price |
+                                currency}}</p>
+                            <p>Business : {{myFlight.seatsPricingDto.businessSeatsPrice + myFlight.airCargoFlight.price |
+                                currency}}</p>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <ngcart-addtocart ng-show="myFlight.availableSeatsDto.economicSeats > 0"
+                                          id="{{myFlight.idEconomic}}"
+                                          name="{{myFlight.nameEconomic}}"
+                                          price="{{myFlight.seatsPricingDto.economicSeatsPrice}}"
+                                          quantity="1" data="myFlight">Add Economic Seat to Cart
+                        </ngcart-addtocart>
+                        <ngcart-addtocart ng-show="myFlight.availableSeatsDto.regularSeats > 0"
+                                          id="{{myFlight.idRegular}}"
+                                          name="{{myFlight.nameRegular}}"
+                                          price="{{myFlight.seatsPricingDto.regularSeatsPrice}}"
+                                          quantity="1" data="myFlight">Add Regular Seat to Cart
+                        </ngcart-addtocart>
+                        <ngcart-addtocart ng-show="myFlight.availableSeatsDto.businessSeats > 0"
+                                          id="{{myFlight.idBusiness}}"
+                                          name="{{myFlight.nameBusiness}}"
+                                          price="{{myFlight.seatsPricingDto.businessSeatsPrice}}"
+                                          quantity="1" data="myFlight">Add Business Seat to Cart
+                        </ngcart-addtocart>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label>To</label>
-            <input type="text" autocomplete="off" name="to" id="to" class="form-control" ng-model="formData.to"
-                   placeholder="To"
-                   uib-typeahead="airport as airport.name for airport in airports | filter:$viewValue | limitTo:8"
-                   typeahead-show-hint="true"/>
-        </div>
-        <div class="form-group">
-            <label>Departure date</label>
-            <p class="input-group">
-                <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="formData.date"
-                       is-open="popup1.opened" datepicker-options="dateOptions" close-text="Close"/>
-                <span class="input-group-btn">
+    </div>
+    <div>
+
+
+        <h3>Search for flights:</h3>
+        <form name="form" ng-submit="find()" role="form">
+            <div class="form-group">
+                <label>From</label>
+                <input type="text" autocomplete="off" name="from" id="from" class="form-control"
+                       ng-model="formData.from"
+                       placeholder="From"
+                       uib-typeahead="airport as airport.name for airport in airports | filter:$viewValue | limitTo:8"
+                       typeahead-show-hint="true"/>
+            </div>
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" ng-click="findNearestAirport()"
+                       value="Find nearest airport automagically"/>
+            </div>
+            <div class="form-group">
+                <label>To</label>
+                <input type="text" autocomplete="off" name="to" id="to" class="form-control" ng-model="formData.to"
+                       placeholder="To"
+                       uib-typeahead="airport as airport.name for airport in airports | filter:$viewValue | limitTo:8"
+                       typeahead-show-hint="true"/>
+            </div>
+            <div class="form-group">
+                <label>Departure date</label>
+                <p class="input-group">
+                    <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="formData.date"
+                           is-open="popup1.opened" datepicker-options="dateOptions" close-text="Close"/>
+                    <span class="input-group-btn">
             <button type="button" class="btn btn-default" ng-click="open1()"><i
                     class="glyphicon glyphicon-calendar"></i></button>
           </span>
-            </p>
-        </div>
-        <div class="form-group">
-            <label>Luggage Weight</label>
-            <input type="number" autocomplete="off" pattern="[0-9]+(\.[0-9]+)?" step="0.01" value=""
-                   name="luggageWeight" id="luggage-weight" class="form-control" ng-model="formData.luggageWeight"/>
-        </div>
-        <div class="form-group">
-            <input type="button" class="btn btn-primary" ng-click="detectWeight()" value="Detect Weight Automatically"/>
-        </div>
-        <div class="form-group">
-            <label>My luggage is alive</label>
-            <input type="checkbox" ng-model="formData.onlyAirVivant">
-        </div>
-        <div class="form-group">
-            <label>My luggage can travel on a different airplane than me</label>
-            <input type="checkbox" ng-model="formData.acceptsAirCargo">
-        </div>
-        <div class="form-group">
-            <label>I want to be in Economic class</label>
-            <input type="checkbox" ng-model="formData.economic">
-        </div>
-        <div class="form-group">
-            <label>I want to be in Regular class</label>
-            <input type="checkbox" ng-model="formData.regular">
-        </div>
-        <div class="form-group">
-            <label>I want to be in Business class</label>
-            <input type="checkbox" ng-model="formData.business">
-        </div>
-        <div class="form-actions">
-            <button type="submit" ng-disabled="!(formData.luggageWeight && formData.from && formData.to)"
-                    class="btn btn-primary">Find flights!
-            </button>
-        </div>
-    </form>
+                </p>
+            </div>
+            <div class="form-group">
+                <label>Luggage Weight</label>
+                <input type="number" autocomplete="off" pattern="[0-9]+(\.[0-9]+)?" step="0.01" value=""
+                       name="luggageWeight" id="luggage-weight" class="form-control" ng-model="formData.luggageWeight"/>
+            </div>
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" ng-click="detectWeight()"
+                       value="Detect Weight Automatically"/>
+            </div>
+            <div class="form-group">
+                <label>My luggage is alive</label>
+                <input type="checkbox" ng-model="formData.onlyAirVivant">
+            </div>
+            <div class="form-group">
+                <label>My luggage can travel on a different airplane than me</label>
+                <input type="checkbox" ng-model="formData.acceptsAirCargo">
+            </div>
+            <div class="form-group">
+                <label>I want to be in Economic class</label>
+                <input type="checkbox" ng-model="formData.economic">
+            </div>
+            <div class="form-group">
+                <label>I want to be in Regular class</label>
+                <input type="checkbox" ng-model="formData.regular">
+            </div>
+            <div class="form-group">
+                <label>I want to be in Business class</label>
+                <input type="checkbox" ng-model="formData.business">
+            </div>
+            <div class="form-actions">
+                <button type="submit" ng-disabled="!(formData.luggageWeight && formData.from && formData.to)"
+                        class="btn btn-primary">Find flights!
+                </button>
+            </div>
+        </form>
 
-    <div ng-show="hideWeightFilteredAlert && flightsWereFilteredByWeight" class="alert alert-warning" role="alert">
-        <button type="button" class="close" ng-click="closeWeightFilteredAlert(doNotShow)" aria-label="Close"><span
-                aria-hidden="true">&times;</span></button>
-        <strong>Warning!</strong> Some flights are not shown because your luggage weight exceeds their capacity.
-    </div>
-
-    <div ng-show="hasError" class="alert alert-danger" role="alert">
-        <strong>Oh snap!</strong> {{error}}
-    </div>
-
-    <div ng-show="haveResults">
-        <h3>Flights</h3>
-
-        <div class="results-container">
-            <table class="table-hover">
-                <tr class="table-header">
-                    <th>Airline company</th>
-                    <th>Available seats</th>
-                    <th>Departure date</th>
-                </tr>
-                <tr ng-attr-data-toggle="{{flight.hasAdditionalWeightOption && !flight.acceptsAdditionalWeight ? undefined : 'modal'}}"
-                    class="result"
-                    ng-class="{'disabled': flight.hasAdditionalWeightOption && !flight.acceptsAdditionalWeight}"
-                    data-target="#{{$index}}" ng-repeat="flight in flightsResults">
-                    <td>{{flight.airlineCompany}}</td>
-                    <td>{{flight.availableSeats}}</td>
-                    <td>{{flight.departureDate}}</td>
-                </tr>
-            </table>
+        <div ng-show="hideWeightFilteredAlert && flightsWereFilteredByWeight" class="alert alert-warning" role="alert">
+            <button type="button" class="close" ng-click="closeWeightFilteredAlert(doNotShow)" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+            <strong>Warning!</strong> Some flights are not shown because your luggage weight exceeds their capacity.
         </div>
-        <div class="form-actions">
-            <button type="button" class="btn btn-primary" ng-click="findReturnFlight()"
-                    ng-show="formData.from !== '' && formData.to !== ''">Find return flight
-            </button>
-        </div>
-    </div>
 
-    <div class="modal fade" id="{{$index}}" ng-repeat="flight in flightsResults" tabindex="-1"
-         role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">{{flight.airlineCompany}}</h4>
-                </div>
-                <div class="modal-body">
-                    <label>Airline company</label>
-                    <p>{{flight.airlineCompany}}</p>
-                    <label>Departure airport</label>
-                    <p>{{flight.humanDepartureAirport}}</p>
-                    <label>Arrival airport</label>
-                    <p>{{flight.humanArrivalAirport}}</p>
-                    <label>Departure date</label>
-                    <p>{{flight.departureDate}}</p>
-                    <label>Available seats</label>
-                    <p>Economic : {{flight.availableSeatsDto.economicSeats}}</p>
-                    <p>Regular : {{flight.availableSeatsDto.regularSeats}}</p>
-                    <p>Business : {{flight.availableSeatsDto.businessSeats}}</p>
-                    <label>Seats pricing</label>
-                    <div ng-show="!flight.airCargoFlight">
-                        <p>Economic : {{flight.seatsPricingDto.economicSeatsPrice | currency}}</p>
-                        <p>Regular : {{flight.seatsPricingDto.regularSeatsPrice | currency}}</p>
-                        <p>Business : {{flight.seatsPricingDto.businessSeatsPrice | currency}}</p>
+        <div ng-show="hasError" class="alert alert-danger" role="alert">
+            <strong>Oh snap!</strong> {{error}}
+        </div>
+
+        <div ng-show="haveResults">
+            <h3>Flights</h3>
+
+            <div class="results-container">
+                <table class="table-hover">
+                    <tr class="table-header">
+                        <th>Airline company</th>
+                        <th>Available seats</th>
+                        <th>Departure date</th>
+                    </tr>
+                    <tr ng-attr-data-toggle="{{flight.hasAdditionalWeightOption && !flight.acceptsAdditionalWeight ? undefined : 'modal'}}"
+                        class="result"
+                        ng-class="{'disabled': flight.hasAdditionalWeightOption && !flight.acceptsAdditionalWeight}"
+                        data-target="#{{$index}}" ng-repeat="flight in flightsResults">
+                        <td>{{flight.airlineCompany}}</td>
+                        <td>{{flight.availableSeats}}</td>
+                        <td>{{flight.departureDate}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-primary" ng-click="findReturnFlight()"
+                        ng-show="formData.from !== '' && formData.to !== ''">Find return flight
+                </button>
+            </div>
+        </div>
+
+        <div class="modal fade" id="{{$index}}" ng-repeat="flight in flightsResults" tabindex="-1"
+             role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">{{flight.airlineCompany}}</h4>
                     </div>
-                    <div ng-show="flight.airCargoFlight">
-                        <p>Economic : {{flight.seatsPricingDto.economicSeatsPrice + flight.airCargoFlight.price |
-                            currency}}</p>
-                        <p>Regular : {{flight.seatsPricingDto.regularSeatsPrice + flight.airCargoFlight.price |
-                            currency}}</p>
-                        <p>Business : {{flight.seatsPricingDto.businessSeatsPrice + flight.airCargoFlight.price |
-                            currency}}</p>
+                    <div class="modal-body">
+                        <label>Airline company</label>
+                        <p>{{flight.airlineCompany}}</p>
+                        <label>Departure airport</label>
+                        <p>{{flight.humanDepartureAirport}}</p>
+                        <label>Arrival airport</label>
+                        <p>{{flight.humanArrivalAirport}}</p>
+                        <label>Departure date</label>
+                        <p>{{flight.departureDate}}</p>
+                        <label>Available seats</label>
+                        <p>Economic : {{flight.availableSeatsDto.economicSeats}}</p>
+                        <p>Regular : {{flight.availableSeatsDto.regularSeats}}</p>
+                        <p>Business : {{flight.availableSeatsDto.businessSeats}}</p>
+                        <label>Seats pricing</label>
+                        <div ng-show="!flight.airCargoFlight">
+                            <p>Economic : {{flight.seatsPricingDto.economicSeatsPrice | currency}}</p>
+                            <p>Regular : {{flight.seatsPricingDto.regularSeatsPrice | currency}}</p>
+                            <p>Business : {{flight.seatsPricingDto.businessSeatsPrice | currency}}</p>
+                        </div>
+                        <div ng-show="flight.airCargoFlight">
+                            <p>Economic : {{flight.seatsPricingDto.economicSeatsPrice + flight.airCargoFlight.price |
+                                currency}}</p>
+                            <p>Regular : {{flight.seatsPricingDto.regularSeatsPrice + flight.airCargoFlight.price |
+                                currency}}</p>
+                            <p>Business : {{flight.seatsPricingDto.businessSeatsPrice + flight.airCargoFlight.price |
+                                currency}}</p>
+                        </div>
                     </div>
-                </div>
 
-                <div class="modal-footer">
-                    <ngcart-addtocart ng-show="flight.availableSeatsDto.economicSeats > 0" id="{{flight.idEconomic}}"
-                                      name="{{flight.nameEconomic}}"
-                                      price="{{flight.seatsPricingDto.economicSeatsPrice}}"
-                                      quantity="1" data="flight">Add Economic Seat to Cart
-                    </ngcart-addtocart>
-                    <ngcart-addtocart ng-show="flight.availableSeatsDto.regularSeats > 0" id="{{flight.idRegular}}"
-                                      name="{{flight.nameRegular}}" price="{{flight.seatsPricingDto.regularSeatsPrice}}"
-                                      quantity="1" data="flight">Add Regular Seat to Cart
-                    </ngcart-addtocart>
-                    <ngcart-addtocart ng-show="flight.availableSeatsDto.businessSeats > 0" id="{{flight.idBusiness}}"
-                                      name="{{flight.nameBusiness}}"
-                                      price="{{flight.seatsPricingDto.businessSeatsPrice}}"
-                                      quantity="1" data="flight">Add Business Seat to Cart
-                    </ngcart-addtocart>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    <div class="modal-footer">
+                        <ngcart-addtocart ng-show="flight.availableSeatsDto.economicSeats > 0"
+                                          id="{{flight.idEconomic}}"
+                                          name="{{flight.nameEconomic}}"
+                                          price="{{flight.seatsPricingDto.economicSeatsPrice}}"
+                                          quantity="1" data="flight">Add Economic Seat to Cart
+                        </ngcart-addtocart>
+                        <ngcart-addtocart ng-show="flight.availableSeatsDto.regularSeats > 0" id="{{flight.idRegular}}"
+                                          name="{{flight.nameRegular}}"
+                                          price="{{flight.seatsPricingDto.regularSeatsPrice}}"
+                                          quantity="1" data="flight">Add Regular Seat to Cart
+                        </ngcart-addtocart>
+                        <ngcart-addtocart ng-show="flight.availableSeatsDto.businessSeats > 0"
+                                          id="{{flight.idBusiness}}"
+                                          name="{{flight.nameBusiness}}"
+                                          price="{{flight.seatsPricingDto.businessSeatsPrice}}"
+                                          quantity="1" data="flight">Add Business Seat to Cart
+                        </ngcart-addtocart>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
