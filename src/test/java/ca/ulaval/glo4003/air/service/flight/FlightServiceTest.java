@@ -197,17 +197,17 @@ public class FlightServiceTest {
 
     @Test
     public void givenAValidFlightIdentifier_whenReservingPlacesForFlight_thenFindFlight() throws FlightNotFoundException {
-        willReturn(Optional.of(passengerFlight)).given(flightQueryBuilder).findOnePassengerFlight();
+        willReturn(Optional.of(passengerFlight)).given(flightQueryBuilder).getOnePassengerFlight();
         flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
 
         verify(flightQueryBuilder).hasAirlineCompany(AIRLINE_COMPANY);
         verify(flightQueryBuilder).isLeavingAfterOrOn(DATE);
-        verify(flightQueryBuilder).findOnePassengerFlight();
+        verify(flightQueryBuilder).getOnePassengerFlight();
     }
 
     @Test
     public void givenAValidFlightIdentifier_whenReservingPlacesForFlight_thenReservesPlaces() throws FlightNotFoundException {
-        willReturn(Optional.of(passengerFlight)).given(flightQueryBuilder).findOnePassengerFlight();
+        willReturn(Optional.of(passengerFlight)).given(flightQueryBuilder).getOnePassengerFlight();
 
         flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
 
@@ -216,7 +216,7 @@ public class FlightServiceTest {
 
     @Test
     public void givenAValidFlightIdentifier_whenReservingPlacesForFlight_thenUpdateFlight() throws FlightNotFoundException {
-        willReturn(Optional.of(passengerFlight)).given(flightQueryBuilder).findOnePassengerFlight();
+        willReturn(Optional.of(passengerFlight)).given(flightQueryBuilder).getOnePassengerFlight();
 
         flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
 
@@ -225,25 +225,25 @@ public class FlightServiceTest {
 
     @Test(expected = FlightNotFoundException.class)
     public void givenAnInValidFlightIdentifier_whenReservingPlacesForFlight_thenUpdateFlight() throws FlightNotFoundException {
-        willReturn(Optional.empty()).given(flightQueryBuilder).findOnePassengerFlight();
+        willReturn(Optional.empty()).given(flightQueryBuilder).getOnePassengerFlight();
 
         flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
     }
 
     @Test
     public void givenAValidFlightIdentifier_whenReleasingPlacesForFlight_thenFindFlight() throws FlightNotFoundException {
-        willReturn(Optional.of(passengerFlight)).given(flightQueryBuilder).findOnePassengerFlight();
+        willReturn(Optional.of(passengerFlight)).given(flightQueryBuilder).getOnePassengerFlight();
 
         flightService.releasePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
 
         verify(flightQueryBuilder).hasAirlineCompany(AIRLINE_COMPANY);
         verify(flightQueryBuilder).isLeavingAfterOrOn(DATE);
-        verify(flightQueryBuilder).findOnePassengerFlight();
+        verify(flightQueryBuilder).getOnePassengerFlight();
     }
 
     @Test
     public void givenAValidFlightIdentifier_whenReleasingPlacesForFlight_thenReleasesPlaces() throws FlightNotFoundException {
-        willReturn(Optional.of(passengerFlight)).given(flightQueryBuilder).findOnePassengerFlight();
+        willReturn(Optional.of(passengerFlight)).given(flightQueryBuilder).getOnePassengerFlight();
 
         flightService.releasePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
 
@@ -252,7 +252,7 @@ public class FlightServiceTest {
 
     @Test
     public void givenAValidFlightIdentifier_whenReleasingPlacesForFlight_thenUpdateFlight() throws FlightNotFoundException {
-        willReturn(Optional.of(passengerFlight)).given(flightQueryBuilder).findOnePassengerFlight();
+        willReturn(Optional.of(passengerFlight)).given(flightQueryBuilder).getOnePassengerFlight();
 
         flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
 
@@ -261,7 +261,7 @@ public class FlightServiceTest {
 
     @Test(expected = FlightNotFoundException.class)
     public void givenAnInValidFlightIdentifier_whenReleasingPlacesForFlight_thenUpdateFlight() throws FlightNotFoundException {
-        willReturn(Optional.empty()).given(flightQueryBuilder).findOnePassengerFlight();
+        willReturn(Optional.empty()).given(flightQueryBuilder).getOnePassengerFlight();
 
         flightService.releasePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
     }
