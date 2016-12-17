@@ -38,6 +38,12 @@ class FlightQueryBuilderInMemory implements FlightQueryBuilder {
     }
 
     @Override
+    public FlightQueryBuilder isLeavingOn(LocalDateTime date) {
+        predicates.add(flight -> flight.isLeavingOn(date));
+        return this;
+    }
+
+    @Override
     public FlightQueryBuilder acceptsWeight(double weight) {
         predicates.add(flight -> flight.acceptsWeight(weight));
         return this;

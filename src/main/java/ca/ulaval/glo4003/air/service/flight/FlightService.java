@@ -122,13 +122,14 @@ public class FlightService {
                                .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
     }
 
+
     private PassengerFlight findPassengerFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate) throws FlightNotFoundException {
         return flightRepository.query()
-                               .hasAirlineCompany(airlineCompany)
-                               .isGoingTo(arrivalAirport)
-                               .isLeavingAfterOrOn(departureDate)
-                               .getOnePassengerFlight()
-                               .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
+                .hasAirlineCompany(airlineCompany)
+                .isGoingTo(arrivalAirport)
+                .isLeavingOn(departureDate)
+                .getOnePassengerFlight()
+                .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
     }
 
     private void validateAirportsArePresent(String departureAirport, String arrivalAirport) {

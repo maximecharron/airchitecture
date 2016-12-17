@@ -72,18 +72,21 @@
                                           id="{{myFlight.idEconomic}}"
                                           name="{{myFlight.nameEconomic}}"
                                           price="{{myFlight.seatsPricingDto.economicSeatsPrice}}"
+                                          quantity-max="{{myFlight.availableSeatsDto.economicSeats}}"
                                           quantity="1" data="myFlight">Add Economic Seat to Cart
                         </ngcart-addtocart>
                         <ngcart-addtocart ng-show="myFlight.availableSeatsDto.regularSeats > 0"
                                           id="{{myFlight.idRegular}}"
                                           name="{{myFlight.nameRegular}}"
                                           price="{{myFlight.seatsPricingDto.regularSeatsPrice}}"
+                                          quantity-max="{{myFlight.availableSeatsDto.regularSeats}}"
                                           quantity="1" data="myFlight">Add Regular Seat to Cart
                         </ngcart-addtocart>
                         <ngcart-addtocart ng-show="myFlight.availableSeatsDto.businessSeats > 0"
                                           id="{{myFlight.idBusiness}}"
                                           name="{{myFlight.nameBusiness}}"
                                           price="{{myFlight.seatsPricingDto.businessSeatsPrice}}"
+                                          quantity-max="{{myFlight.availableSeatsDto.businessSeats}}"
                                           quantity="1" data="myFlight">Add Business Seat to Cart
                         </ngcart-addtocart>
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -243,17 +246,20 @@
                                           id="{{flight.idEconomic}}"
                                           name="{{flight.nameEconomic}}"
                                           price="{{flight.seatsPricingDto.economicSeatsPrice}}"
+                                          quantity-max="{{flight.availableSeatsDto.economicSeats}}"
                                           quantity="1" data="flight">Add Economic Seat to Cart
                         </ngcart-addtocart>
                         <ngcart-addtocart ng-show="flight.availableSeatsDto.regularSeats > 0" id="{{flight.idRegular}}"
                                           name="{{flight.nameRegular}}"
                                           price="{{flight.seatsPricingDto.regularSeatsPrice}}"
+                                          quantity-max="{{flight.availableSeatsDto.regularSeats}}"
                                           quantity="1" data="flight">Add Regular Seat to Cart
                         </ngcart-addtocart>
                         <ngcart-addtocart ng-show="flight.availableSeatsDto.businessSeats > 0"
                                           id="{{flight.idBusiness}}"
                                           name="{{flight.nameBusiness}}"
                                           price="{{flight.seatsPricingDto.businessSeatsPrice}}"
+                                          quantity-max="{{flight.availableSeatsDto.businessSeats}}"
                                           quantity="1" data="flight">Add Business Seat to Cart
                         </ngcart-addtocart>
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
