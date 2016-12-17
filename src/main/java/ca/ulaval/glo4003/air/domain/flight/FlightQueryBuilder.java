@@ -12,6 +12,8 @@ public interface FlightQueryBuilder {
 
     FlightQueryBuilder isLeavingAfterOrOn(LocalDateTime date);
 
+    FlightQueryBuilder isLeavingOn(LocalDateTime date);
+
     FlightQueryBuilder acceptsWeight(double weight);
 
     FlightQueryBuilder isAirVivant();

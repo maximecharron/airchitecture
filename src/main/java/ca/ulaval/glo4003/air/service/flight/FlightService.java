@@ -90,13 +90,13 @@ public class FlightService {
     }
 
     public void reservePlacesInFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate, SeatMap seatMap) throws FlightNotFoundException {
-        PassengerFlight flight = findPassengerFlight(airlineCompany, arrivalAirport, departureDate);
+        PassengerFlight flight = findPassengerFlightOnDate(airlineCompany, arrivalAirport, departureDate);
         flight.reserveSeats(seatMap);
         this.flightRepository.save(flight);
     }
 
     public void releasePlacesInFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate, SeatMap seatMap) throws FlightNotFoundException {
-        PassengerFlight flight = findPassengerFlight(airlineCompany, arrivalAirport, departureDate);
+        PassengerFlight flight = findPassengerFlightOnDate(airlineCompany, arrivalAirport, departureDate);
         flight.releaseSeats(seatMap);
         this.flightRepository.save(flight);
     }
@@ -129,6 +129,15 @@ public class FlightService {
                                .isLeavingAfterOrOn(departureDate)
                                .getOnePassengerFlight()
                                .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
+    }
+
+    private PassengerFlight findPassengerFlightOnDate(String airlineCompany, String arrivalAirport, LocalDateTime departureDate) throws FlightNotFoundException {
+        return flightRepository.query()
+                .hasAirlineCompany(airlineCompany)
+                .isGoingTo(arrivalAirport)
+                .isLeavingOn(departureDate)
+                .getOnePassengerFlight()
+                .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
     }
 
     private void validateAirportsArePresent(String departureAirport, String arrivalAirport) {

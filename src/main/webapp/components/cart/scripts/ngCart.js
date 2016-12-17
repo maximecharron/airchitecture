@@ -38,7 +38,7 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
             };
         };
 
-        this.addItem = function (id, name, price, quantity, data) {
+        this.addItem = function (id, name, price, quantity, quantityMax, data) {
 
             var inCart = this.getItemById(id);
 
@@ -46,7 +46,7 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
                 //Update quantity of an item if it's already in the cart
                 inCart.setQuantity(quantity, false);
             } else {
-                var newItem = new ngCartItem(id, name, price, quantity, data);
+                var newItem = new ngCartItem(id, name, price, quantity, quantityMax, data);
                 this.$cart.items.push(newItem);
                 if (data.airCargoFlight) {
                     if (id.indexOf("Economic") > -1) {
@@ -297,68 +297,70 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
             var cart = this.getCart();
             angular.forEach(cart.items, function (item, index) {
                 if (item.getId() === id) {
-                    if (item.getData().airCargoFlight) {
-                        if (id.indexOf("Economic") > -1) {
-                            cartResource.reserveTicket({
-                                "arrivalAirport": item.getData().arrivalAirport,
-                                "airlineCompany": item.getData().airlineCompany,
-                                "departureDate": item.getData().departureDate,
-                                "airCargoDepartureDate": item.getData().airCargoFlight.departureDate,
-                                "airCargoAirLineCompany": item.getData().airCargoFlight.airlineCompany,
-                                "luggageWeight": item.getData().luggageWeight,
-                                "seatMapDto": {"economicSeats": 1, "regularSeats": 0, "businessSeats": 0}
-                            });
-                        } else if (id.indexOf("Regular") > -1) {
-                            console.dir(item.getData());
-                            cartResource.reserveTicket({
-                                "arrivalAirport": item.getData().arrivalAirport,
-                                "airlineCompany": item.getData().airlineCompany,
-                                "departureDate": item.getData().departureDate,
-                                "airCargoDepartureDate": item.getData().airCargoFlight.departureDate,
-                                "airCargoAirLineCompany": item.getData().airCargoFlight.airlineCompany,
-                                "luggageWeight": item.getData().luggageWeight,
-                                "seatMapDto": {"economicSeats": 0, "regularSeats": 1, "businessSeats": 0}
-                            });
-                        } else if (id.indexOf("Business") > -1) {
-                            cartResource.reserveTicket({
-                                "arrivalAirport": item.getData().arrivalAirport,
-                                "airlineCompany": item.getData().airlineCompany,
-                                "departureDate": item.getData().departureDate,
-                                "airCargoDepartureDate": item.getData().airCargoFlight.departureDate,
-                                "airCargoAirLineCompany": item.getData().airCargoFlight.airlineCompany,
-                                "luggageWeight": item.getData().luggageWeight,
-                                "seatMapDto": {"economicSeats": 0, "regularSeats": 0, "businessSeats": 1}
-                            });
+                    if (item.getQuantity() + 1 <= item.getQuantityMax()) {
+                        if (item.getData().airCargoFlight) {
+                            if (id.indexOf("Economic") > -1) {
+                                cartResource.reserveTicket({
+                                    "arrivalAirport": item.getData().arrivalAirport,
+                                    "airlineCompany": item.getData().airlineCompany,
+                                    "departureDate": item.getData().departureDate,
+                                    "airCargoDepartureDate": item.getData().airCargoFlight.departureDate,
+                                    "airCargoAirLineCompany": item.getData().airCargoFlight.airlineCompany,
+                                    "luggageWeight": item.getData().luggageWeight,
+                                    "seatMapDto": {"economicSeats": 1, "regularSeats": 0, "businessSeats": 0}
+                                });
+                            } else if (id.indexOf("Regular") > -1) {
+                                console.dir(item.getData());
+                                cartResource.reserveTicket({
+                                    "arrivalAirport": item.getData().arrivalAirport,
+                                    "airlineCompany": item.getData().airlineCompany,
+                                    "departureDate": item.getData().departureDate,
+                                    "airCargoDepartureDate": item.getData().airCargoFlight.departureDate,
+                                    "airCargoAirLineCompany": item.getData().airCargoFlight.airlineCompany,
+                                    "luggageWeight": item.getData().luggageWeight,
+                                    "seatMapDto": {"economicSeats": 0, "regularSeats": 1, "businessSeats": 0}
+                                });
+                            } else if (id.indexOf("Business") > -1) {
+                                cartResource.reserveTicket({
+                                    "arrivalAirport": item.getData().arrivalAirport,
+                                    "airlineCompany": item.getData().airlineCompany,
+                                    "departureDate": item.getData().departureDate,
+                                    "airCargoDepartureDate": item.getData().airCargoFlight.departureDate,
+                                    "airCargoAirLineCompany": item.getData().airCargoFlight.airlineCompany,
+                                    "luggageWeight": item.getData().luggageWeight,
+                                    "seatMapDto": {"economicSeats": 0, "regularSeats": 0, "businessSeats": 1}
+                                });
+                            }
+                        } else {
+                            if (id.indexOf("Economic") > -1) {
+                                cartResource.reserveTicket({
+                                    "arrivalAirport": item.getData().arrivalAirport,
+                                    "airlineCompany": item.getData().airlineCompany,
+                                    "departureDate": item.getData().departureDate,
+                                    "luggageWeight": item.getData().luggageWeight,
+                                    "seatMapDto": {"economicSeats": 1, "regularSeats": 0, "businessSeats": 0}
+                                });
+                            } else if (id.indexOf("Regular") > -1) {
+                                console.dir(item.getData());
+                                cartResource.reserveTicket({
+                                    "arrivalAirport": item.getData().arrivalAirport,
+                                    "airlineCompany": item.getData().airlineCompany,
+                                    "departureDate": item.getData().departureDate,
+                                    "luggageWeight": item.getData().luggageWeight,
+                                    "seatMapDto": {"economicSeats": 0, "regularSeats": 1, "businessSeats": 0}
+                                });
+                            } else if (id.indexOf("Business") > -1) {
+                                cartResource.reserveTicket({
+                                    "arrivalAirport": item.getData().arrivalAirport,
+                                    "airlineCompany": item.getData().airlineCompany,
+                                    "departureDate": item.getData().departureDate,
+                                    "luggageWeight": item.getData().luggageWeight,
+                                    "seatMapDto": {"economicSeats": 0, "regularSeats": 0, "businessSeats": 1}
+                                });
+                            }
                         }
-                    } else {
-                        if (id.indexOf("Economic") > -1) {
-                            cartResource.reserveTicket({
-                                "arrivalAirport": item.getData().arrivalAirport,
-                                "airlineCompany": item.getData().airlineCompany,
-                                "departureDate": item.getData().departureDate,
-                                "luggageWeight": item.getData().luggageWeight,
-                                "seatMapDto": {"economicSeats": 1, "regularSeats": 0, "businessSeats": 0}
-                            });
-                        } else if (id.indexOf("Regular") > -1) {
-                            console.dir(item.getData());
-                            cartResource.reserveTicket({
-                                "arrivalAirport": item.getData().arrivalAirport,
-                                "airlineCompany": item.getData().airlineCompany,
-                                "departureDate": item.getData().departureDate,
-                                "luggageWeight": item.getData().luggageWeight,
-                                "seatMapDto": {"economicSeats": 0, "regularSeats": 1, "businessSeats": 0}
-                            });
-                        } else if (id.indexOf("Business") > -1) {
-                            cartResource.reserveTicket({
-                                "arrivalAirport": item.getData().arrivalAirport,
-                                "airlineCompany": item.getData().airlineCompany,
-                                "departureDate": item.getData().departureDate,
-                                "luggageWeight": item.getData().luggageWeight,
-                                "seatMapDto": {"economicSeats": 0, "regularSeats": 0, "businessSeats": 1}
-                            });
-                        }
+                        item.setQuantity(1, true);
                     }
-                    item.setQuantity(1, true);
                 }
             });
             $rootScope.$broadcast('ngCart:change', {});
@@ -516,7 +518,7 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
             _self.$cart.tax = storedCart.tax;
 
             angular.forEach(storedCart.items, function (item) {
-                _self.$cart.items.push(new ngCartItem(item._id, item._name, item._price, item._quantity, item._data));
+                _self.$cart.items.push(new ngCartItem(item._id, item._name, item._price, item._quantity, item._quantityMax, item._data));
             });
             this.$save();
         };
@@ -529,13 +531,13 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
 
     .factory('ngCartItem', ['$rootScope', '$log', 'cartResource', function ($rootScope, $log, cartResource) {
 
-        var item = function (id, name, price, quantity, data) {
+        var item = function (id, name, price, quantity, quantityMax, data) {
             this.setId(id);
             this.setName(name);
             this.setPrice(price);
             this.setData(data);
-            console.log(data);
             this.setQuantity(quantity);
+            this.setQuantityMax(quantityMax);
         };
 
 
@@ -616,12 +618,21 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
             return +parseFloat(this.getQuantity() * this.getPrice()).toFixed(2);
         };
 
+        item.prototype.getQuantityMax = function () {
+            return this._quantityMax;
+        };
+
+        item.prototype.setQuantityMax = function (quantityMax) {
+            this._quantityMax = quantityMax;
+        }
+
         item.prototype.toObject = function () {
             return {
                 id: this.getId(),
                 name: this.getName(),
                 price: this.getPrice(),
                 quantity: this.getQuantity(),
+                quantityMax: this.getQuantityMax(),
                 data: this.getData(),
                 total: this.getTotal()
             }
@@ -638,7 +649,7 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
                         airCargoDepartureDate: this.getData().airCargoFlight.departureDate,
                         airCargoAirLineCompany: this.getData().airCargoFlight.airlineCompany,
                         luggageWeight: this.getData().luggageWeight,
-                        seatMapDto: {economicSeats: 1, regularSeats: 0, businessSeats: 0}
+                        seatMapDto: {economicSeats: this.getQuantity(), regularSeats: 0, businessSeats: 0}
                     };
                 } else if (this.getId().indexOf("Business") > -1) {
                     itemDto = {
@@ -648,7 +659,7 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
                         airCargoDepartureDate: this.getData().airCargoFlight.departureDate,
                         airCargoAirLineCompany: this.getData().airCargoFlight.airlineCompany,
                         luggageWeight: this.getData().luggageWeight,
-                        seatMapDto: {economicSeats: 0, regularSeats: 1, businessSeats: 0}
+                        seatMapDto: {economicSeats: 0, regularSeats: this.getQuantity(), businessSeats: 0}
                     };
                 } else {
                     itemDto = {
@@ -658,7 +669,7 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
                         airCargoDepartureDate: this.getData().airCargoFlight.departureDate,
                         airCargoAirLineCompany: this.getData().airCargoFlight.airlineCompany,
                         luggageWeight: this.getData().luggageWeight,
-                        seatMapDto: {economicSeats: 0, regularSeats: 0, businessSeats: 1}
+                        seatMapDto: {economicSeats: 0, regularSeats: 0, businessSeats: this.getQuantity()}
                     };
                 }
             } else {
@@ -668,7 +679,7 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
                         airlineCompany: this.getData().airlineCompany,
                         departureDate: this.getData().departureDate,
                         luggageWeight: this.getData().luggageWeight,
-                        seatMapDto: {economicSeats: 1, regularSeats: 0, businessSeats: 0}
+                        seatMapDto: {economicSeats: this.getQuantity(), regularSeats: 0, businessSeats: 0}
                     };
                 } else if (this.getId().indexOf("Business") > -1) {
                     itemDto = {
@@ -676,7 +687,7 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
                         airlineCompany: this.getData().airlineCompany,
                         departureDate: this.getData().departureDate,
                         luggageWeight: this.getData().luggageWeight,
-                        seatMapDto: {economicSeats: 0, regularSeats: 1, businessSeats: 0}
+                        seatMapDto: {economicSeats: 0, regularSeats: this.getQuantity(), businessSeats: 0}
                     };
                 } else {
                     itemDto = {
@@ -684,7 +695,7 @@ angular.module('ngCart', ['ngCart.directives', 'airchitecture.cart'])
                         airlineCompany: this.getData().airlineCompany,
                         departureDate: this.getData().departureDate,
                         luggageWeight: this.getData().luggageWeight,
-                        seatMapDto: {economicSeats: 0, regularSeats: 0, businessSeats: 1}
+                        seatMapDto: {economicSeats: 0, regularSeats: 0, businessSeats: this.getQuantity()}
                     };
                 }
             }

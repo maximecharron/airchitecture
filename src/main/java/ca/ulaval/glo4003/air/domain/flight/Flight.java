@@ -36,6 +36,10 @@ public abstract class Flight {
         return departureDate.isAfter(date) || departureDate.isEqual(date);
     }
 
+    public boolean isLeavingOn(LocalDateTime date) {
+        return departureDate.isEqual(date);
+    }
+
     public boolean isLeavingWithinXDaysOf(LocalDateTime date, int numberOfDays) {
         return departureDate.isBefore(date.plusDays(numberOfDays));
     }
