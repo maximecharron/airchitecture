@@ -35,7 +35,6 @@ input[type=search]{
     background-color: #cccccc;
     border: solid 1px #cccccc;
     padding-left: 20px;
-    width: 25px;
     height : 25px;
     -webkit-border-radius: 10em;
     -moz-border-radius: 10em;
@@ -45,7 +44,7 @@ input[type=search]{
     -moz-transition: all .5s;
     transition: all .5s;
 
-    color: transparent;
+    color: #000000;
     cursor: pointer;
 }
 
