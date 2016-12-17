@@ -1,12 +1,11 @@
 package ca.ulaval.glo4003.air.infrastructure.flight;
 
-import ca.ulaval.glo4003.air.domain.flight.*;
+import ca.ulaval.glo4003.air.domain.flight.Flight;
+import ca.ulaval.glo4003.air.domain.flight.FlightQueryBuilder;
+import ca.ulaval.glo4003.air.domain.flight.FlightRepository;
 
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FlightRepositoryInMemory implements FlightRepository {
 

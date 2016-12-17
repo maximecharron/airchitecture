@@ -1,11 +1,11 @@
 package ca.ulaval.glo4003.air.service.transaction;
 
-import ca.ulaval.glo4003.air.service.user.UserService;
-import ca.ulaval.glo4003.air.transfer.transaction.dto.TransactionDto;
 import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifier;
 import ca.ulaval.glo4003.air.domain.transaction.Transaction;
 import ca.ulaval.glo4003.air.domain.transaction.TransactionRepository;
+import ca.ulaval.glo4003.air.service.user.UserService;
 import ca.ulaval.glo4003.air.transfer.transaction.TransactionAssembler;
+import ca.ulaval.glo4003.air.transfer.transaction.dto.TransactionDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

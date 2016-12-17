@@ -1,11 +1,10 @@
 package ca.ulaval.glo4003.air.transfer.flight;
 
-import ca.ulaval.glo4003.air.transfer.flight.dto.AirCargoFlightDto;
-import ca.ulaval.glo4003.air.transfer.flight.dto.PassengerFlightDto;
-import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.domain.flight.AirCargoFlight;
 import ca.ulaval.glo4003.air.domain.flight.FlightSearchResult;
 import ca.ulaval.glo4003.air.domain.flight.PassengerFlight;
+import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchResultDto;
+import ca.ulaval.glo4003.air.transfer.flight.dto.PassengerFlightDto;
 
 import java.util.List;
 import java.util.Map;

@@ -9,9 +9,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -108,7 +106,7 @@ public class AirCargoFlightTest {
 
         verify(airplane).acceptsTotalWeight(airCargoFlight.getTotalWeight() + A_WEIGHT);
     }
-    
+
     @Test
     public void givenAAirCargoFlight_whenCheckingIfItIsAirVivant_thenItsDelegatedToTheAirplane() {
         AirCargoFlight airCargoFlight = givenAAirCargoFlight();
@@ -140,12 +138,12 @@ public class AirCargoFlightTest {
 
     private AirCargoFlight givenAAirCargoFlight() {
         return new AirCargoFlight.AirCargoFlightBuilder()
-                .departureAirport(AIRPORT_A)
-                .arrivalAirport(AIRPORT_B)
-                .departureDate(A_DEPARTURE_DATE)
-                .airlineCompany(AN_AIRLINE_COMPANY)
-                .airplane(airplane)
-                .price(A_PRICE)
-                .build();
+            .departureAirport(AIRPORT_A)
+            .arrivalAirport(AIRPORT_B)
+            .departureDate(A_DEPARTURE_DATE)
+            .airlineCompany(AN_AIRLINE_COMPANY)
+            .airplane(airplane)
+            .price(A_PRICE)
+            .build();
     }
 }

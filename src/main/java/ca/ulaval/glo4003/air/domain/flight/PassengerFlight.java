@@ -111,8 +111,6 @@ public class PassengerFlight extends Flight {
         return airplane.acceptsAdditionalWeight(weight);
     }
 
-
-
     public void reserveSeats(SeatMap seatMap) {
         availableSeats.reserve(seatMap);
     }
