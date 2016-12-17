@@ -1,7 +1,5 @@
 package ca.ulaval.glo4003.air.domain.flight;
 
-import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
-import ca.ulaval.glo4003.air.service.flight.FlightService;
 import ca.ulaval.glo4003.air.transfer.flight.FlightSearchQueryAssembler;
 import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchQueryDto;
 import org.junit.Before;

@@ -23,7 +23,7 @@ public class AirplaneDevDataFactory {
         Airplane airplane5 = new AirLourdAirplane(seatMap4, 0, false, "a-one", 12000);
 
         SeatMap seatMap5 = new SeatMap(50, 50, 50);
-        Airplane airplane6 = new AirLourdAirplane(seatMap5, 0, false, "a-cris", 20000);
+        Airplane airplane6 = new AirLourdAirplane(seatMap5, 0, false, "a-cric", 20000);
 
         SeatMap seatMap6 = new SeatMap(50, 50, 50);
         Airplane airplane7 = new AirLourdAirplane(seatMap6, 0, false, "a-crac", 22000);

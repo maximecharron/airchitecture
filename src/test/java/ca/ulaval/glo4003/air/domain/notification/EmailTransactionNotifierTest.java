@@ -1,7 +1,6 @@
 package ca.ulaval.glo4003.air.domain.notification;
 
 import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
-import ca.ulaval.glo4003.air.domain.flight.AvailableSeats;
 import ca.ulaval.glo4003.air.domain.transaction.Transaction;
 import ca.ulaval.glo4003.air.domain.transaction.cart.CartItem;
 import org.junit.Before;

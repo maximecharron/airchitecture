@@ -1,8 +1,8 @@
 package ca.ulaval.glo4003.air.api.user;
 
-import ca.ulaval.glo4003.air.transfer.user.dto.UserDto;
 import ca.ulaval.glo4003.air.domain.user.UserAlreadyExistException;
 import ca.ulaval.glo4003.air.service.user.UserService;
+import ca.ulaval.glo4003.air.transfer.user.dto.UserDto;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Rule;

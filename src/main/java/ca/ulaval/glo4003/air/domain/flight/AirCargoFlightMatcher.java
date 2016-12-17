@@ -5,9 +5,10 @@ import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchQueryDto;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public class AirCargoFlightMatcher {
+
+    private static final int WITHIN_3_DAYS = 3;
 
     private final FlightRepository flightRepository;
 
@@ -20,21 +21,20 @@ public class AirCargoFlightMatcher {
 
         Map<PassengerFlight, AirCargoFlight> flightsWithAirCargo = new HashMap<>();
 
-        passengerFlights.forEach(flight -> {
-            Optional<AirCargoFlight> optionalAirCargoFlight = airCargoFlights.stream().filter(airCargoFlight -> airCargoFlight.isLeavingWithinXDaysOf(flight.getDepartureDate(), 3)).findFirst();
-            if (optionalAirCargoFlight.isPresent()) {
-                flightsWithAirCargo.put(flight, optionalAirCargoFlight.get());
-            }
-        });
+        passengerFlights.forEach(flight ->
+            airCargoFlights.stream()
+                           .filter(airCargoFlight -> airCargoFlight.isLeavingWithinXDaysOf(flight.getDepartureDate(), WITHIN_3_DAYS))
+                           .findFirst()
+                           .ifPresent(cargo -> flightsWithAirCargo.put(flight, cargo)));
 
         return flightsWithAirCargo;
     }
 
     private List<AirCargoFlight> findAirCargoFlights(FlightSearchQueryDto searchDto) {
         FlightQueryBuilder query = flightRepository.query()
-                .isDepartingFrom(searchDto.departureAirport)
-                .isGoingTo(searchDto.arrivalAirport)
-                .acceptsWeight(searchDto.weight);
+                                                   .isDepartingFrom(searchDto.departureAirport)
+                                                   .isGoingTo(searchDto.arrivalAirport)
+                                                   .acceptsWeight(searchDto.weight);
 
         if (searchDto.onlyAirVivant) {
             query.isAirVivant();

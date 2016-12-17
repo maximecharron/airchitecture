@@ -59,10 +59,6 @@ public class AirCargoFlight extends Flight {
         this.price = builder.price;
     }
 
-    public double getTotalWeight() {
-        return totalWeight;
-    }
-
     @Override
     public boolean acceptsWeight(double weight) {
         return airplane.acceptsTotalWeight(totalWeight + weight);
@@ -90,4 +86,7 @@ public class AirCargoFlight extends Flight {
         totalWeight -= luggageWeight;
     }
 
+    public double getTotalWeight() {
+        return totalWeight;
+    }
 }

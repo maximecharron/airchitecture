@@ -50,10 +50,10 @@ class FlightQueryBuilderInMemory implements FlightQueryBuilder {
     }
 
     @Override
-    public FlightQueryBuilder hasSeatsAvailable(boolean economySeats, boolean regularSeats, boolean businessSeats){
-        predicates.add(flight -> flight.isPassengerFlight() && (((PassengerFlight)flight).hasAvailableEconomySeats() == economySeats
-                || ((PassengerFlight)flight).hasAvailableRegularSeats() == regularSeats
-                || ((PassengerFlight)flight).hasAvailableBusinessSeats() == businessSeats));
+    public FlightQueryBuilder hasSeatsAvailable(boolean economySeats, boolean regularSeats, boolean businessSeats) {
+        predicates.add(flight -> flight.isPassengerFlight() && (((PassengerFlight) flight).hasAvailableEconomySeats() == economySeats
+            || ((PassengerFlight) flight).hasAvailableRegularSeats() == regularSeats
+            || ((PassengerFlight) flight).hasAvailableBusinessSeats() == businessSeats));
         return this;
     }
 
@@ -89,12 +89,12 @@ class FlightQueryBuilderInMemory implements FlightQueryBuilder {
 
     private Stream<PassengerFlight> filterPassengerFlights(Stream<Flight> flights) {
         return flights.filter(Flight::isPassengerFlight)
-                .map(flight -> (PassengerFlight) flight);
+                      .map(flight -> (PassengerFlight) flight);
     }
 
     private Stream<AirCargoFlight> filterAirCargoFlights(Stream<Flight> flights) {
         return flights.filter(Flight::isAirCargo)
-                .map(flight -> (AirCargoFlight) flight);
+                      .map(flight -> (AirCargoFlight) flight);
     }
 
     private Stream<Flight> filterFlights() {

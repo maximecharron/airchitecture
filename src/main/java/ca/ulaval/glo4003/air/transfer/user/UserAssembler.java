@@ -1,11 +1,11 @@
 package ca.ulaval.glo4003.air.transfer.user;
 
-import ca.ulaval.glo4003.air.transfer.user.dto.UserSearchPreferencesDto;
-import ca.ulaval.glo4003.air.transfer.user.dto.UserSettingsDto;
 import ca.ulaval.glo4003.air.domain.user.User;
 import ca.ulaval.glo4003.air.domain.user.UserSearchPreferences;
 import ca.ulaval.glo4003.air.domain.user.UserSettings;
 import ca.ulaval.glo4003.air.transfer.user.dto.UserDto;
+import ca.ulaval.glo4003.air.transfer.user.dto.UserSearchPreferencesDto;
+import ca.ulaval.glo4003.air.transfer.user.dto.UserSettingsDto;
 
 public class UserAssembler {
 

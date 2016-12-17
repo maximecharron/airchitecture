@@ -70,9 +70,9 @@ public class UserService {
         return updateAuthenticatedUser(token, userSettings);
     }
 
-    public void addNewDestinationToUser(String token, String destination){
+    public void addNewDestinationToUser(String token, String destination) {
         User user;
-        if (token == null || token.isEmpty()){
+        if (token == null || token.isEmpty()) {
             return;
         }
         try {

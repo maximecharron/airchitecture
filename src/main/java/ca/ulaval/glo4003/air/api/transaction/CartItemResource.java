@@ -1,8 +1,8 @@
 package ca.ulaval.glo4003.air.api.transaction;
 
-import ca.ulaval.glo4003.air.transfer.transaction.dto.CartItemDto;
 import ca.ulaval.glo4003.air.domain.flight.FlightNotFoundException;
 import ca.ulaval.glo4003.air.service.transaction.cart.CartItemService;
+import ca.ulaval.glo4003.air.transfer.transaction.dto.CartItemDto;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -61,8 +61,8 @@ public class CartItemResource {
             return LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         } catch (DateTimeParseException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Invalid datetime format. " + e.getMessage())
-                    .build());
+                                                      .entity("Invalid datetime format. " + e.getMessage())
+                                                      .build());
         }
     }
 }

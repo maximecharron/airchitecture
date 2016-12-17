@@ -1,8 +1,6 @@
 package ca.ulaval.glo4003.air.infrastructure.flight;
 
 import ca.ulaval.glo4003.air.domain.flight.Flight;
-import ca.ulaval.glo4003.air.domain.flight.FlightQueryBuilder;
-import ca.ulaval.glo4003.air.domain.flight.FlightRepository;
 import ca.ulaval.glo4003.air.domain.flight.PassengerFlight;
 import org.junit.Before;
 import org.junit.Test;

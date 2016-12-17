@@ -1,7 +1,6 @@
 package ca.ulaval.glo4003.air.infrastructure.flight;
 
 import ca.ulaval.glo4003.air.domain.flight.AirCargoFlight;
-import ca.ulaval.glo4003.air.domain.flight.FlightQueryBuilder;
 import ca.ulaval.glo4003.air.domain.flight.FlightRepository;
 import ca.ulaval.glo4003.air.domain.flight.PassengerFlight;
 import org.junit.Before;
@@ -11,10 +10,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
 

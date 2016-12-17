@@ -112,22 +112,19 @@ public class User {
         userSearchPreferences.incrementSearchesPreferences(hasSearchedForAirVivantFlights, hasSearchedForEconomyClassFlights, hasSearchedForRegularClassFlights, hasSearchedForBusinessClassFlights);
     }
 
-    public void addPreferredDestination(String destination){
-        if (preferredDestinations.containsKey(destination)){
+    public void addPreferredDestination(String destination) {
+        if (preferredDestinations.containsKey(destination)) {
             preferredDestinations.put(destination, preferredDestinations.get(destination) + 1);
         } else {
             preferredDestinations.put(destination, 1);
         }
     }
 
-    public Map<String, Integer> getPreferredDestination(){
-        //Some Java8 lambda to reverseSort the map before returning it.
-        Map<String, Integer> sortedMap =
-                preferredDestinations.entrySet().stream()
-                        .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                                (e1, e2) -> e1, LinkedHashMap::new));
-        return sortedMap;
+    public Map<String, Integer> getPreferredDestination() {
+        return preferredDestinations.entrySet()
+                                    .stream()
+                                    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 
     public UserSearchPreferences getUserSearchPreferences() {

@@ -1,7 +1,7 @@
 package ca.ulaval.glo4003.air.api.geolocation;
 
-import ca.ulaval.glo4003.air.transfer.geolocation.dto.NearestAirportDto;
 import ca.ulaval.glo4003.air.service.geolocation.GeolocationService;
+import ca.ulaval.glo4003.air.transfer.geolocation.dto.NearestAirportDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

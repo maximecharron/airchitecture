@@ -56,11 +56,13 @@
                             <p>Business : {{myFlight.seatsPricingDto.businessSeatsPrice | currency}}</p>
                         </div>
                         <div ng-show="myFlight.airCargoFlight">
-                            <p>Economic : {{myFlight.seatsPricingDto.economicSeatsPrice + myFlight.airCargoFlight.price |
+                            <p>Economic : {{myFlight.seatsPricingDto.economicSeatsPrice + myFlight.airCargoFlight.price
+                                |
                                 currency}}</p>
                             <p>Regular : {{myFlight.seatsPricingDto.regularSeatsPrice + myFlight.airCargoFlight.price |
                                 currency}}</p>
-                            <p>Business : {{myFlight.seatsPricingDto.businessSeatsPrice + myFlight.airCargoFlight.price |
+                            <p>Business : {{myFlight.seatsPricingDto.businessSeatsPrice + myFlight.airCargoFlight.price
+                                |
                                 currency}}</p>
                         </div>
                     </div>

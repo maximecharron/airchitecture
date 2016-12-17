@@ -1,14 +1,12 @@
 package ca.ulaval.glo4003.air.service.transaction;
 
-import ca.ulaval.glo4003.air.domain.transaction.cart.CartItem;
-import ca.ulaval.glo4003.air.domain.user.InvalidTokenException;
-import ca.ulaval.glo4003.air.domain.user.UserRepository;
-import ca.ulaval.glo4003.air.service.user.UserService;
-import ca.ulaval.glo4003.air.transfer.transaction.dto.TransactionDto;
 import ca.ulaval.glo4003.air.domain.notification.TransactionNotifier;
 import ca.ulaval.glo4003.air.domain.transaction.Transaction;
 import ca.ulaval.glo4003.air.domain.transaction.TransactionRepository;
+import ca.ulaval.glo4003.air.domain.transaction.cart.CartItem;
+import ca.ulaval.glo4003.air.service.user.UserService;
 import ca.ulaval.glo4003.air.transfer.transaction.TransactionAssembler;
+import ca.ulaval.glo4003.air.transfer.transaction.dto.TransactionDto;
 
 import java.util.logging.Logger;
 

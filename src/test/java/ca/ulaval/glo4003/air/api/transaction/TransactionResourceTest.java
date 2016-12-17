@@ -1,7 +1,7 @@
 package ca.ulaval.glo4003.air.api.transaction;
 
-import ca.ulaval.glo4003.air.transfer.transaction.dto.TransactionDto;
 import ca.ulaval.glo4003.air.service.transaction.TransactionService;
+import ca.ulaval.glo4003.air.transfer.transaction.dto.TransactionDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
