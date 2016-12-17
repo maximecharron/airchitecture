@@ -171,6 +171,7 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
             }
             else {
                 $scope.showWeightFilteredAlert = $window.localStorage.getItem("showWeightFilteredAlert") === null
+                console.log($scope.showWeightFilteredAlert);
             }
 
             $scope.flightsResults = flights;
