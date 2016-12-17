@@ -166,13 +166,13 @@ public class PassengerFlightTest {
 
     private PassengerFlight givenAPassengerFlight() {
         return new PassengerFlight.PassengerFlightBuilder()
-                .departureAirport(AIRPORT_A)
-                .arrivalAirport(AIRPORT_B)
-                .departureDate(A_DEPARTURE_DATE)
-                .airlineCompany(AN_AIRLINE_COMPANY)
-                .airplane(airplane)
-                .seatsPricing(seatsPricing)
-                .availableSeatsFactory(availableSeatsFactory)
-                .build();
+            .departureAirport(AIRPORT_A)
+            .arrivalAirport(AIRPORT_B)
+            .departureDate(A_DEPARTURE_DATE)
+            .airlineCompany(AN_AIRLINE_COMPANY)
+            .airplane(airplane)
+            .seatsPricing(seatsPricing)
+            .availableSeatsFactory(availableSeatsFactory)
+            .build();
     }
 }

@@ -1,7 +1,7 @@
 package ca.ulaval.glo4003.air.domain.weightdetection;
 
-import ca.ulaval.glo4003.air.transfer.weightdetection.dto.WeightDetectionDto;
 import ca.ulaval.glo4003.air.transfer.weightdetection.WeightDetectionAssembler;
+import ca.ulaval.glo4003.air.transfer.weightdetection.dto.WeightDetectionDto;
 import org.junit.Before;
 import org.junit.Test;
 

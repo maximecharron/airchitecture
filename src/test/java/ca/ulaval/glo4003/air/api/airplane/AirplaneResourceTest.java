@@ -1,12 +1,12 @@
 package ca.ulaval.glo4003.air.api.airplane;
 
-import ca.ulaval.glo4003.air.transfer.airplane.dto.AirplaneDto;
-import ca.ulaval.glo4003.air.transfer.airplane.dto.AirplaneSearchResultDto;
-import ca.ulaval.glo4003.air.transfer.airplane.dto.AirplaneUpdateDto;
 import ca.ulaval.glo4003.air.domain.airplane.AirplaneNotFoundException;
 import ca.ulaval.glo4003.air.domain.user.InvalidTokenException;
 import ca.ulaval.glo4003.air.domain.user.UnauthorizedException;
 import ca.ulaval.glo4003.air.service.airplane.AirplaneService;
+import ca.ulaval.glo4003.air.transfer.airplane.dto.AirplaneDto;
+import ca.ulaval.glo4003.air.transfer.airplane.dto.AirplaneSearchResultDto;
+import ca.ulaval.glo4003.air.transfer.airplane.dto.AirplaneUpdateDto;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;

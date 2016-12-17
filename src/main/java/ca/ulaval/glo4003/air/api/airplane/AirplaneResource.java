@@ -1,12 +1,12 @@
 package ca.ulaval.glo4003.air.api.airplane;
 
-import ca.ulaval.glo4003.air.transfer.airplane.dto.AirplaneDto;
-import ca.ulaval.glo4003.air.transfer.airplane.dto.AirplaneSearchResultDto;
-import ca.ulaval.glo4003.air.transfer.airplane.dto.AirplaneUpdateDto;
 import ca.ulaval.glo4003.air.domain.airplane.AirplaneNotFoundException;
 import ca.ulaval.glo4003.air.domain.user.InvalidTokenException;
 import ca.ulaval.glo4003.air.domain.user.UnauthorizedException;
 import ca.ulaval.glo4003.air.service.airplane.AirplaneService;
+import ca.ulaval.glo4003.air.transfer.airplane.dto.AirplaneDto;
+import ca.ulaval.glo4003.air.transfer.airplane.dto.AirplaneSearchResultDto;
+import ca.ulaval.glo4003.air.transfer.airplane.dto.AirplaneUpdateDto;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -41,13 +41,13 @@ public class AirplaneResource {
         } catch (InvalidTokenException | UnauthorizedException e) {
             logger.info("Airplane update failed because: " + e.getMessage());
             throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED)
-                    .entity("Token is invalid or the user does not have the required permissions.")
-                    .build());
+                                                      .entity("Token is invalid or the user does not have the required permissions.")
+                                                      .build());
         } catch (AirplaneNotFoundException e) {
             logger.info("Airplane update failed because: " + e.getMessage());
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity("This airplane does not exist.")
-                    .build());
+                                                      .entity("This airplane does not exist.")
+                                                      .build());
         }
     }
 }

@@ -17,6 +17,6 @@ public class DummyAirportGeolocatorTest {
     public void whenGeolocating_thenAValidAirportIATAIsReturned() {
         String result = this.dummyAirportGeolocator.findNearestAirport(AN_IP_ADDRESS);
 
-        assert(result.length() == 3);
+        assert (result.length() == 3);
     }
 }

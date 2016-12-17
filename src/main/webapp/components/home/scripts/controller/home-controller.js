@@ -15,7 +15,9 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
         business: false
     };
     $scope.haveResults = false;
+    $scope.haveMyResults = false;
     $scope.flightsResults = [];
+    $scope.myFlightResults = [];
 
     $scope.hasError = false;
     $scope.error = undefined;
@@ -31,10 +33,6 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
         });
     }
 
-    $http.get('./airports.json')
-        .success(function (data) {
-            $scope.airports = data;
-        });
 
     $scope.detectWeight = function () {
         weightDetectionResource.get({}, function onSuccess(data) {
@@ -62,6 +60,63 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
             $window.localStorage.setItem("showWeightFilteredAlert", false);
         }
     };
+
+    $scope.findMyFlight = function () {
+
+        if ($rootScope.user && $rootScope.user.preferredDestinations) {
+            $scope.isLoading = true;
+            if ($rootScope.user.preferredDestinations.entry.length > 0) {
+                geolocationResource.get({}, function onSuccess(data) {
+                    $scope.airports.forEach(function (airport, index) {
+                        if (airport.code == data.nearestAirport) {
+                            $scope.formData.from = airport;
+                        }
+                    });
+
+                    $rootScope.user.preferredDestinations.entry.forEach(function (destination, index) {
+                        var searchCriteria = {};
+                        searchCriteria.to = destination.key;
+                        searchCriteria.weight = 1;
+                        if ($scope.formData.from) {
+                            searchCriteria.from = 'YUL';
+                        }
+
+                        homeResource.get(searchCriteria, function onSuccess(data) {
+                            var flights = [];
+                            data.flights.forEach(function(flight, index) {
+                                var flight = data.flights[index];
+                                flight.idEconomic = flight.airlineCompany + flight.departureDate + flight.arrivalAirport + "-Economic";
+                                flight.idBusiness = flight.airlineCompany + flight.departureDate + flight.arrivalAirport + "-Business";
+                                flight.idRegular = flight.airlineCompany + flight.departureDate + flight.arrivalAirport + "-Regular";
+                                flight.availableSeats = flight.availableSeatsDto.regularSeats + flight.availableSeatsDto.economicSeats + flight.availableSeatsDto.businessSeats;
+                                flight.humanArrivalAirport = $scope.formData.to.name;
+                                flight.humanDepartureAirport = $scope.formData.from.name;
+                                flight.luggageWeight = $scope.formData.luggageWeight;
+                                flight.nameEconomic = flight.airlineCompany + " from " + flight.humanDepartureAirport + " to " + flight.humanArrivalAirport + " - Economic Seat";
+                                flight.nameBusiness = flight.airlineCompany + " from " + flight.humanDepartureAirport + " to " + flight.humanArrivalAirport + " - Business Seat";
+                                flight.nameRegular = flight.airlineCompany + " from " + flight.humanDepartureAirport + " to " + flight.humanArrivalAirport + " - Regular Seat";
+                                $scope.myFlightResults.push(flight);
+                            })
+
+                            $scope.flightsWereFilteredByWeight = data.flightsWereFilteredByWeight;
+                            $scope.haveMyResults = true;
+                            $scope.isLoading = false;
+
+                        }, function onError(data) {
+                            $scope.isLoading = false;
+                            $scope.hasError = true;
+                            $scope.error = data;
+                        });
+                    })
+                    if ($rootScope.user.preferredDestinations.entry.length == 0) {
+                        $scope.isLoading = false;
+                    }
+                });
+            } else {
+                $scope.isLoading = false;
+            }
+        }
+    }
 
     $scope.find = function () {
         $scope.isLoading = true;
@@ -116,6 +171,7 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
             }
             else {
                 $scope.showWeightFilteredAlert = $window.localStorage.getItem("showWeightFilteredAlert") === null
+                console.log($scope.showWeightFilteredAlert);
             }
 
             $scope.flightsResults = flights;
@@ -228,4 +284,11 @@ homeApp.controller("home-controller", function ($scope, $rootScope, $http, $cook
 
         return '';
     }
+
+    $http.get('./airports.json')
+        .success(function (data) {
+            $scope.airports = data;
+            $scope.findMyFlight();
+        });
+
 });

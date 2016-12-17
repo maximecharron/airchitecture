@@ -1,10 +1,10 @@
 package ca.ulaval.glo4003.air.transfer.airplane;
 
-import ca.ulaval.glo4003.air.transfer.airplane.dto.AirplaneDto;
-import ca.ulaval.glo4003.air.transfer.airplane.dto.AirplaneSearchResultDto;
 import ca.ulaval.glo4003.air.domain.airplane.AirLourdAirplane;
 import ca.ulaval.glo4003.air.domain.airplane.Airplane;
 import ca.ulaval.glo4003.air.domain.airplane.AirplaneSearchResult;
+import ca.ulaval.glo4003.air.transfer.airplane.dto.AirplaneDto;
+import ca.ulaval.glo4003.air.transfer.airplane.dto.AirplaneSearchResultDto;
 
 import java.util.stream.Collectors;
 

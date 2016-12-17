@@ -1,6 +1,5 @@
 package ca.ulaval.glo4003.air.domain.airplane;
 
-import jersey.repackaged.com.google.common.collect.SetMultimap;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

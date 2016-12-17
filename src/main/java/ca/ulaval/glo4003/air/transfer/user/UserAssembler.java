@@ -1,11 +1,11 @@
 package ca.ulaval.glo4003.air.transfer.user;
 
-import ca.ulaval.glo4003.air.transfer.user.dto.UserSearchPreferencesDto;
-import ca.ulaval.glo4003.air.transfer.user.dto.UserSettingsDto;
 import ca.ulaval.glo4003.air.domain.user.User;
 import ca.ulaval.glo4003.air.domain.user.UserSearchPreferences;
 import ca.ulaval.glo4003.air.domain.user.UserSettings;
 import ca.ulaval.glo4003.air.transfer.user.dto.UserDto;
+import ca.ulaval.glo4003.air.transfer.user.dto.UserSearchPreferencesDto;
+import ca.ulaval.glo4003.air.transfer.user.dto.UserSettingsDto;
 
 public class UserAssembler {
 
@@ -13,8 +13,9 @@ public class UserAssembler {
         UserDto userDto = new UserDto();
         userDto.token = user.getToken();
         userDto.emailAddress = user.getEmailAddress();
-        userDto.hidesWeightFilteredAlert = user.showsWeightFilteredAlert();
+        userDto.showsWeightFilteredAlert = user.showsWeightFilteredAlert();
         userDto.isAdmin = user.isAdmin();
+        userDto.preferredDestinations = user.getPreferredDestination();
         return userDto;
     }
 

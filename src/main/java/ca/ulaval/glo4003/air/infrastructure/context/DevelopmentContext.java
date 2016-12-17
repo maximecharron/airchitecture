@@ -10,10 +10,7 @@ import ca.ulaval.glo4003.air.api.user.UserResource;
 import ca.ulaval.glo4003.air.api.weightdetection.WeightDetectionResource;
 import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.airplane.Airplane;
-import ca.ulaval.glo4003.air.domain.flight.AvailableSeatsFactory;
-import ca.ulaval.glo4003.air.domain.flight.Flight;
-import ca.ulaval.glo4003.air.domain.flight.FlightSortingStrategy;
-import ca.ulaval.glo4003.air.domain.flight.WeightFilterVerifier;
+import ca.ulaval.glo4003.air.domain.flight.*;
 import ca.ulaval.glo4003.air.domain.geolocation.Geolocator;
 import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifier;
 import ca.ulaval.glo4003.air.domain.notification.EmailTransactionNotifierConfiguration;
@@ -47,8 +44,9 @@ import ca.ulaval.glo4003.air.service.user.UserService;
 import ca.ulaval.glo4003.air.service.weightdetection.WeightDetectionService;
 import ca.ulaval.glo4003.air.transfer.airplane.AirplaneAssembler;
 import ca.ulaval.glo4003.air.transfer.airplane.SeatMapAssembler;
+import ca.ulaval.glo4003.air.transfer.flight.AirCargoFlightAssembler;
 import ca.ulaval.glo4003.air.transfer.flight.AvailableSeatsAssembler;
-import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
+import ca.ulaval.glo4003.air.transfer.flight.PassengerFlightAssembler;
 import ca.ulaval.glo4003.air.transfer.flight.SeatsPricingAssembler;
 import ca.ulaval.glo4003.air.transfer.geolocation.NearestAirportAssembler;
 import ca.ulaval.glo4003.air.transfer.transaction.CartItemAssembler;
@@ -82,7 +80,7 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
 
         CartItemAssembler cartItemAssembler = new CartItemAssembler(seatMapAssembler);
         CartItemResource cartItemResource = createCartItemResource(flightService, cartItemAssembler);
-        TransactionResource transactionResource = createTransactionResource(cartItemAssembler);
+        TransactionResource transactionResource = createTransactionResource(cartItemAssembler, userService);
 
         AuthenticationResource authenticationResource = new AuthenticationResource(userService);
 
@@ -106,14 +104,14 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
         return new CartItemResource(cartItemService);
     }
 
-    private static TransactionResource createTransactionResource(CartItemAssembler cartItemAssembler) {
+    private static TransactionResource createTransactionResource(CartItemAssembler cartItemAssembler, UserService userService) {
         TransactionRepository transactionRepository = new TransactionRepositoryInMemory();
         SmtpEmailSender smtpEmailSender = new SmtpEmailSender();
         EmailTransactionNotifierConfiguration emailConfiguration = new ResourcesWithDefaultsEmailTransactionNotifierConfiguration();
         TransactionNotifier transactionNotifier = new EmailTransactionNotifier(smtpEmailSender, emailConfiguration);
 
         TransactionAssembler transactionAssembler = new TransactionAssembler(cartItemAssembler);
-        TransactionService transactionService = new TransactionService(transactionRepository, transactionNotifier, transactionAssembler);
+        TransactionService transactionService = new TransactionService(transactionRepository, transactionNotifier, transactionAssembler, userService);
         return new TransactionResource(transactionService);
     }
 
@@ -132,16 +130,17 @@ public class DevelopmentContext implements AirChitectureApplicationContext {
 
     private static FlightService createFlightService(List<Airplane> airplanes, AvailableSeatsAssembler availableSeatsAssembler, UserService userService) {
         FlightRepositoryInMemory flightRepository = new FlightRepositoryInMemory();
-        FlightAssembler flightAssembler = new FlightAssembler(availableSeatsAssembler, new SeatsPricingAssembler());
+        PassengerFlightAssembler passengerFlightAssembler = new PassengerFlightAssembler(availableSeatsAssembler, new SeatsPricingAssembler(), new AirCargoFlightAssembler());
 
         FlightDevDataFactory flightDevDataFactory = new FlightDevDataFactory();
         List<Flight> flights = flightDevDataFactory.createMockData(airplanes, new AvailableSeatsFactory());
         flights.forEach(flightRepository::save);
 
+        AirCargoFlightMatcher airCargoFlightMatcher = new AirCargoFlightMatcher(flightRepository);
         WeightFilterVerifier weightFilterVerifier = new WeightFilterVerifier();
         DateTimeFactory dateTimeFactory = new DateTimeFactory();
         FlightSortingStrategy flightSortingStrategy = new SeatsAndPriceSortingStrategy();
-        return new FlightService(flightRepository, weightFilterVerifier, dateTimeFactory, flightSortingStrategy, flightAssembler, userService);
+        return new FlightService(flightRepository, weightFilterVerifier, dateTimeFactory, flightSortingStrategy, passengerFlightAssembler, userService, airCargoFlightMatcher);
     }
 
 

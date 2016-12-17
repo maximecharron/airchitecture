@@ -4,7 +4,7 @@ import ca.ulaval.glo4003.air.domain.DateTimeFactory;
 import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 import ca.ulaval.glo4003.air.domain.flight.*;
 import ca.ulaval.glo4003.air.service.user.UserService;
-import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
+import ca.ulaval.glo4003.air.transfer.flight.PassengerFlightAssembler;
 import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchQueryDto;
 import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchResultDto;
 
@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.logging.Logger;
 
 public class FlightService {
@@ -24,16 +23,18 @@ public class FlightService {
     private final WeightFilterVerifier weightFilterVerifier;
     private final DateTimeFactory dateTimeFactory;
     private final FlightSortingStrategy flightSortingStrategy;
-    private final FlightAssembler flightAssembler;
+    private final PassengerFlightAssembler passengerFlightAssembler;
     private final UserService userService;
+    private final AirCargoFlightMatcher airCargoFlightMatcher;
 
-    public FlightService(FlightRepository flightRepository, WeightFilterVerifier weightFilterVerifier, DateTimeFactory dateTimeFactory, FlightSortingStrategy flightSortingStrategy, FlightAssembler flightAssembler, UserService userService) {
+    public FlightService(FlightRepository flightRepository, WeightFilterVerifier weightFilterVerifier, DateTimeFactory dateTimeFactory, FlightSortingStrategy flightSortingStrategy, PassengerFlightAssembler passengerFlightAssembler, UserService userService, AirCargoFlightMatcher airCargoFlightMatcher) {
         this.flightRepository = flightRepository;
         this.weightFilterVerifier = weightFilterVerifier;
         this.dateTimeFactory = dateTimeFactory;
         this.flightSortingStrategy = flightSortingStrategy;
-        this.flightAssembler = flightAssembler;
+        this.passengerFlightAssembler = passengerFlightAssembler;
         this.userService = userService;
+        this.airCargoFlightMatcher = airCargoFlightMatcher;
     }
 
     public FlightSearchResultDto findAllWithFilters(String accessToken, FlightSearchQueryDto searchDto) {
@@ -76,39 +77,16 @@ public class FlightService {
         Map<PassengerFlight, AirCargoFlight> flightsWithAirCargo = new HashMap<>();
         if (flightsWereFilteredByWeight && searchDto.acceptsAirCargo) {
             allPassengerFlights.removeAll(flightsFilteredByWeight);
-            flightsWithAirCargo.putAll(searchForAirCargo(allPassengerFlights, searchDto.departureAirport, searchDto.arrivalAirport, searchDto.onlyAirVivant, searchDto.weight));
+            flightsWithAirCargo.putAll(airCargoFlightMatcher.matchWithAirCargoFlights(allPassengerFlights, searchDto));
 
             flightsFilteredByWeight.addAll(flightsWithAirCargo.keySet());
             flightsWereFilteredByWeight = weightFilterVerifier.verifyFlightsFilteredByWeightWithFilters(flightsFilteredByWeight, allPassengerFlights);
         }
 
-        List<PassengerFlight> sortedFlights = flightSortingStrategy.sort(flightsFilteredByWeight);//todo : Ralex plz take these flights
+        List<PassengerFlight> sortedFlights = flightSortingStrategy.sort(flightsFilteredByWeight);
 
         FlightSearchResult searchResult = new FlightSearchResult(sortedFlights, searchDto.weight, flightsWereFilteredByWeight, flightsWithAirCargo);
-        return flightAssembler.create(searchResult);
-    }
-
-    private Map<PassengerFlight, AirCargoFlight> searchForAirCargo(List<PassengerFlight> allFlights, String departureAirport, String arrivalAirport, boolean isOnlyAirVivant, double weight) {
-        FlightQueryBuilder query = flightRepository.query()
-                                                   .isDepartingFrom(departureAirport)
-                                                   .isGoingTo(arrivalAirport)
-                                                   .acceptsWeight(weight);
-
-        if (isOnlyAirVivant) {
-            query.isAirVivant();
-        }
-
-        List<AirCargoFlight> airCargoFlights = query.getAirCargoFlights();
-        Map<PassengerFlight, AirCargoFlight> flightsWithAirCargo = new HashMap<>();
-
-        allFlights.forEach(flight -> {
-            Optional<AirCargoFlight> optionalAirCargoFlight = airCargoFlights.stream().filter(airCargoFlight -> airCargoFlight.isLeavingWithinXDaysOf(flight.getDepartureDate(), 3)).findFirst();
-            if (optionalAirCargoFlight.isPresent()) {
-                flightsWithAirCargo.put(flight, optionalAirCargoFlight.get());
-            }
-        });
-
-        return flightsWithAirCargo;
+        return passengerFlightAssembler.create(searchResult);
     }
 
     public void reservePlacesInFlight(String airlineCompany, String arrivalAirport, LocalDateTime departureDate, SeatMap seatMap) throws FlightNotFoundException {
@@ -140,7 +118,7 @@ public class FlightService {
                                .hasAirlineCompany(airlineCompany)
                                .isGoingTo(arrivalAirport)
                                .isLeavingAfterOrOn(departureDate)
-                               .findOneAirCargoFlight()
+                               .getOneAirCargoFlight()
                                .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
     }
 
@@ -149,7 +127,7 @@ public class FlightService {
                                .hasAirlineCompany(airlineCompany)
                                .isGoingTo(arrivalAirport)
                                .isLeavingAfterOrOn(departureDate)
-                               .findOnePassengerFlight()
+                               .getOnePassengerFlight()
                                .orElseThrow(() -> new FlightNotFoundException("Flight " + airlineCompany + " " + arrivalAirport + " does not exists."));
     }
 

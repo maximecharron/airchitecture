@@ -1,9 +1,10 @@
 package ca.ulaval.glo4003.air.api.transaction;
 
-import ca.ulaval.glo4003.air.transfer.transaction.dto.TransactionDto;
 import ca.ulaval.glo4003.air.service.transaction.TransactionService;
+import ca.ulaval.glo4003.air.transfer.transaction.dto.TransactionDto;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
@@ -19,7 +20,7 @@ public class TransactionResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void checkout(TransactionDto transactionDto) {
-        transactionService.buyTickets(transactionDto);
+    public void checkout(TransactionDto transactionDto, @HeaderParam("X-Access-Token") String token) {
+        transactionService.buyTickets(transactionDto, token);
     }
 }

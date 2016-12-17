@@ -1,11 +1,11 @@
 package ca.ulaval.glo4003.air.service.transaction.cart;
 
-import ca.ulaval.glo4003.air.transfer.transaction.dto.CartItemDto;
 import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
 import ca.ulaval.glo4003.air.domain.flight.FlightNotFoundException;
 import ca.ulaval.glo4003.air.domain.transaction.cart.CartItem;
 import ca.ulaval.glo4003.air.service.flight.FlightService;
 import ca.ulaval.glo4003.air.transfer.transaction.CartItemAssembler;
+import ca.ulaval.glo4003.air.transfer.transaction.dto.CartItemDto;
 
 import java.time.LocalDateTime;
 import java.util.logging.Logger;

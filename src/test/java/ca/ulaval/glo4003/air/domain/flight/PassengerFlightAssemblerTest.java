@@ -2,8 +2,9 @@ package ca.ulaval.glo4003.air.domain.flight;
 
 import ca.ulaval.glo4003.air.domain.airplane.Airplane;
 import ca.ulaval.glo4003.air.domain.airplane.SeatMap;
+import ca.ulaval.glo4003.air.transfer.flight.AirCargoFlightAssembler;
 import ca.ulaval.glo4003.air.transfer.flight.AvailableSeatsAssembler;
-import ca.ulaval.glo4003.air.transfer.flight.FlightAssembler;
+import ca.ulaval.glo4003.air.transfer.flight.PassengerFlightAssembler;
 import ca.ulaval.glo4003.air.transfer.flight.SeatsPricingAssembler;
 import ca.ulaval.glo4003.air.transfer.flight.dto.FlightSearchResultDto;
 import ca.ulaval.glo4003.air.transfer.flight.dto.PassengerFlightDto;
@@ -25,7 +26,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyDouble;
 
 @RunWith(MockitoJUnitRunner.class)
-public class FlightAssemblerTest {
+public class PassengerFlightAssemblerTest {
 
     private static final SeatMap SEAT_MAP = new SeatMap(20, 15, 30);
     private static final String ARRIVAL_AIRPORT = "ABC";
@@ -46,7 +47,7 @@ public class FlightAssemblerTest {
     @Mock
     private AvailableSeats availableSeats;
 
-    private FlightAssembler flightAssembler;
+    private PassengerFlightAssembler passengerFlightAssembler;
 
     @Before
     public void setup() {
@@ -57,14 +58,14 @@ public class FlightAssemblerTest {
 
         given(availableSeatsFactory.createFromSeatMap(SEAT_MAP)).willReturn(availableSeats);
 
-        flightAssembler = new FlightAssembler(new AvailableSeatsAssembler(), new SeatsPricingAssembler());
+        passengerFlightAssembler = new PassengerFlightAssembler(new AvailableSeatsAssembler(), new SeatsPricingAssembler(), new AirCargoFlightAssembler());
     }
 
     @Test
     public void givenAFlight_whenCreatingAFlightDto_thenItHasAllTheRelevantProperties() {
         PassengerFlight flight = givenAPassengerFlight();
 
-        PassengerFlightDto passengerFlightDto = flightAssembler.create(flight, WEIGHT);
+        PassengerFlightDto passengerFlightDto = passengerFlightAssembler.create(flight, WEIGHT);
 
         assertHasAllTheRelevantProperties(flight, passengerFlightDto);
     }
@@ -75,7 +76,7 @@ public class FlightAssemblerTest {
         List<PassengerFlight> flights = Stream.of(flight).collect(Collectors.toList());
         FlightSearchResult flightSearchResult = new FlightSearchResult(flights, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT, PASSENGER_FLIGHTS_WITH_AIR_CARGO);
 
-        FlightSearchResultDto flightSearchResultDto = flightAssembler.create(flightSearchResult);
+        FlightSearchResultDto flightSearchResultDto = passengerFlightAssembler.create(flightSearchResult);
 
         assertHasAllTheRelevantProperties(flight, flightSearchResultDto.flights.get(0));
     }
@@ -86,7 +87,7 @@ public class FlightAssemblerTest {
         List<PassengerFlight> flights = Stream.of(flight).collect(Collectors.toList());
         FlightSearchResult flightSearchResult = new FlightSearchResult(flights, WEIGHT, A_FILTERED_BY_WEIGHT_RESULT, PASSENGER_FLIGHTS_WITH_AIR_CARGO);
 
-        FlightSearchResultDto flightSearchResultDto = flightAssembler.create(flightSearchResult);
+        FlightSearchResultDto flightSearchResultDto = passengerFlightAssembler.create(flightSearchResult);
 
         assertEquals(A_FILTERED_BY_WEIGHT_RESULT, flightSearchResultDto.flightsWereFilteredByWeight);
     }

@@ -29,10 +29,8 @@ public class EmailTransactionNotifier implements TransactionNotifier {
             bodyBuilder.append(body);
         }
 
-        Email email = new Email(emailConfiguration.getFromAddress(),
-                                transaction.getEmailAddress(),
-                                NOTIFICATION_MESSAGE_SUBJECT,
-                                String.format(NOTIFICATION_MESSAGE_BODY, bodyBuilder.toString()));
+        String body = String.format(NOTIFICATION_MESSAGE_BODY, bodyBuilder.toString());
+        Email email = new Email(emailConfiguration.getFromAddress(), transaction.getEmailAddress(), NOTIFICATION_MESSAGE_SUBJECT, body);
 
         this.emailSender.sendEmail(email);
     }
