@@ -88,7 +88,7 @@ public class FlightServiceTest {
         given(flightQueryBuilder.isDepartingFrom(any())).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.isGoingTo(any())).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.isLeavingAfterOrOn(any())).willReturn(flightQueryBuilder);
-        given(flightQueryBuilder.isLeavingAfterOrOn(any())).willReturn(flightQueryBuilder);
+        given(flightQueryBuilder.isLeavingOn(any())).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.acceptsWeight(anyDouble())).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.isAirVivant()).willReturn(flightQueryBuilder);
         given(flightQueryBuilder.hasAirlineCompany(anyString())).willReturn(flightQueryBuilder);
@@ -204,7 +204,7 @@ public class FlightServiceTest {
         flightService.reservePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
 
         verify(flightQueryBuilder).hasAirlineCompany(AIRLINE_COMPANY);
-        verify(flightQueryBuilder).isLeavingAfterOrOn(DATE);
+        verify(flightQueryBuilder).isLeavingOn(DATE);
         verify(flightQueryBuilder).getOnePassengerFlight();
     }
 
@@ -240,7 +240,7 @@ public class FlightServiceTest {
         flightService.releasePlacesInFlight(AIRLINE_COMPANY, ARRIVAL_AIRPORT, DATE, A_SEAT_MAP);
 
         verify(flightQueryBuilder).hasAirlineCompany(AIRLINE_COMPANY);
-        verify(flightQueryBuilder).isLeavingAfterOrOn(DATE);
+        verify(flightQueryBuilder).isLeavingOn(DATE);
         verify(flightQueryBuilder).getOnePassengerFlight();
     }
 
