@@ -13,7 +13,7 @@ public class UserAssembler {
         UserDto userDto = new UserDto();
         userDto.token = user.getToken();
         userDto.emailAddress = user.getEmailAddress();
-        userDto.hidesWeightFilteredAlert = user.showsWeightFilteredAlert();
+        userDto.showsWeightFilteredAlert = user.showsWeightFilteredAlert();
         userDto.isAdmin = user.isAdmin();
         userDto.preferredDestinations = user.getPreferredDestination();
         return userDto;
